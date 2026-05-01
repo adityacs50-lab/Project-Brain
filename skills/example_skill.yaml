@@ -1,0 +1,19 @@
+name: "Refund Approval Process"
+trigger_keywords:
+  - "refund"
+  - "approval"
+  - "reimbursement"
+description: "Handles customer refund requests and required management approvals."
+steps:
+  - step: 1
+    action: "Verify receipt and product return status."
+    condition: "Always"
+  - step: 2
+    action: "Process refund immediately if amount is under $50."
+    condition: "amount < 50"
+  - step: 3
+    action: "Request VP approval for refunds over $200."
+    condition: "amount > 200"
+approval_required: true
+approver_role: "VP of Operations"
+notes: "All refunds must be processed within 5 business days of approval."

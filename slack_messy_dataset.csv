@@ -1,0 +1,9 @@
+thread_id,user,text,timestamp
+T1,alice_dev,"hey team, should we update the Jira workflow?",2026-05-01T09:00:00Z
+T1,bob_pm,"yeah, let's make it mandatory to tag QA on all bug tickets before moving to resolved.",2026-05-01T09:05:00Z
+T2,charlie_sales,Anyone know the discount policy?,2026-05-01T10:00:00Z
+T2,sarah_director,Only Sales Directors can approve discounts above 20%. Anything below that needs manager approval.,2026-05-01T10:15:00Z
+T3,dave_eng,Does anyone want to grab lunch?,2026-05-01T11:00:00Z
+T3,eve_eng,"Yeah, let's do Thai.",2026-05-01T11:05:00Z
+T4,frank_support,"New refund rule: If the user has been with us > 1 year, we can waive the $50 fee.",2026-05-01T12:00:00Z
+T5,grace_hr,Please update your profile picture for the company directory.,2026-05-01T13:00:00Z
