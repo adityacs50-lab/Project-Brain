@@ -4,7 +4,6 @@
 [![Python](https://img.shields.io/badge/Backend-Python_3.11-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/Framework-FastAPI-green?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
-[![Gemini](https://img.shields.io/badge/AI-Gemini_1.5_Flash-orange?logo=google&logoColor=white)](https://ai.google.dev/)
 [![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%2Bpgvector-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
 ---
