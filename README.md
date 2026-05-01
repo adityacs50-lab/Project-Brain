@@ -1,84 +1,102 @@
-# Company Brain 🧠
-### Turning Messy Slack History into Executable Company Intelligence
+# Company Brain
 
-[![Python](https://img.shields.io/badge/Backend-Python_3.11-blue?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/Framework-FastAPI-green?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react&logoColor=black)](https://reactjs.org/)
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL%2Bpgvector-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+Company Brain is an enterprise-grade logic extraction and retrieval system. It systematically processes unstructured organizational communication, identifies standard operating procedures, and codifies them into structured, machine-readable rulesets. These rulesets are then leveraged by an autonomous support agent to provide deterministic, policy-grounded answers to internal queries.
 
----
+## Architecture
 
-## 🚀 The Vision
-Most company knowledge is trapped in Slack threads, forgotten the moment they scroll off the screen. **Company Brain** is an AI-powered operations engine that watches your Slack history, extracts recurring business logic, and transforms it into a structured **"Skills File" (YAML)**.
+The system operates across three primary layers:
 
-This Skills File then powers an **AI Support Agent** that provides grounded, policy-backed answers to employee questions—eliminating the "Where is that policy?" frustration forever.
+1. **Ingestion Engine**: Processes historical and real-time messaging data (e.g., Slack) via asynchronous webhooks and batch pipelines, applying heuristic noise-filtering to isolate high-signal workflow discussions.
+2. **Extraction Pipeline**: Utilizes Large Language Models to parse conversational context, identify distinct business policies, and compile them into formal YAML-based "Skills" files.
+3. **Execution & Retrieval (RAG)**: Employs vector embeddings (`pgvector`) and keyword heuristics to retrieve relevant procedural context, grounding the agent's responses strictly in codified company policy.
 
----
+## Prerequisites
 
-## ✨ Key Features
-- **🧠 Automated Logic Extraction**: Uses Gemini 1.5 Flash to identify procedures and workflows in messy chat history.
-- **📄 Executable Skills Files**: Knowledge is stored in versionable YAML files, making business rules readable for both humans and machines.
-- **🛡️ Policy-Grounded RAG**: An AI agent that answers questions based *strictly* on documented procedures.
-- **⚡ Real-time Ingestion**: Connects via Slack Webhooks to capture new policies as they are announced.
-- **💎 Premium UI**: A sleek, procedural chat interface designed for high-efficiency operations teams.
+- Python 3.11+
+- Node.js 18+
+- PostgreSQL database with the `pgvector` extension enabled
+- Valid LLM API keys and Slack integration tokens
 
----
+## Installation
 
-## 🛠️ Tech Stack
-- **AI/LLM**: Google Gemini 1.5 Flash (Extraction & RAG)
-- **Backend**: FastAPI (Async Python 3.11)
-- **Frontend**: React + Vite (Plain JS, Inline Design System)
-- **Database**: PostgreSQL with `pgvector` for semantic search
-- **Ingestion**: `slack-sdk` for historical and live event processing
+### 1. Environment Configuration
 
----
+Clone the repository and configure the required environment variables:
 
-## 🚦 Quick Start
-
-### 1. Prerequisites
-Ensure you have Python 3.11+ and Node.js installed. You will need a PostgreSQL database with the `pgvector` extension enabled (Supabase is recommended).
-
-### 2. Environment Setup
-Copy `.env.example` to `.env` and fill in your credentials:
-```env
-GEMINI_API_KEY=your_key
-SLACK_BOT_TOKEN=xoxb-...
-DATABASE_URL=postgresql+asyncpg://...
+```bash
+cp .env.example .env
 ```
 
-### 3. Run the Demo
-Experience the full pipeline (Ingestion -> Extraction -> Answering) with one command:
+Ensure the following variables are populated in your `.env` file:
+- `SLACK_BOT_TOKEN`
+- `SLACK_SIGNING_SECRET`
+- `LLM_API_KEY` (or provider-specific key, replacing `GEMINI_API_KEY`)
+- `DATABASE_URL`
+
+### 2. Backend Setup
+
+Initialize the Python environment and install the required dependencies:
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+### 3. Frontend Setup
+
+Install the React application dependencies:
+
+```bash
+cd frontend
+npm install
+```
+
+## Usage
+
+### Running the End-to-End Demo
+
+To validate the extraction and retrieval pipeline without external dependencies, execute the demo script:
+
 ```bash
 python backend/demo.py
 ```
 
-### 4. Development Launch
-**Backend**:
+### Starting the Services
+
+**API Server**
+Start the FastAPI backend:
 ```bash
 cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-**Frontend**:
+**Interface**
+Start the frontend development server:
 ```bash
 cd frontend
-npm install
 npm run dev
 ```
 
----
+The interface will be available at `http://localhost:5173/`.
 
-## 🗺️ Roadmap (The YC Path)
-- [ ] **V1 (Current)**: Slack-to-YAML extraction and RAG support.
-- [ ] **V2**: Multi-channel synthesis and conflict detection between rules.
-- [ ] **V3**: "Self-Healing" logic (Agent asks for clarification when a rule is ambiguous).
-- [ ] **V4**: Native integrations with Jira, Notion, and Salesforce for action-taking.
+## Repository Structure
 
----
+```
+company-brain/
+├── backend/
+│   ├── main.py          # FastAPI application entry point
+│   ├── ingestor.py      # Slack ingestion and filtering logic
+│   ├── extractor.py     # Unstructured data to YAML transformation
+│   ├── executor.py      # RAG-based query resolution
+│   ├── db.py            # PostgreSQL and pgvector configuration
+│   └── models.py        # SQLAlchemy ORM definitions
+├── frontend/            # React SPA for the conversational interface
+├── skills/              # Repository for extracted YAML rulesets
+└── slack_messy_dataset.csv
+```
 
-## 🤝 Contributing
-Built with ⚡ by the Company Brain team. Targeted for YC Summer 2026.
+## Contributing
 
----
-*Company Brain: Because your company's intelligence shouldn't have an expiration date.*
+We welcome contributions to Company Brain. Please ensure all pull requests include appropriate tests and adhere to the existing architectural patterns.
