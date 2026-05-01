@@ -1,14 +1,19 @@
 # Company Brain
 
-Company Brain is an enterprise-grade logic extraction and retrieval system. It systematically processes unstructured organizational communication, identifies standard operating procedures, and codifies them into structured, machine-readable rulesets. These rulesets are then leveraged by an autonomous support agent to provide deterministic, policy-grounded answers to internal queries.
+**Company Brain** turns messy Slack into usable company logic that answers real operational questions correctly. 
 
-## Architecture
+This repository contains the Minimum Buyable Solution (MBS) for the platform—the core, end-to-end flow demonstrating how organizational knowledge is extracted from team chats and used to provide deterministic answers.
 
-The system operates across three primary layers:
+## The Minimum Buyable Solution (MBS)
 
-1. **Ingestion Engine**: Processes historical and real-time messaging data (e.g., Slack) via asynchronous webhooks and batch pipelines, applying heuristic noise-filtering to isolate high-signal workflow discussions.
-2. **Extraction Pipeline**: Utilizes Large Language Models to parse conversational context, identify distinct business policies, and compile them into formal YAML-based "Skills" files.
-3. **Execution & Retrieval (RAG)**: Employs vector embeddings (`pgvector`) and keyword heuristics to retrieve relevant procedural context, grounding the agent's responses strictly in codified company policy.
+Our MBS is focused on proving one thing: capturing chaotic conversational data and making it actionable. It specifically includes:
+
+1. **Slack Ingestion**: A Slack app that securely ingests messages.
+2. **Skill Extractor**: An LLM-powered engine that identifies policy-like discussions and transforms them into structured YAML "Skills".
+3. **Execution & Retrieval**: A search and execution layer (RAG) that uses these extracted YAML files to answer company-procedure questions.
+4. **Simple Interface**: A clean UI (or direct Slack bot response) that provides answers with clear source attribution.
+
+*Note: In the spirit of the MBS, this version intentionally omits complex multi-source connectors, deep RBAC (Role-Based Access Control) frameworks, self-healing workflow logic, and administrative marketplaces. It is designed to be installed, tested, and utilized quickly by real customers.*
 
 ## Prerequisites
 
