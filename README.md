@@ -1,13 +1,8 @@
 # Company Brain
 
-Company Brain is a Slack-to-Intelligence pipeline that turns messy company communication into structured, executable business logic. It ingests Slack messages, extracts policy-like skills into YAML, and answers company-procedure questions with grounded, source-attributed responses.
+Turn messy Slack conversations into executable company logic for AI agents.
 
-## What it does
-- Ingests historical or live Slack messages.
-- Filters noise from real operational logic.
-- Extracts company policies into structured YAML skills.
-- Answers questions using only the extracted company knowledge.
-- Preserves source attribution for every answer.
+Company Brain ingests company communication, extracts policy-like skills into structured YAML, and uses those skills to answer operational questions with grounded, source-attributed responses.
 
 ## Demo
 Run the end-to-end demo:
