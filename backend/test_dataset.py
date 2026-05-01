@@ -22,6 +22,9 @@ def create_mock_skill(name, keywords, content):
     s.yaml_content = content
     return s
 
+import pytest
+
+@pytest.mark.asyncio
 async def test_dataset_mocked():
     print("--- TESTING UPLOADED DATASET (MOCKED DB) ---")
     

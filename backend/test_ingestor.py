@@ -7,6 +7,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from backend.ingestor import score_logic_relevance
 
+import pytest
+
+@pytest.mark.asyncio
 async def test_scoring():
     test_messages = [
         "Hello everyone! How is it going?", # 0.0

@@ -1,107 +1,90 @@
 # Company Brain
 
-**Company Brain** turns messy Slack into usable company logic that answers real operational questions correctly. 
+Company Brain is a Slack-to-Intelligence pipeline that turns messy company communication into structured, executable business logic. It ingests Slack messages, extracts policy-like skills into YAML, and answers company-procedure questions with grounded, source-attributed responses.
 
-This repository contains the Minimum Buyable Solution (MBS) for the platform—the core, end-to-end flow demonstrating how organizational knowledge is extracted from team chats and used to provide deterministic answers.
+## What it does
+- Ingests historical or live Slack messages.
+- Filters noise from real operational logic.
+- Extracts company policies into structured YAML skills.
+- Answers questions using only the extracted company knowledge.
+- Preserves source attribution for every answer.
 
-## The Minimum Buyable Solution (MBS)
-
-Our MBS is focused on proving one thing: capturing chaotic conversational data and making it actionable. It specifically includes:
-
-1. **Slack Ingestion**: A Slack app that securely ingests messages.
-2. **Skill Extractor**: An LLM-powered engine that identifies policy-like discussions and transforms them into structured YAML "Skills".
-3. **Execution & Retrieval**: A search and execution layer (RAG) that uses these extracted YAML files to answer company-procedure questions.
-4. **Simple Interface**: A clean UI (or direct Slack bot response) that provides answers with clear source attribution.
-
-*Note: In the spirit of the MBS, this version intentionally omits complex multi-source connectors, deep RBAC (Role-Based Access Control) frameworks, self-healing workflow logic, and administrative marketplaces. It is designed to be installed, tested, and utilized quickly by real customers.*
-
-## Prerequisites
-
-- Python 3.11+
-- Node.js 18+
-- PostgreSQL database with the `pgvector` extension enabled
-- Valid LLM API keys and Slack integration tokens
-
-## Installation
-
-### 1. Environment Configuration
-
-Clone the repository and configure the required environment variables:
-
-```bash
-cp .env.example .env
-```
-
-Ensure the following variables are populated in your `.env` file:
-- `SLACK_BOT_TOKEN`
-- `SLACK_SIGNING_SECRET`
-- `LLM_API_KEY` (or provider-specific key, replacing `GEMINI_API_KEY`)
-- `DATABASE_URL`
-
-### 2. Backend Setup
-
-Initialize the Python environment and install the required dependencies:
-
-```bash
-cd backend
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 3. Frontend Setup
-
-Install the React application dependencies:
-
-```bash
-cd frontend
-npm install
-```
-
-## Usage
-
-### Running the End-to-End Demo
-
-To validate the extraction and retrieval pipeline without external dependencies, execute the demo script:
+## Demo
+Run the end-to-end demo:
 
 ```bash
 python backend/demo.py
 ```
 
-### Starting the Services
+## Backend
+Start the backend server:
 
-**API Server**
-Start the FastAPI backend:
 ```bash
-cd backend
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+uvicorn backend.main:app --reload
 ```
 
-**Interface**
-Start the frontend development server:
+If your app uses a different entrypoint, adjust the module path accordingly.
+
+## Frontend
+Run the frontend:
+
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
 
-The interface will be available at `http://localhost:5173/`.
+## Tests
+Run the full test suite:
 
-## Repository Structure
-
-```
-company-brain/
-├── backend/
-│   ├── main.py          # FastAPI application entry point
-│   ├── ingestor.py      # Slack ingestion and filtering logic
-│   ├── extractor.py     # Unstructured data to YAML transformation
-│   ├── executor.py      # RAG-based query resolution
-│   ├── db.py            # PostgreSQL and pgvector configuration
-│   └── models.py        # SQLAlchemy ORM definitions
-├── frontend/            # React SPA for the conversational interface
-├── skills/              # Repository for extracted YAML rulesets
-└── slack_messy_dataset.csv
+```bash
+pytest
 ```
 
-## Contributing
+Run the edge case tests:
 
-We welcome contributions to Company Brain. Please ensure all pull requests include appropriate tests and adhere to the existing architectural patterns.
+```bash
+pytest backend/test_edge_cases.py
+```
+
+## Environment Setup
+Create a `.env` file in the project root with any required keys, such as:
+
+```env
+GEMINI_API_KEY=your_key_here
+DATABASE_URL=your_database_url_here
+SLACK_BOT_TOKEN=your_slack_token_here
+SLACK_SIGNING_SECRET=your_slack_signing_secret_here
+```
+
+If you are using a local mock setup, make sure the demo and tests are pointed at the correct mock or in-memory configuration.
+
+## Project Structure
+- `backend/` - FastAPI backend, ingestion, extraction, executor, and tests.
+- `frontend/` - React frontend.
+- `skills/` - Generated YAML skill files.
+- `slack_messy_dataset.csv` - Sample dataset for testing.
+
+## How the pipeline works
+1. Slack messages are ingested from historical data or live events.
+2. Noise filtering separates casual chat from policy-like content.
+3. The extractor converts relevant threads into YAML skills.
+4. The executor uses those skills to answer questions.
+5. Each response includes source attribution.
+
+## Example workflow
+1. Add messages to Slack or load the sample dataset.
+2. Run the ingestion and extraction pipeline.
+3. Ask a question like:
+   - What is the refund policy?
+   - How do we handle bug tickets?
+   - Who can approve discounts?
+4. The system replies with a grounded answer and a source reference.
+
+## Notes
+- This is an MVP focused on demonstrating the core logic layer idea.
+- It is optimized for speed of iteration, not full enterprise hardening.
+- The next production step is stronger conflict resolution, RBAC, and connector expansion.
+
+## YC Summary
+Company Brain is the logic layer for AI agents. It turns fragmented Slack knowledge into executable skills so company-specific workflows can run reliably.

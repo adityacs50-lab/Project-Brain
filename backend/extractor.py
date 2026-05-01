@@ -84,7 +84,7 @@ skills:
         action: "What to do next"
     approval_required: false
     approver_role: null
-    notes: "Any important caveats or exceptions"
+    notes: "Any important caveats or exceptions. IF CONFLICTING RULES EXIST, start this field with 'CONFLICT DETECTED:' and explain."
 
 If no clear business rule exists in these messages, respond with:
 skills: []

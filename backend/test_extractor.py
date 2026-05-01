@@ -16,6 +16,9 @@ from backend.models import SlackMessage
 # Now we can import extractor
 from backend.extractor import extract_skills_from_messages
 
+import pytest
+
+@pytest.mark.asyncio
 async def test_extraction():
     # 1. Create fake SlackMessage objects
     fake_messages = [
@@ -84,6 +87,7 @@ skills:
 
     # Mock database session
     mock_db = AsyncMock()
+    mock_db.add = MagicMock()
     
     print("--- Starting Extraction Test ---")
     
