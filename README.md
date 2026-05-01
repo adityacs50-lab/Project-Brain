@@ -1,8 +1,6 @@
 # Company Brain
 
-Turn messy Slack conversations into executable company logic for AI agents.
-
-Company Brain ingests company communication, extracts policy-like skills into structured YAML, and uses those skills to answer operational questions with grounded, source-attributed responses.
+Turn messy Slack conversations into executable company logic for AI agents.Company Brain ingests company communication, extracts policy-like skills into structured YAML, and uses those skills to answer operational questions with grounded, source-attributed responses.
 
 ## Demo
 Run the end-to-end demo:
