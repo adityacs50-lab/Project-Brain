@@ -6,7 +6,7 @@ import { StatsBar } from "@/components/StatsBar";
 import { RuleCard, Rule } from "@/components/RuleCard";
 
 export default function ReviewQueue() {
-  const workspaceId = "test-workspace-1";
+  const workspaceId = "demo-workspace";
   const { data: rules, mutate } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
 
   const pendingRules = rules?.filter((r: Rule) => r.status === "pending") || [];
