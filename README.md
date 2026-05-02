@@ -63,4 +63,4 @@ Company Brain is an AI-powered system designed to capture, structure, and query 
 
 ---
 
-Built with ❤️ to solve the "where did we talk about that?" problem.
+Built with ❤️ 

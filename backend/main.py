@@ -8,6 +8,7 @@ from backend.executor import answer_query
 from backend.slack_oauth import router as slack_oauth_router, run_scheduled_sync
 from backend.permissions import router as permissions_router
 from backend.versioning import router as versioning_router
+from backend.agent_api import router as agent_api_router
 from backend.bot import handler as slack_bot_handler
 from backend.db import engine, Base
 from sqlalchemy import text
@@ -24,7 +25,7 @@ class AskRequest(BaseModel):
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -35,6 +36,7 @@ app.include_router(slack_router)
 app.include_router(slack_oauth_router)
 app.include_router(permissions_router)
 app.include_router(versioning_router)
+app.include_router(agent_api_router)
 
 @app.get("/health")
 async def health():

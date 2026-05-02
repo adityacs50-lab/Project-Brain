@@ -1,0 +1,10 @@
+﻿{
+    "context":  {
+                    "issue":  "customer requests $480 refund after failed onboarding",
+                    "ticket_priority":  "high",
+                    "customer_tenure":  "4 months"
+                },
+    "workspace_id":  "demo-workspace",
+    "agent_id":  "support-agent-01",
+    "action":  "process refund request"
+}

@@ -110,3 +110,19 @@ class QueryLog(Base):
     similarity_score = Column(Float, nullable=True)
     was_flagged = Column(Boolean, default=False)
     asked_at = Column(DateTime, default=datetime.utcnow)
+
+class AgentDecisionLog(Base):
+    __tablename__ = "agent_decision_logs"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    workspace_id = Column(String, index=True)
+    agent_id = Column(String)
+    action = Column(String)
+    context = Column(Text)  # JSON stored as text
+    matched_rule_id = Column(UUID(as_uuid=True), ForeignKey("rules.id"), nullable=True)
+    rule_text = Column(Text, nullable=True)
+    decision = Column(String)  # "permitted" | "denied" | "escalate" | "no_rule_found"
+    escalate_to = Column(String, nullable=True)
+    confidence = Column(Float, nullable=True)
+    agent_feedback = Column(Text, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)

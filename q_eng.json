@@ -1,0 +1,8 @@
+﻿{
+    "context":  {
+                    "issue":  "incident protocol"
+                },
+    "workspace_id":  "test-workspace-1",
+    "agent_id":  "support-agent-01",
+    "action":  "Tickets marked urgent must be escalated to on-call engineer within 15 minutes"
+}

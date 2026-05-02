@@ -2,12 +2,9 @@ export const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 const BASE_URL = "http://localhost:8000";
 
-export const getRules = (workspaceId: string, status?: string) => {
-    const url = new URL(`${BASE_URL}/rules/${workspaceId}/rules`);
-    if (status) {
-        url.searchParams.append("status", status);
-    }
-    return url.toString();
+// Review queue and stats bar both fetch the full rules list and filter by status on the client.
+export const getRules = (workspaceId: string) => {
+    return `${BASE_URL}/rules/${workspaceId}/rules`;
 };
 
 export const getContradictions = (workspaceId: string) => {
