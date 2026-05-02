@@ -9,6 +9,7 @@ from backend.slack_oauth import router as slack_oauth_router, run_scheduled_sync
 from backend.permissions import router as permissions_router
 from backend.versioning import router as versioning_router
 from backend.agent_api import router as agent_api_router
+from backend.versioning import get_model
 from backend.bot import handler as slack_bot_handler
 from backend.db import engine, Base
 from sqlalchemy import text
@@ -40,7 +41,7 @@ app.include_router(agent_api_router)
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "version": "0.1.0"}
+    return {"status": "ok"}
 
 @app.post("/extract")
 async def extract_logic():
