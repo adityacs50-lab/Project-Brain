@@ -25,3 +25,10 @@ Thumbs.db
 # Database
 *.db
 *.sqlite
+
+# Tool specific
+.agents/
+.windsurf/
+.zencoder/
+alter_db.py
+insert_workspace.py

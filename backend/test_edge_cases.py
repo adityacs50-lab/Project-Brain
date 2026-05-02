@@ -32,6 +32,7 @@ async def test_malformed_input():
     mock_yaml = "skills: []"
     
     mock_db = AsyncMock()
+    mock_db.__aenter__.return_value = mock_db
     mock_db.add = MagicMock()
     
     with patch("backend.extractor.call_gemini_with_retry", return_value=mock_yaml):
@@ -69,6 +70,7 @@ skills:
 """
     
     mock_db = AsyncMock()
+    mock_db.__aenter__.return_value = mock_db
     mock_db.add = MagicMock()
     
     with patch("backend.extractor.call_gemini_with_retry", return_value=mock_yaml):

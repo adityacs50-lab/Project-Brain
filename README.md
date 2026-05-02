@@ -1,90 +1,66 @@
-# Company Brain
+# 🧠 Company Brain: Turning Slack Noise into Executable Knowledge
 
-Company Brain is a Slack-to-Intelligence pipeline that turns messy company communication into structured, executable business logic. It ingests Slack messages, extracts policy-like skills into YAML, and answers company-procedure questions with grounded, source-attributed responses.
+Company Brain is an AI-powered system designed to capture, structure, and query internal company knowledge hidden within Slack conversations. It uses a "Human-in-the-Loop" workflow to ensure that the knowledge captured is accurate and verifiable.
 
-## What it does
-- Ingests historical or live Slack messages.
-- Filters noise from real operational logic.
-- Extracts company policies into structured YAML skills.
-- Answers questions using only the extracted company knowledge.
-- Preserves source attribution for every answer.
+## 🚀 Key Features
 
-## Demo
-Run the end-to-end demo:
+*   **AI Knowledge Extraction**: Automatically scans Slack messages to identify policies, business rules, and operational procedures.
+*   **Semantic Search with pgvector**: Uses state-of-the-art vector embeddings to search for knowledge based on meaning, not just keywords.
+*   **Version Control & Contradiction Detection**: Automatically detects when new information contradicts existing rules and maintains a full version history of all company knowledge.
+*   **Human Review Queue**: A dedicated Next.js dashboard where admins can review, edit, and approve AI-extracted knowledge before it goes live.
+*   **Slack RAG Bot**: Employees can ask questions directly in Slack. The bot responds with grounded answers, source citations, and a feedback mechanism for continuous improvement.
 
-```bash
-python backend/demo.py
-```
+## 🛠️ Technology Stack
 
-## Backend
-Start the backend server:
+*   **Backend**: FastAPI (Python), SQLAlchemy, pgvector, Sentence Transformers.
+*   **Frontend**: Next.js 14, Tailwind CSS, shadcn/ui.
+*   **Database**: PostgreSQL (Supabase recommended).
+*   **Integration**: Slack Bolt SDK.
 
-```bash
-uvicorn backend.main:app --reload
-```
+## 🏁 Getting Started
 
-If your app uses a different entrypoint, adjust the module path accordingly.
+### 1. Prerequisites
+*   Python 3.10+
+*   Node.js 18+
+*   PostgreSQL with `pgvector` extension (e.g., Supabase)
 
-## Frontend
-Run the frontend:
+### 2. Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Create a `.env` file in the root directory (see `.env.example`).
+4. Start the server:
+   ```bash
+   uvicorn backend.main:app --reload
+   ```
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+### 3. Frontend Setup
+1. Navigate to the frontend directory:
+   ```bash
+   cd next-app
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-## Tests
-Run the full test suite:
+## 🧠 How It Works
 
-```bash
-pytest
-```
+1.  **Ingest**: Slack messages are synced to the database.
+2.  **Extract**: The system identifies logic candidates and extracts them into "Rules".
+3.  **Review**: Rules appear in the **Human Review Queue** for validation.
+4.  **Query**: Once approved, rules are indexed in the vector database and accessible via the Slack Bot.
+5.  **Feedback**: Users can flag inaccurate responses, pushing the rule back to the review queue automatically.
 
-Run the edge case tests:
+---
 
-```bash
-pytest backend/test_edge_cases.py
-```
-
-## Environment Setup
-Create a `.env` file in the project root with any required keys, such as:
-
-```env
-GEMINI_API_KEY=your_key_here
-DATABASE_URL=your_database_url_here
-SLACK_BOT_TOKEN=your_slack_token_here
-SLACK_SIGNING_SECRET=your_slack_signing_secret_here
-```
-
-If you are using a local mock setup, make sure the demo and tests are pointed at the correct mock or in-memory configuration.
-
-## Project Structure
-- `backend/` - FastAPI backend, ingestion, extraction, executor, and tests.
-- `frontend/` - React frontend.
-- `skills/` - Generated YAML skill files.
-- `slack_messy_dataset.csv` - Sample dataset for testing.
-
-## How the pipeline works
-1. Slack messages are ingested from historical data or live events.
-2. Noise filtering separates casual chat from policy-like content.
-3. The extractor converts relevant threads into YAML skills.
-4. The executor uses those skills to answer questions.
-5. Each response includes source attribution.
-
-## Example workflow
-1. Add messages to Slack or load the sample dataset.
-2. Run the ingestion and extraction pipeline.
-3. Ask a question like:
-   - What is the refund policy?
-   - How do we handle bug tickets?
-   - Who can approve discounts?
-4. The system replies with a grounded answer and a source reference.
-
-## Notes
-- This is an MVP focused on demonstrating the core logic layer idea.
-- It is optimized for speed of iteration, not full enterprise hardening.
-- The next production step is stronger conflict resolution, RBAC, and connector expansion.
-
-## YC Summary
-Company Brain is the logic layer for AI agents. It turns fragmented Slack knowledge into executable skills so company-specific workflows can run reliably.
+Built with ❤️ to solve the "where did we talk about that?" problem.
