@@ -7,8 +7,6 @@ from datetime import datetime
 from sqlalchemy import select, update
 from backend.db import AsyncSessionLocal
 from backend.models import SlackMessage, Skill
-from dotenv import load_dotenv
-
 load_dotenv()
 
 # Configure Gemini
