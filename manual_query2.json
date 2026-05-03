@@ -1,8 +1,0 @@
-﻿{
-    "context":  {
-
-                },
-    "workspace_id":  "demo-workspace",
-    "agent_id":  "support-agent-01",
-    "action":  "Refunds over $200 require VP of Customer Success approval"
-}

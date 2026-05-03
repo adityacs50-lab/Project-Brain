@@ -11,6 +11,10 @@ export const getContradictions = (workspaceId: string) => {
     return `${BASE_URL}/rules/${workspaceId}/contradictions`;
 };
 
+export const getDecisions = (workspaceId: string) => {
+    return `${BASE_URL}/agent/decisions/${workspaceId}`;
+};
+
 export const updateRuleStatus = async (ruleId: string, status: string, editedText?: string) => {
     const res = await fetch(`${BASE_URL}/rules/${ruleId}/status`, {
         method: "PATCH",

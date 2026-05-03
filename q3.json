@@ -1,9 +1,0 @@
-﻿{
-    "context":  {
-                    "issue":  "customer requesting fee waiver",
-                    "customer_tenure":  "2 years"
-                },
-    "workspace_id":  "test-workspace-1",
-    "agent_id":  "support-agent-01",
-    "action":  "waive platform fee"
-}

@@ -1,97 +1,131 @@
 "use client";
 
-import { Activity, Brain, CheckCircle2, AlertTriangle, ArrowRight, Zap, ShieldCheck } from "lucide-react";
+import useSWR from "swr";
+import { Activity, Brain, CheckCircle2, AlertTriangle, ArrowRight, Zap, ShieldCheck, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { fetcher, getRules } from "@/lib/api";
 import { StatsBar } from "@/components/StatsBar";
 
 export default function Dashboard() {
+  const workspaceId = "test-workspace-1";
+  const { data: rules, error, isLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-8 text-center bg-red-500/10 border border-red-500/20 rounded-xl">
+        <p className="text-red-500 font-medium">Failed to load dashboard data. Is the backend running?</p>
+      </div>
+    );
+  }
+
+  const recentRules = [...(rules || [])]
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(0, 5);
+
+  const averageConfidence = rules?.length 
+    ? Math.round(rules.reduce((acc: number, r: any) => acc + (r.confidence || 0), 0) / rules.length) 
+    : 0;
+
   return (
-    <div className="flex flex-col gap-8 animate-in fade-in duration-500">
+    <div className="flex flex-col gap-8 animate-in fade-in duration-700">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight mb-2 flex items-center gap-3">
-            Company Brain <span className="text-gradient">Overview</span>
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Real-time monitoring of your organization&apos;s living operating system.
-          </p>
-        </div>
-        <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-full backdrop-blur-md shadow-lg">
-          <div className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Company Brain</h1>
+          <div className="flex items-center gap-2 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20">
+            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-green-600 uppercase tracking-wider">Online</span>
           </div>
-          <span className="text-sm font-medium text-white/90">System Online</span>
         </div>
       </div>
 
-      <StatsBar workspaceId="demo-workspace" />
+      <StatsBar workspaceId={workspaceId} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Activity Feed */}
-        <div className="glass-card rounded-2xl p-6 flex flex-col h-full border border-white/10 hover:border-primary/30 transition-colors">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <Activity className="w-5 h-5 text-blue-400" />
+        <div className="lg:col-span-2 bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
+          <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
+            <h2 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
+              <Activity className="w-4 h-4 text-blue-600" />
               Recent Rule Activity
             </h2>
-            <Link href="/rules" className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors">
-              View all <ArrowRight className="w-4 h-4" />
+            <Link href="/active-rules" className="text-xs text-zinc-500 hover:text-blue-600 transition-colors flex items-center gap-1">
+              View all <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
           
-          <div className="space-y-4 flex-1">
-            {[
-              { title: "Updated Refund Policy", time: "10 mins ago", type: "update", icon: Zap },
-              { title: "New Enterprise Pricing Tier", time: "2 hours ago", type: "new", icon: ShieldCheck },
-              { title: "SLA Response Times", time: "5 hours ago", type: "review", icon: AlertTriangle },
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-4 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
-                <div className={`p-2 rounded-lg ${item.type === 'update' ? 'bg-blue-500/20 text-blue-400' : item.type === 'new' ? 'bg-green-500/20 text-green-400' : 'bg-orange-500/20 text-orange-400'} group-hover:scale-110 transition-transform`}>
-                  <item.icon className="w-4 h-4" />
+          <div className="divide-y divide-zinc-100">
+            {recentRules.length > 0 ? (
+              recentRules.map((rule, i) => (
+                <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-zinc-50 transition-colors cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    <div className={`p-2 rounded-lg ${rule.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'}`}>
+                      {rule.status === 'active' ? <ShieldCheck className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-zinc-900 group-hover:text-blue-600 transition-colors">{rule.title}</h3>
+                      <p className="text-xs text-zinc-500 mt-0.5">{rule.source_channel || "#general"}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-xs text-zinc-400">{new Date(rule.created_at).toLocaleDateString()}</p>
+                    <p className="text-[10px] font-mono text-zinc-500 mt-1 uppercase tracking-tighter">{rule.status}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-medium text-sm text-white/90 group-hover:text-blue-400 transition-colors">{item.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">{item.time}</p>
-                </div>
+              ))
+            ) : (
+              <div className="p-12 text-center">
+                <p className="text-sm text-zinc-400">No recent activity found.</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
 
         {/* Intelligence Health */}
-        <div className="glass-card rounded-2xl p-6 flex flex-col h-full border border-white/10 hover:border-primary/30 transition-colors relative overflow-hidden">
-          <div className="absolute -right-20 -top-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="flex items-center justify-between mb-6 relative z-10">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <Brain className="w-5 h-5 text-purple-400" />
+        <div className="bg-white border border-zinc-200 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-sm">
+          <div className="absolute top-4 left-6">
+            <h2 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
+              <Brain className="w-4 h-4 text-purple-600" />
               Brain Health
             </h2>
           </div>
 
-          <div className="flex-1 flex flex-col justify-center gap-6 relative z-10">
-            <div className="flex flex-col items-center justify-center py-6">
-              <div className="relative w-32 h-32 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle cx="64" cy="64" r="60" className="stroke-white/10" strokeWidth="8" fill="none" />
-                  <circle cx="64" cy="64" r="60" className="stroke-green-500" strokeWidth="8" fill="none" strokeDasharray="377" strokeDashoffset="40" strokeLinecap="round" />
-                </svg>
-                <div className="absolute flex flex-col items-center justify-center text-center">
-                  <span className="text-3xl font-bold">89%</span>
-                  <span className="text-xs text-muted-foreground">Confidence</span>
-                </div>
-              </div>
+          <div className="mt-8 relative w-48 h-48 flex items-center justify-center">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle cx="96" cy="96" r="80" className="stroke-zinc-100" strokeWidth="12" fill="none" />
+              <circle 
+                cx="96" 
+                cy="96" 
+                r="80" 
+                className="stroke-blue-600" 
+                strokeWidth="12" 
+                fill="none" 
+                strokeDasharray="502" 
+                strokeDashoffset={502 - (502 * averageConfidence) / 100} 
+                strokeLinecap="round" 
+                style={{ transition: 'stroke-dashoffset 1s ease-in-out' }}
+              />
+            </svg>
+            <div className="absolute flex flex-col items-center justify-center text-center">
+              <span className="text-4xl font-bold text-zinc-900">{averageConfidence}%</span>
+              <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mt-1">Confidence</span>
             </div>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-muted-foreground flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500"/> Hallucination Free</span>
-                <span className="font-medium">100%</span>
-              </div>
-              <div className="flex justify-between items-center text-sm">
-                <span className="text-muted-foreground flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500"/> Contradiction Free</span>
-                <span className="font-medium text-orange-400">Reviewing</span>
-              </div>
+          </div>
+          
+          <div className="mt-8 w-full space-y-3">
+            <div className="flex justify-between items-center px-2">
+              <span className="text-xs text-zinc-500">Hallucination Free</span>
+              <span className="text-xs font-bold text-green-600">100%</span>
+            </div>
+            <div className="w-full h-1.5 bg-zinc-100 rounded-full overflow-hidden">
+              <div className="h-full bg-green-500 w-full" />
             </div>
           </div>
         </div>

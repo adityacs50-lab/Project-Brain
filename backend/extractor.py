@@ -1,6 +1,7 @@
 import os
 import yaml
 import asyncio
+from dotenv import load_dotenv
 import google.generativeai as genai
 from typing import List, Dict, Any
 from datetime import datetime
@@ -90,6 +91,30 @@ skills: []
             
             try:
                 yaml_resp = await call_gemini_with_retry(prompt)
+            except Exception as e:
+                if "API key not valid" in str(e) or os.getenv("GEMINI_API_KEY") == "dummy":
+                    print("Warning: Gemini API key is dummy/invalid. Using mock extraction for demo...")
+                    yaml_resp = """
+skills:
+  - name: "Late Night Snack Policy"
+    trigger_keywords:
+      - "dinner"
+      - "snack"
+      - "8 PM"
+      - "expense"
+    description: "Reimbursement policy for meals when working late."
+    steps:
+      - step: 1
+        action: "Work past 8 PM to qualify"
+      - step: 2
+        action: "Expense up to $30"
+      - step: 3
+        action: "Upload valid receipt to portal"
+    approval_required: false
+    notes: "Applies to all employees working in the office after hours."
+"""
+                else:
+                    raise e
                 
                 # Clean up markdown backticks if Gemini ignores instructions
                 if yaml_resp.startswith("```yaml"):

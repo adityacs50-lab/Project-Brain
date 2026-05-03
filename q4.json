@@ -1,8 +1,0 @@
-﻿{
-    "context":  {
-                    "issue":  "customer unhappy with current plan"
-                },
-    "workspace_id":  "test-workspace-1",
-    "agent_id":  "support-agent-01",
-    "action":  "offer free upgrade"
-}

@@ -1,8 +1,0 @@
-﻿{
-    "context":  {
-                    "issue":  "refund policy lookup"
-                },
-    "workspace_id":  "test-workspace-1",
-    "agent_id":  "support-agent-01",
-    "action":  "Refunds over $200 require VP of Customer Success approval"
-}
