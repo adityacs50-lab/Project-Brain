@@ -1,6 +1,6 @@
 # 🧠 Company Brain: The Rules Layer for AI Agents
 
-![Company Brain Hero](C:\Users\Umesh Shinde\.gemini\antigravity\brain\595ad488-c640-4ce9-8431-040e58647473\company_brain_hero_1777795798110.png)
+![Company Brain Hero](assets/hero.png)
 
 > **"Never let your AI agents hallucinate your company's policies again."**
 
