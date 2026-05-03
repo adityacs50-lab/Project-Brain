@@ -1,7 +1,7 @@
 "use client";
 
 import useSWR from "swr";
-import { fetcher, getDecisions } from "@/lib/api";
+import { fetcher, getDecisions, getStats } from "@/lib/api";
 import { Brain, Search, Loader2, AlertCircle, CheckCircle2, XCircle, HelpCircle, Flag } from "lucide-react";
 
 export default function AgentDecisions() {

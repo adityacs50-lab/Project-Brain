@@ -3,7 +3,7 @@
 import useSWR from "swr";
 import { Activity, Brain, CheckCircle2, AlertTriangle, ArrowRight, Zap, ShieldCheck, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { fetcher, getRules } from "@/lib/api";
+import { fetcher, getRules, getStats } from "@/lib/api";
 import { StatsBar } from "@/components/StatsBar";
 
 export default function Dashboard() {
