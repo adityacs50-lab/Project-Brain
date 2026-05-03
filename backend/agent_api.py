@@ -282,6 +282,46 @@ async def get_decisions(workspace_id: str):
         }
 
 # ========================================
+# GET /agent/stats/{workspace_id}
+# ========================================
+@router.get("/stats/{workspace_id}")
+async def get_agent_stats(workspace_id: str):
+    """
+    Returns real-time health and performance metrics for the agent brain.
+    - Brain Health (Avg Confidence)
+    - Hallucination Free Score (1 - Flagged/Total)
+    - Total Decisions
+    - Active Rules Count
+    """
+    async with AsyncSessionLocal() as db:
+        # 1. Rules Stats
+        stmt_rules = select(Rule).where(Rule.workspace_id == workspace_id, Rule.status == "active")
+        result_rules = await db.execute(stmt_rules)
+        rules = result_rules.scalars().all()
+        total_rules = len(rules)
+        avg_confidence = sum([r.confidence for r in rules]) / total_rules if total_rules > 0 else 1.0
+
+        # 2. Decisions Stats
+        stmt_decisions = select(AgentDecisionLog).where(AgentDecisionLog.workspace_id == workspace_id)
+        result_decisions = await db.execute(stmt_decisions)
+        decisions = result_decisions.scalars().all()
+        total_decisions = len(decisions)
+        
+        # 3. Hallucination Free Score (Flags)
+        # Any decision where feedback is 'incorrect' or 'overridden' is considered a hallucination/error
+        flagged_count = sum([1 for d in decisions if d.agent_feedback and ("incorrect" in d.agent_feedback.lower() or "overridden" in d.agent_feedback.lower())])
+        hallucination_free = (1 - (flagged_count / total_decisions)) if total_decisions > 0 else 1.0
+
+        return {
+            "workspace_id": workspace_id,
+            "brain_health": int(avg_confidence * 100),
+            "hallucination_free": int(hallucination_free * 100),
+            "total_decisions": total_decisions,
+            "active_rules": total_rules,
+            "health_status": "OPTIMAL" if avg_confidence > 0.8 else "STABLE" if avg_confidence > 0.5 else "CRITICAL"
+        }
+
+# ========================================
 # POST /agent/seed/{workspace_id}
 # ========================================
 @router.post("/seed/{workspace_id}")
@@ -332,8 +372,8 @@ async def seed_agent_rules(workspace_id: str):
         await db.execute(stmt_del)
         await db.commit()
         
-        # Seed Rule 1: Refunds over $200 require VP approval
-        rule1_text = "Refunds over $200 require VP of Customer Success approval"
+        # Seed Rule 1: Refund Approval Policy
+        rule1_text = "Any refund request exceeding the threshold of $200 requires formal authorization from the VP of Customer Success before the transaction can be processed."
         embedding1 = model_instance.encode(rule1_text).tolist()
         
         rule1 = Rule(
@@ -342,7 +382,7 @@ async def seed_agent_rules(workspace_id: str):
             title="Refund Approval Policy",
             rule_text=rule1_text,
             status="active",
-            confidence=0.95,
+            confidence=1.0,
             source_message="Refunds over $200 require VP of Customer Success approval",
             channel_id="support-policies",
             version=1,
@@ -354,8 +394,8 @@ async def seed_agent_rules(workspace_id: str):
         await db.refresh(rule1)
         seeded_rules.append(str(rule1.id))
         
-        # Seed Rule 2: Urgent tickets must be escalated
-        rule2_text = "Tickets marked urgent must be escalated to on-call engineer within 15 minutes"
+        # Seed Rule 2: Urgent Ticket Protocol
+        rule2_text = "All support tickets designated as 'Urgent' must be immediately escalated to the active on-call engineer, with a mandatory internal response time of no more than 15 minutes."
         embedding2 = model_instance.encode(rule2_text).tolist()
         
         rule2 = Rule(
@@ -364,7 +404,7 @@ async def seed_agent_rules(workspace_id: str):
             title="Urgent Ticket Protocol",
             rule_text=rule2_text,
             status="active",
-            confidence=0.92,
+            confidence=1.0,
             source_message="Tickets marked urgent must be escalated to on-call engineer within 15 minutes",
             channel_id="support-policies",
             version=1,
@@ -386,7 +426,7 @@ async def seed_agent_rules(workspace_id: str):
             title="Fee Waiver Policy",
             rule_text=rule3_text,
             status="active",
-            confidence=0.90,
+            confidence=1.0,
             source_message="Customers with tenure over 1 year are permitted a one-time fee waiver",
             channel_id="support-policies",
             version=1,
@@ -422,12 +462,12 @@ async def run_agent_demo():
     demo_queries = [
         {
             "query": "process refund of $350 for 3 month old customer",
-            "action": "Refunds over $200 require VP of Customer Success approval",
+            "action": "Any refund request exceeding the threshold of $200 requires formal authorization from the VP of Customer Success before the transaction can be processed.",
             "context": {}
         },
         {
             "query": "handle urgent production outage ticket",
-            "action": "Tickets marked urgent must be escalated to on-call engineer within 15 minutes",
+            "action": "All support tickets designated as 'Urgent' must be immediately escalated to the active on-call engineer, with a mandatory internal response time of no more than 15 minutes.",
             "context": {}
         },
         {

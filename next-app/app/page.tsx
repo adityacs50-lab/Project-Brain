@@ -8,20 +8,13 @@ import { StatsBar } from "@/components/StatsBar";
 
 export default function Dashboard() {
   const workspaceId = "demo-workspace";
-  const { data: rules, error, isLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
+  const { data: rules, error: rulesError, isLoading: rulesLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
+  const { data: stats, error: statsError } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
 
-  if (isLoading) {
+  if (rulesLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-8 text-center bg-red-500/10 border border-red-500/20 rounded-xl">
-        <p className="text-red-500 font-medium">Failed to load dashboard data. Is the backend running?</p>
       </div>
     );
   }
@@ -30,9 +23,8 @@ export default function Dashboard() {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
 
-  const averageConfidence = rules?.length 
-    ? Math.round(rules.reduce((acc: number, r: any) => acc + (r.confidence || 0), 0) / rules.length) 
-    : 0;
+  const brainHealth = stats?.brain_health || 100;
+  const hallucinationFree = stats?.hallucination_free || 100;
 
   return (
     <div className="flex flex-col gap-8 animate-in fade-in duration-700">
@@ -108,13 +100,13 @@ export default function Dashboard() {
                 strokeWidth="12" 
                 fill="none" 
                 strokeDasharray="502" 
-                strokeDashoffset={502 - (502 * averageConfidence) / 100} 
+                strokeDashoffset={502 - (502 * brainHealth) / 100} 
                 strokeLinecap="round" 
                 style={{ transition: 'stroke-dashoffset 1s ease-in-out' }}
               />
             </svg>
             <div className="absolute flex flex-col items-center justify-center text-center">
-              <span className="text-4xl font-bold text-zinc-900">{averageConfidence}%</span>
+              <span className="text-4xl font-bold text-zinc-900">{brainHealth}%</span>
               <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mt-1">Confidence</span>
             </div>
           </div>
@@ -122,10 +114,10 @@ export default function Dashboard() {
           <div className="mt-8 w-full space-y-3">
             <div className="flex justify-between items-center px-2">
               <span className="text-xs text-zinc-500">Hallucination Free</span>
-              <span className="text-xs font-bold text-green-600">100%</span>
+              <span className="text-xs font-bold text-green-600">{hallucinationFree}%</span>
             </div>
             <div className="w-full h-1.5 bg-zinc-100 rounded-full overflow-hidden">
-              <div className="h-full bg-green-500 w-full" />
+              <div className="h-full bg-green-500" style={{ width: `${hallucinationFree}%` }} />
             </div>
           </div>
         </div>

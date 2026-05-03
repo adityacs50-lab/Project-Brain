@@ -7,6 +7,7 @@ import { Brain, Search, Loader2, AlertCircle, CheckCircle2, XCircle, HelpCircle,
 export default function AgentDecisions() {
   const workspaceId = "demo-workspace";
   const { data, error, isLoading } = useSWR(getDecisions(workspaceId), fetcher, { refreshInterval: 30000 });
+  const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
 
   if (isLoading) {
     return (
@@ -17,6 +18,9 @@ export default function AgentDecisions() {
   }
 
   const decisions = data?.decisions || [];
+  const accuracy = stats?.hallucination_free || 100;
+  const brainHealth = stats?.brain_health || 100;
+  const healthStatus = stats?.health_status || "OPTIMAL";
 
   const getDecisionBadge = (decision: string) => {
     switch (decision) {
@@ -41,6 +45,26 @@ export default function AgentDecisions() {
           <div>
             <h1 className="text-xl font-bold text-zinc-900 tracking-tight">Agent Decisions</h1>
             <p className="text-xs text-zinc-500 mt-0.5">Audit log of all autonomous actions and rule-based enforcement.</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-6 px-6 py-3 bg-zinc-50 border border-zinc-200 rounded-xl">
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Diagnostic Accuracy</span>
+            <span className="text-lg font-bold text-green-600">{accuracy}%</span>
+          </div>
+          <div className="w-px h-8 bg-zinc-200" />
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Avg. Confidence</span>
+            <span className="text-lg font-bold text-blue-600">{brainHealth}%</span>
+          </div>
+          <div className="w-px h-8 bg-zinc-200" />
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">System Health</span>
+            <div className="flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full animate-pulse ${healthStatus === 'OPTIMAL' ? 'bg-green-500' : 'bg-yellow-500'}`} />
+              <span className="text-xs font-bold text-zinc-700">{healthStatus}</span>
+            </div>
           </div>
         </div>
       </div>

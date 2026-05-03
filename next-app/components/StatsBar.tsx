@@ -1,15 +1,16 @@
 import useSWR from "swr";
-import { fetcher, getRules, getContradictions } from "@/lib/api";
+import { fetcher, getRules, getContradictions, getStats } from "@/lib/api";
 import { useEffect, useState } from "react";
-import { CheckCircle2, Clock, AlertOctagon, TrendingUp } from "lucide-react";
+import { CheckCircle2, Clock, AlertOctagon, Zap } from "lucide-react";
 
 export function StatsBar({ workspaceId }: { workspaceId: string }) {
-  const { data: rules, isValidating } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
+  const { data: rules } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
   const { data: contradictions } = useSWR(getContradictions(workspaceId), fetcher, { refreshInterval: 30000 });
+  const { data: statsData } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
 
   const totalActive = rules?.filter((r: {status: string}) => r.status === "active").length || 0;
   const pendingReview = rules?.filter((r: {status: string}) => r.status === "pending").length || 0;
-  const totalContradictions = contradictions?.length || 0;
+  const totalDecisions = statsData?.total_decisions || 0;
 
   const stats = [
     {
@@ -20,16 +21,16 @@ export function StatsBar({ workspaceId }: { workspaceId: string }) {
       bg: "bg-green-500/10",
     },
     {
-      title: "Pending Review",
-      value: pendingReview,
-      icon: Clock,
+      title: "Total AI Decisions",
+      value: totalDecisions,
+      icon: Zap,
       color: "text-blue-500",
       bg: "bg-blue-500/10",
     },
     {
-      title: "Contradictions",
-      value: totalContradictions,
-      icon: AlertOctagon,
+      title: "Pending Review",
+      value: pendingReview,
+      icon: Clock,
       color: "text-orange-500",
       bg: "bg-orange-500/10",
     }

@@ -35,9 +35,9 @@ async def run_demo():
     print("\nStep 1: Seeding fake Slack messages...")
     messages = [
         "Hey team, just FYI the kitchen is out of coffee",
-        "From now on, all refund requests over $200 must be approved by VP of Customer Success before processing",
+        "From now on, any refund request exceeding the threshold of $200 requires formal authorization from the VP of Customer Success before the transaction can be processed",
         "lol did anyone see the game last night",
-        "New policy: when a customer reports a bug, create a Jira ticket within 2 hours AND send them an email acknowledgment within 4 hours",
+        "All support tickets designated as 'Urgent' must be immediately escalated to the active on-call engineer, with a mandatory internal response time of no more than 15 minutes",
         "reminder that tomorrow is casual friday",
         "Going forward, any pricing exceptions above 15% discount require written approval from Sales Director and must be logged in Salesforce",
         "the coffee machine is fixed btw",
@@ -64,8 +64,8 @@ async def run_demo():
     
     # Mocking Gemini answers
     mock_answers = {
-        "how do I handle a refund request for $500?": "Refunds over $200 must be approved by the VP of Customer Success. Please ensure you have the request details ready for approval.",
-        "customer reported a bug, what should I do?": "Create a Jira ticket within 2 hours and send an email acknowledgment to the customer within 4 hours.",
+        "how do I handle a refund request for $500?": "Any refund request exceeding the threshold of $200 requires formal authorization from the VP of Customer Success before the transaction can be processed.",
+        "customer reported a bug, what should I do?": "All support tickets designated as 'Urgent' must be immediately escalated to the active on-call engineer, with a mandatory internal response time of no more than 15 minutes.",
         "can I give a customer 20% discount?": "Pricing exceptions above 15% require written approval from the Sales Director and must be logged in Salesforce."
     }
 

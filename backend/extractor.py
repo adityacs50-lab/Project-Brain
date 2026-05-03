@@ -7,7 +7,8 @@ from typing import List, Dict, Any
 from datetime import datetime
 from sqlalchemy import select, update
 from backend.db import AsyncSessionLocal
-from backend.models import SlackMessage, Skill
+from backend.models import SlackMessage, Rule
+from backend.versioning import get_model
 load_dotenv()
 
 # Configure Gemini
@@ -128,16 +129,31 @@ skills:
                 if not extracted_skills:
                     continue
                     
+                model_instance = get_model()
                 for s_data in extracted_skills:
-                    new_skill = Skill(
-                        name=s_data.get("name"),
-                        version="1.0.0",
-                        yaml_content=yaml.dump(s_data),
-                        trigger_keywords=s_data.get("trigger_keywords", []),
-                        source_message_ids=[m.id for m in group]
+                    rule_text = s_data.get("description", "")
+                    if s_data.get("steps"):
+                        steps_text = "\n".join([f"{step.get('step')}. {step.get('action')}" for step in s_data.get("steps")])
+                        rule_text += f"\n\nSteps:\n{steps_text}"
+                    
+                    # Generate embedding
+                    embedding = model_instance.encode(rule_text).tolist()
+                    
+                    new_rule = Rule(
+                        id=uuid.uuid4(),
+                        workspace_id="demo-workspace", # Default for demo, should be fetched from message context in prod
+                        title=s_data.get("name"),
+                        rule_text=rule_text,
+                        status="pending",
+                        confidence=0.85,
+                        source_message=messages_text[:500],
+                        channel_id=group[0].channel_id,
+                        version=1,
+                        embedding=embedding,
+                        created_at=datetime.utcnow()
                     )
-                    db.add(new_skill)
-                    created_skills.append(new_skill)
+                    db.add(new_rule)
+                    created_skills.append(new_rule) # Keep list for return value (refers to Rule now)
                 
                 await db.commit()
             except Exception as e:

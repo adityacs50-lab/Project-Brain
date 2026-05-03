@@ -70,8 +70,8 @@ async def test_dataset_mocked():
     # Mocked answers based on the CSV data
     mock_answers = {
         "What is the discount policy?": "Only Sales Directors can approve discounts above 20%. Anything below that needs manager approval.",
-        "How should we handle bug tickets?": "It is mandatory to tag QA on all bug tickets before moving them to resolved.",
-        "What is the new refund rule?": "If a user has been with us for more than 1 year, we can waive the $50 refund fee."
+        "How should we handle bug tickets?": "All support tickets designated as 'Urgent' must be immediately escalated to the active on-call engineer, with a mandatory internal response time of no more than 15 minutes.",
+        "What is the new refund rule?": "Any refund request exceeding the threshold of $200 requires formal authorization from the VP of Customer Success before the transaction can be processed."
     }
     
     for q in test_queries:

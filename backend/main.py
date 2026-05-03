@@ -55,8 +55,54 @@ async def extract_logic():
 
 @app.post("/ask")
 async def ask_agent(request: AskRequest):
-    result = await answer_query(request.query)
-    return result
+    from backend.versioning import get_model
+    from backend.models import Rule
+    from sqlalchemy import select, asc
+    from backend.db import AsyncSessionLocal
+    import google.generativeai as genai
+
+    query_text = request.query
+    workspace_id = "demo-workspace"
+    
+    model = get_model()
+    embedding = model.encode(query_text).tolist()
+    
+    async with AsyncSessionLocal() as db:
+        stmt = select(Rule).where(
+            Rule.workspace_id == workspace_id, 
+            Rule.status == "active"
+        ).order_by(Rule.embedding.cosine_distance(embedding)).limit(3)
+            
+        result = await db.execute(stmt)
+        matching_rules = result.scalars().all()
+        
+        if not matching_rules:
+            return {
+                "answer": "I don't have a documented procedure for this — please check with your manager.",
+                "sources": [],
+                "confidence": "low"
+            }
+        
+        rules_context = "\n---\n".join([f"Rule: {r.title}\n{r.rule_text}" for r in matching_rules])
+        
+        prompt = f"""SYSTEM: You are a helpful company operations assistant. Answer using ONLY the company's documented procedures below.\n\nPROCEDURES:\n{rules_context}\n\nQUESTION: {query_text}"""
+        
+        try:
+            response = await genai.GenerativeModel('gemini-1.5-flash').generate_content_async(prompt)
+            answer = response.text.strip()
+            sources = [r.title for r in matching_rules]
+            confidence = "high"
+        except Exception as e:
+            print(f"Gemini error: {e}")
+            answer = matching_rules[0].rule_text
+            sources = [matching_rules[0].title]
+            confidence = "medium"
+
+        return {
+            "answer": answer,
+            "sources": sources,
+            "confidence": confidence
+        }
 
 @app.post("/slack/events")
 async def slack_events(req: Request):
