@@ -7,7 +7,7 @@ import { fetcher, getRules } from "@/lib/api";
 import { StatsBar } from "@/components/StatsBar";
 
 export default function Dashboard() {
-  const workspaceId = "test-workspace-1";
+  const workspaceId = "demo-workspace";
   const { data: rules, error, isLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
 
   if (isLoading) {
