@@ -1,17 +1,21 @@
-# TODO: Implement Agent API Layer
+# 🚀 Company Brain: Roadmap & Technical Debt
 
-## 1. Update models.py
-- [x] Add AgentDecisionLog table with all required fields
+## ✅ Completed (V1 Core)
+- [x] **Agent API Layer**: Full semantic enforcement engine using pgvector.
+- [x] **Human-in-the-Loop**: Next.js dashboard for rule verification and audit logs.
+- [x] **Conflict Detection**: Automated identification of contradictory business rules.
+- [x] **Diagnostic Engine**: Built-in test suite for policy enforcement validation.
 
-## 2. Create agent_api.py
-- [x] POST /agent/query - Query rules using semantic search with pgvector
-- [x] GET /agent/rules/{workspace_id}/support - Get all active rules
-- [x] POST /agent/feedback - Update feedback and trigger learning loop
-- [x] GET /agent/decisions/{workspace_id} - Get audit trail
-- [x] POST /agent/seed/{workspace_id} - Seed test rules
+## 🔜 Phase 2: Scale & Robustness
+- [ ] **Multi-Agent Orchestration**: Support for coordinating across multiple specialized agents (Support, Legal, HR).
+- [ ] **Amazon Bedrock Integration**: Leverage Claude 3.5 Sonnet for deeper reasoning in rule synthesis.
+- [ ] **Real-Time Streaming**: Move from batch processing to real-time Slack socket-mode ingestion.
+- [ ] **Policy Simulator**: Sandbox environment to test "What if?" scenarios without affecting live agents.
 
-## 3. Register router in main.py
-- [x] Include agent_api router with prefix /agent
+## 📈 Future Vision
+- [ ] **Autonomous Conflict Resolution**: AI-driven suggestions for resolving policy contradictions.
+- [ ] **Hierarchical Policy Graphs**: Support for nested rules and inheritance (e.g., Global Policy vs Team Policy).
+- [ ] **Identity-Aware Enforcement**: Decisions based on the user's role and permissions fetched from SSO.
 
-## 4. Test
-- [x] Test the API endpoints work correctly
+---
+*Maintained by the Company Brain Core Team.*
