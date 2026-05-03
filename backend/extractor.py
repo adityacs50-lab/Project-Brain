@@ -1,4 +1,5 @@
 import os
+import uuid
 import yaml
 import asyncio
 from dotenv import load_dotenv
@@ -7,7 +8,7 @@ from typing import List, Dict, Any
 from datetime import datetime
 from sqlalchemy import select, update
 from backend.db import AsyncSessionLocal
-from backend.models import SlackMessage, Rule
+from backend.models import SlackMessage, Rule, Skill
 from backend.versioning import get_model
 load_dotenv()
 
