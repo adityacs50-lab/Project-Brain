@@ -61,6 +61,45 @@ async def ask_agent(request: AskRequest):
     result = await answer_query(request.query, request.workspace_id)
     return result
 
+@app.get("/graph")
+async def get_logic_graph():
+    """🛡️ THIEL PROTOCOL RULE 4: GRAPH EXPORT.
+    Returns nodes (rules) and edges (dependencies) for visual mapping.
+    """
+    from backend.models import Rule, RuleDependency
+    from sqlalchemy import select
+    from backend.db import AsyncSessionLocal
+
+    async with AsyncSessionLocal() as db:
+        # Get all rules
+        rules_stmt = select(Rule)
+        rules_result = await db.execute(rules_stmt)
+        rules = rules_result.scalars().all()
+        
+        # Get all dependencies
+        deps_stmt = select(RuleDependency)
+        deps_result = await db.execute(deps_stmt)
+        deps = deps_result.scalars().all()
+        
+        nodes = []
+        for r in rules:
+            nodes.append({
+                "id": str(r.id),
+                "label": r.title,
+                "status": r.status,
+                "type": r.action_type
+            })
+            
+        edges = []
+        for d in deps:
+            edges.append({
+                "from": str(d.rule_id),
+                "to": str(d.depends_on_id),
+                "type": d.dependency_type
+            })
+            
+        return {"nodes": nodes, "edges": edges}
+
 @app.post("/slack/events")
 async def slack_events(req: Request):
     return await slack_bot_handler.handle(req)
