@@ -206,5 +206,11 @@ async def run_extraction_pipeline() -> Dict[str, Any]:
                 "errors": 0
             }
         except Exception as e:
-            print(f"Pipeline error: {e}")
-            return {"processed": len(candidates), "skills_created": 0, "errors": 1}
+            error_msg = str(e)
+            print(f"Pipeline error: {error_msg}")
+            return {
+                "processed": len(candidates), 
+                "skills_created": 0, 
+                "errors": 1,
+                "error_details": error_msg
+            }
