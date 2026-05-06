@@ -5,7 +5,7 @@ import LogicGraph from './components/LogicGraph';
 const App = () => {
   const API_BASE_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:8000' 
-    : 'https://company-brain-production.up.railway.app';
+    : 'https://project-brain-production-fa75.up.railway.app';
 
   const [messages, setMessages] = useState([
     { text: "Hi! I'm Company Brain. Ask me anything about our company procedures.", role: 'bot' }

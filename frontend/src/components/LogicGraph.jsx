@@ -11,7 +11,7 @@ const nodeStyles = {
 const LogicGraph = () => {
   const API_BASE_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:8000' 
-    : 'https://company-brain-production.up.railway.app';
+    : 'https://project-brain-production-fa75.up.railway.app';
 
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
