@@ -126,27 +126,27 @@ async def handle_query(query_text: str, workspace_id: str, say, user_id: str):
             await say("I don't have a rule for this yet — want me to flag it for your Ops team? 🤔")
 
 @app.event("app_mention")
-async def handle_app_mention_events(body, say):
+async def handle_app_mention_events(body, say, context):
     event = body.get("event", {})
     query_text = event.get("text", "")
     # Remove the bot mention <@U123456> from the text
     if ">" in query_text:
         query_text = query_text.split(">", 1)[1].strip()
         
-    workspace_id = body.get("team_id", "")
+    workspace_id = context.get("team_id")
     user_id = event.get("user", "")
     
     await handle_query(query_text, workspace_id, say, user_id)
 
 @app.event("message")
-async def handle_message_events(body, say, logger):
+async def handle_message_events(body, say, logger, context):
     """Saves all messages as logic candidates and handles DM queries."""
     event = body.get("event", {})
     if event.get("bot_id") or event.get("subtype") == "bot_message":
         return
         
     text = event.get("text", "")
-    workspace_id = body.get("team_id", "")
+    workspace_id = context.get("team_id")
     user_id = event.get("user", "")
     channel_id = event.get("channel")
     ts = event.get("ts")

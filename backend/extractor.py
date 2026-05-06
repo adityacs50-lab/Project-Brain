@@ -170,23 +170,39 @@ skills:
     return created_skills
 
 async def run_extraction_pipeline() -> Dict[str, Any]:
-    """Queries unprocessed candidates and extracts skills."""
+    """Queries unprocessed candidates and extracts skills, isolated by workspace."""
     async with AsyncSessionLocal() as db:
-        # Get all candidates (we'll filter processed in a simple way for the MVP: 
-        # messages not associated with any Skill yet)
-        # Note: In a real app, we'd use a dedicated 'processed' flag on SlackMessage
-        stmt = select(SlackMessage).where(SlackMessage.is_logic_candidate == True)
+        # 🛡️ FIXED: Only process messages with a valid workspace_id to prevent orphaned rules
+        stmt = select(SlackMessage).where(
+            SlackMessage.is_logic_candidate == True,
+            SlackMessage.workspace_id.isnot(None),
+            SlackMessage.workspace_id != ""
+        )
         result = await db.execute(stmt)
         candidates = result.scalars().all()
         
         if not candidates:
-            return {"processed": 0, "skills_created": 0, "errors": 0}
+            return {"processed": 0, "skills_created": 0, "errors": 0, "message": "No new candidates to process"}
             
+        # 🛡️ FIXED: Group candidates by workspace to prevent tenant-leaking in the extraction prompt
+        workspace_groups = {}
+        for c in candidates:
+            ws_id = c.workspace_id
+            if ws_id not in workspace_groups:
+                workspace_groups[ws_id] = []
+            workspace_groups[ws_id].append(c)
+            
+        total_skills = 0
         try:
-            skills = await extract_skills_from_messages(candidates)
+            for ws_id, msgs in workspace_groups.items():
+                # Process each workspace independently
+                skills = await extract_skills_from_messages(msgs)
+                total_skills += len(skills)
+                
             return {
                 "processed": len(candidates),
-                "skills_created": len(skills),
+                "workspaces_processed": len(workspace_groups),
+                "skills_created": total_skills,
                 "errors": 0
             }
         except Exception as e:
