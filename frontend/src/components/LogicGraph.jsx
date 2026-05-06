@@ -9,6 +9,10 @@ const nodeStyles = {
 };
 
 const LogicGraph = () => {
+  const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000' 
+    : 'https://company-brain-production.up.railway.app';
+
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +20,7 @@ const LogicGraph = () => {
   useEffect(() => {
     const fetchGraph = async () => {
       try {
-        const response = await fetch('http://localhost:8000/graph');
+        const response = await fetch(`${API_BASE_URL}/graph`);
         const data = await response.json();
         
         // Transform nodes for ReactFlow

@@ -3,6 +3,10 @@ import Message from './components/Message';
 import LogicGraph from './components/LogicGraph';
 
 const App = () => {
+  const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000' 
+    : 'https://company-brain-production.up.railway.app';
+
   const [messages, setMessages] = useState([
     { text: "Hi! I'm Company Brain. Ask me anything about our company procedures.", role: 'bot' }
   ]);
@@ -21,13 +25,13 @@ const App = () => {
   }, [messages]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/health')
+    fetch(`${API_BASE_URL}/health`)
       .then(res => res.json())
       .then(data => {
         if (data.status === 'ok') setBackendOk(true);
       })
       .catch(() => setBackendOk(false));
-  }, []);
+  }, [API_BASE_URL]);
 
   const handleSend = async (e) => {
     if (e) e.preventDefault();
@@ -40,10 +44,10 @@ const App = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:8000/ask', {
+      const response = await fetch(`${API_BASE_URL}/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: userQuery }),
+        body: JSON.stringify({ query: userQuery, workspace_id: 'default' }), # Added default workspace_id
       });
 
       if (!response.ok) throw new Error('API request failed');
