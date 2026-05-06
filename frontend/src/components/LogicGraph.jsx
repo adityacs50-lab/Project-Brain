@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import ReactFlow, { Background, Controls, MiniMap } from 'reactflow';
+import ReactFlow, { Background, Controls, MiniMap, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
 
 const nodeStyles = {
@@ -49,16 +49,20 @@ const LogicGraph = () => {
           };
         });
 
+        const validNodeIds = new Set(rfNodes.map(n => n.id));
+
         // Transform edges for ReactFlow
-        const rfEdges = data.edges.map((e, i) => ({
-          id: `e-${i}`,
-          source: e.from,
-          target: e.to,
-          label: e.type,
-          animated: e.type === 'requires',
-          markerEnd: { type: 'arrowclosed', color: '#94a3b8' },
-          style: { stroke: '#94a3b8', strokeWidth: 2 }
-        }));
+        const rfEdges = data.edges
+          .filter(e => validNodeIds.has(e.from) && validNodeIds.has(e.to))
+          .map((e, i) => ({
+            id: `e-${i}`,
+            source: e.from,
+            target: e.to,
+            label: e.type,
+            animated: e.type === 'requires',
+            markerEnd: { type: MarkerType.ArrowClosed, color: '#94a3b8' },
+            style: { stroke: '#94a3b8', strokeWidth: 2 }
+          }));
 
         setNodes(rfNodes);
         setEdges(rfEdges);

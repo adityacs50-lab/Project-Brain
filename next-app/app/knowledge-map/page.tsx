@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import ReactFlow, { Background, Controls, MiniMap } from 'reactflow';
+import ReactFlow, { Background, Controls, MiniMap, MarkerType } from 'reactflow';
 import 'reactflow/dist/style.css';
 
 const nodeStyles = {
@@ -50,16 +50,32 @@ export default function KnowledgeMapPage() {
           };
         });
 
-        const rfEdges = data.edges.map((e: any, i: number) => ({
-          id: `e-${i}`,
-          source: e.from,
-          target: e.to,
-          label: e.type,
-          animated: e.type === 'requires',
-          markerEnd: { type: 'arrowclosed', color: '#4B5563' },
-          style: { stroke: '#4B5563', strokeWidth: 2 }
-        }));
+        // Get a set of all valid node IDs for validation
+        const validNodeIds = new Set(rfNodes.map((n: any) => n.id));
 
+        const rfEdges = data.edges
+          .filter((e: any) => {
+            const hasSource = validNodeIds.has(e.from);
+            const hasTarget = validNodeIds.has(e.to);
+            if (!hasSource || !hasTarget) {
+              console.warn(`Skipping edge: Source(${e.from}) exists: ${hasSource}, Target(${e.to}) exists: ${hasTarget}`);
+            }
+            return hasSource && hasTarget;
+          })
+          .map((e: any, i: number) => ({
+            id: `e-${i}`,
+            source: e.from,
+            target: e.to,
+            label: e.type,
+            animated: e.type === 'requires',
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              color: '#4B5563',
+            },
+            style: { stroke: '#4B5563', strokeWidth: 2 }
+          }));
+
+        console.log(`Successfully mapped ${rfNodes.length} nodes and ${rfEdges.length} edges.`);
         setNodes(rfNodes);
         setEdges(rfEdges);
       } catch (err) {
