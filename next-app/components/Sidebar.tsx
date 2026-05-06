@@ -9,7 +9,7 @@ export function Sidebar() {
 
   const links = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/knowledge-map", label: "Knowledge Map", icon: GitBranch }, # New Link
+    { href: "/knowledge-map", label: "Knowledge Map", icon: GitBranch }, // Corrected comment
     { href: "/review", label: "Review Queue", icon: ClipboardCheck },
     { href: "/active-rules", label: "Active Rules", icon: Workflow },
     { href: "/decisions", label: "Agent Decisions", icon: Brain },
