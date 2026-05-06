@@ -14,7 +14,7 @@ load_dotenv()
 
 # Configure Gemini
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
+model = genai.GenerativeModel('gemini-2.5-flash')
 
 STOPWORDS = {"the", "a", "an", "is", "are", "was", "were", "to", "from", "in", "on", "at", "with", "and", "or", "but", "for", "of"}
 
