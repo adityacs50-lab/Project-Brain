@@ -67,9 +67,24 @@ async def extract_skills_from_messages(messages: List[SlackMessage]) -> List[Rul
     created_skills = []
     async with AsyncSessionLocal() as db:
         for group in groups:
+            ws_id = group[0].workspace_id
+            industry_context = ""
+            
+            # 🛡️ THIEL PROTOCOL RULE 2: NICHE SECRETS
+            try:
+                from backend.models import WorkspaceNiche
+                stmt = select(WorkspaceNiche).where(WorkspaceNiche.workspace_id == ws_id)
+                niche_result = await db.execute(stmt)
+                niche = niche_result.scalar_one_or_none()
+                if niche:
+                    industry_context = f"\nINDUSTRY CONTEXT ({niche.industry}):\n{niche.special_logic_notes}\n"
+            except Exception as ne:
+                print(f"Niche context fetch failed: {ne}")
+
             messages_text = "\n".join([f"User {m.sender}: {m.text}" for m in group])
             
-            prompt = f"""SYSTEM: You are a business process extraction AI. Your job is to read Slack conversations and extract concrete business rules and procedures.
+            prompt = f"""SYSTEM: You are a business process extraction AI.{industry_context}
+Your job is to read Slack conversations and extract concrete business rules and procedures.
 
 USER: Here are Slack messages from a company. Extract any business rules, policies, or procedures mentioned.
 
@@ -198,6 +213,42 @@ Only respond with valid YAML."""
                     )
                     db.add(new_rule)
                     created_skills.append(new_rule)
+                    
+                    # 🛡️ THIEL PROTOCOL RULE 4: DEPENDENCY DETECTION
+                    # Check if this new rule depends on any existing active rules
+                    try:
+                        stmt = select(Rule).where(Rule.workspace_id == new_rule.workspace_id, Rule.status == "active")
+                        existing_rules_result = await db.execute(stmt)
+                        existing_rules = existing_rules_result.scalars().all()
+                        
+                        if existing_rules:
+                            context = "\n".join([f"- {r.id}: {r.title}" for r in existing_rules])
+                            dep_prompt = f"""SYSTEM: You are a logic graph architect.
+NEW RULE: {new_rule.title} ({new_rule.rule_text})
+EXISTING RULES:
+{context}
+
+Does the NEW RULE depend on, conflict with, or refine any of the EXISTING RULES?
+Respond with YAML in this format:
+dependencies:
+  - rule_id: "uuid"
+    type: "requires | conflicts | refines"
+
+If no link exists, respond with dependencies: []"""
+                            dep_yaml = await call_gemini_with_retry(dep_prompt)
+                            # Simple parsing
+                            if "dependencies:" in dep_yaml:
+                                dep_data = yaml.safe_load(dep_yaml)
+                                for dep in dep_data.get("dependencies", []):
+                                    from backend.models import RuleDependency
+                                    new_dep = RuleDependency(
+                                        rule_id=new_rule.id,
+                                        depends_on_id=uuid.UUID(dep["rule_id"]),
+                                        dependency_type=dep["type"]
+                                    )
+                                    db.add(new_dep)
+                    except Exception as de:
+                        print(f"Dependency detection failed: {de}")
                 
                 await db.commit()
             except Exception as e:

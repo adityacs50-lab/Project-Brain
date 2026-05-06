@@ -87,7 +87,35 @@ class Rule(Base):
     parent_rule_id = Column(UUID(as_uuid=True), ForeignKey("rules.id"), nullable=True)
     action_type = Column(String) # "permitted" | "denied" | "escalate"
     embedding = Column(Vector(384))
+    
+    # 🛡️ THIEL PROTOCOL RULE 5: EXECUTIVE SEAL
+    approved_by = Column(String, nullable=True)
+    approved_at = Column(DateTime, nullable=True)
+    
     created_at = Column(DateTime, default=datetime.utcnow)
+
+class RuleDependency(Base):
+    """🛡️ THIEL PROTOCOL RULE 4: THE LOGIC GRAPH.
+    Creates many-to-many links between rules to build a proprietary knowledge moat.
+    """
+    __tablename__ = "rule_dependencies"
+    
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    rule_id = Column(UUID(as_uuid=True), ForeignKey("rules.id"))
+    depends_on_id = Column(UUID(as_uuid=True), ForeignKey("rules.id"))
+    dependency_type = Column(String, default="requires") # "requires" | "conflicts" | "refines"
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class WorkspaceNiche(Base):
+    """🛡️ THIEL PROTOCOL RULE 2: THE MONOPOLY NICHE.
+    Stores industry-specific 'Secrets' to give the AI an edge in vertical progress.
+    """
+    __tablename__ = "workspace_niches"
+    
+    workspace_id = Column(String, ForeignKey("slack_workspaces.workspace_id"), primary_key=True)
+    industry = Column(String) # "fintech" | "healthtech" | "saas" | "legal"
+    special_logic_notes = Column(Text) # The "Secrets" of this specific niche
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class Contradiction(Base):
     __tablename__ = "contradictions"
