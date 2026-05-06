@@ -10,7 +10,7 @@ load_dotenv()
 
 # Configure Gemini
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 async def answer_query(user_query: str) -> Dict[str, Any]:
     """Finds relevant skills and uses Gemini to answer the user query."""
@@ -63,7 +63,7 @@ Provide a clear, step-by-step answer. Be concise. If approval is required, menti
 """
         
         try:
-            response = await genai.GenerativeModel('gemini-1.5-flash').generate_content_async(prompt)
+            response = await genai.GenerativeModel('gemini-1.5-flash-latest').generate_content_async(prompt)
             answer = response.text.strip()
             sources = [s.name for s in top_skills]
             

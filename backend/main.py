@@ -89,7 +89,7 @@ async def ask_agent(request: AskRequest):
         prompt = f"""SYSTEM: You are a helpful company operations assistant. Answer using ONLY the company's documented procedures below.\n\nPROCEDURES:\n{rules_context}\n\nQUESTION: {query_text}"""
         
         try:
-            response = await genai.GenerativeModel('gemini-1.5-flash').generate_content_async(prompt)
+            response = await genai.GenerativeModel('gemini-1.5-flash-latest').generate_content_async(prompt)
             answer = response.text.strip()
             sources = [r.title for r in matching_rules]
             confidence = "high"

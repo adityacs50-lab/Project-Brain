@@ -355,7 +355,7 @@ async def query_rules(request: QueryRequest):
             try:
                 import google.generativeai as genai
                 prompt = f"""SYSTEM: Answer using ONLY company rules below.\n\n{rules_context}\n\nQuestion: {request.query}\n\nAnswer:"""
-                response = await genai.GenerativeModel('gemini-1.5-flash').generate_content_async(prompt)
+                response = await genai.GenerativeModel('gemini-1.5-flash-latest').generate_content_async(prompt)
                 answer = response.text.strip()
                 sources = [r.title for r in matching_rules]
                 confidence = "high"
