@@ -121,10 +121,13 @@ async def startup_event():
     
     # Setup background scheduler for syncing slack
     scheduler = AsyncIOScheduler()
-    # Run every 6 hours
+    # Sync messages every 6 hours
     scheduler.add_job(run_scheduled_sync, 'interval', hours=6)
+    # 🛡️ THIEL PROTOCOL RULE 2: AUTOMATED EXTRACTION
+    # Run the extraction pipeline every hour to turn raw data into logic automatically.
+    scheduler.add_job(run_extraction_pipeline, 'interval', hours=1)
     scheduler.start()
-    print("APScheduler started: Slack sync job scheduled every 6 hours.")
+    print("APScheduler started: Slack sync (6h) and Extraction pipeline (1h) scheduled.")
 
 if __name__ == "__main__":
     import uvicorn

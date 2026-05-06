@@ -1,5 +1,11 @@
 # 🚀 Company Brain: Roadmap & Technical Debt
 
+## 🛡️ Thiel Protocol Compliance (High Priority)
+- [x] **Adversarial Verification**: 10x Accuracy check for extracted logic. (Rule 1 & 3)
+- [x] **Automated Synthesis**: 24/7 background logic extraction. (Rule 2)
+- [ ] **Proprietary Logic Graph**: Move from list-based rules to a connected graph of dependencies. (Rule 4)
+- [ ] **Niche Dominance (Verticals)**: Pre-seed dataset for Fintech/Support verticals. (Rule 2)
+
 ## ✅ Completed (V1 Core)
 - [x] **Agent API Layer**: Full semantic enforcement engine using pgvector.
 - [x] **Human-in-the-Loop**: Next.js dashboard for rule verification and audit logs.

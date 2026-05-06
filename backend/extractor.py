@@ -141,7 +141,37 @@ skills:
                 
                 if not extracted_skills:
                     continue
+
+                # 🛡️ THIEL PROTOCOL RULE 1 & 3: ADVERSARIAL VERIFICATION
+                # We audit the AI's own output to ensure it's not hallucinating or contradicting.
+                if len(extracted_skills) > 0:
+                    verification_prompt = f"""SYSTEM: You are a high-fidelity business logic auditor.
+Review the following extracted rules for accuracy and consistency.
+
+EXTRACTED RULES (YAML):
+{yaml_resp}
+
+AUDIT TASKS:
+1. Identify any steps that are physically impossible or obviously hallucinated.
+2. Check for contradictions (e.g., Rule A says 'always refund', Rule B says 'never refund').
+3. Ensure trigger_keywords are specific and relevant.
+
+Respond with a clean YAML version of the rules. If a rule is hallucinated or contradictory, remove it or fix it.
+Only respond with valid YAML."""
                     
+                    try:
+                        # Use a second pass for verification
+                        yaml_resp = await call_gemini_with_retry(verification_prompt)
+                        # Re-clean and re-load
+                        if yaml_resp.startswith("```yaml"):
+                            yaml_resp = yaml_resp.replace("```yaml", "").replace("```", "").strip()
+                        elif yaml_resp.startswith("```"):
+                            yaml_resp = yaml_resp.replace("```", "").strip()
+                        data = yaml.safe_load(yaml_resp)
+                        extracted_skills = data.get("skills", [])
+                    except Exception as ve:
+                        print(f"Verification step failed, falling back to initial extraction: {ve}")
+                
                 model_instance = get_model()
                 for s_data in extracted_skills:
                     rule_text = s_data.get("description", "")
