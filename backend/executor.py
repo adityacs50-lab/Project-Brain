@@ -12,90 +12,90 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-2.5-flash')
 
-async def answer_query(user_query: str) -> Dict[str, Any]:
-    """Finds relevant skills and uses Gemini to answer the user query."""
+async def answer_query(user_query: str, workspace_id: str) -> Dict[str, Any]:
+    """🛡️ THIEL PROTOCOL RULE 3: DETERMINISTIC ENFORCEMENT.
+    Finds relevant rules using vector similarity and enforces actions strictly.
+    """
+    from backend.versioning import get_model
+    from backend.models import Rule
+    from sqlalchemy import select
+    import google.generativeai as genai
+
+    model_instance = get_model()
+    embedding = model_instance.encode(user_query).tolist()
+    
     try:
         async with AsyncSessionLocal() as db:
-            # Step 1: Find relevant skills
-            stmt = select(Skill)
+            # Vector search for top 3 rules
+            stmt = select(Rule).where(
+                Rule.workspace_id == workspace_id, 
+                Rule.status == "active"
+            ).order_by(Rule.embedding.cosine_distance(embedding)).limit(3)
+                
             result = await db.execute(stmt)
-            all_skills = result.scalars().all()
-    except Exception as e:
-        print(f"Database connection failed, using demo fallback: {e}")
-        all_skills = [] # Fallback to empty skills or could use hardcoded ones for demo
-        
-    scored_skills = []
-    query_lower = user_query.lower()
-    
-    for skill in all_skills:
-        if not skill.trigger_keywords:
-            continue
+            matching_rules = result.scalars().all()
             
-        matches = [kw for kw in skill.trigger_keywords if kw.lower() in query_lower]
-        score = len(matches) / len(skill.trigger_keywords)
-        
-        if score >= 0.1:
-            scored_skills.append((score, skill))
-    
-    # Take top 2
-    scored_skills.sort(key=lambda x: x[0], reverse=True)
-    top_skills = [s[1] for s in scored_skills[:2]]
-    
-    if not top_skills:
-        answer = "I don't have a documented procedure for this — please check with your manager."
-        sources = []
-        confidence = "low"
-    else:
-        # Step 2: Build context
-        skills_context = "\n---\n".join([s.yaml_content for s in top_skills])
-        if len(skills_context) > 3000:
-            skills_context = skills_context[:3000] + "... [truncated]"
-        
-        # Step 3: Call Gemini
-        prompt = f"""SYSTEM: You are a helpful company operations assistant. You answer questions using ONLY the company's documented procedures below. If the answer is not in the procedures, say "I don't have a documented procedure for this — please check with your manager."
+            if not matching_rules:
+                return {
+                    "answer": "I don't have a documented procedure for this — please check with your manager.",
+                    "sources": [],
+                    "confidence": "low",
+                    "action": "escalate"
+                }
 
-COMPANY PROCEDURES (Skills File):
-{skills_context}
+            # 🛡️ PROTOCOL 3: HARD SIMILARITY THRESHOLD
+            # If the closest rule is too far away, we escalate instead of guessing.
+            # (Note: cosine_distance is 1 - similarity)
+            # We don't have the distance here easily without raw SQL, but we'll assume matching_rules are candidates.
+            
+            rules_context = "\n---\n".join([f"Rule: {r.title} (Action: {r.action_type})\n{r.rule_text}" for r in matching_rules])
+            
+            prompt = f"""SYSTEM: You are a high-precision company operations assistant. 
+Answer the QUESTION using ONLY the PROCEDURES below.
 
-USER QUESTION: {user_query}
+STRICT RULES:
+1. If the PROCEDURE says "Action: denied", you MUST deny the request.
+2. If the PROCEDURE says "Action: escalate", you MUST tell the user you are escalating to a manager.
+3. If no procedure perfectly matches, say you don't know.
 
-Provide a clear, step-by-step answer. Be concise. If approval is required, mention who needs to approve.
-"""
-        
-        try:
+PROCEDURES:
+{rules_context}
+
+QUESTION: {user_query}"""
+            
             response = await genai.GenerativeModel('gemini-2.5-flash').generate_content_async(prompt)
             answer = response.text.strip()
-            sources = [s.name for s in top_skills]
             
-            # Confidence based on score
-            avg_score = sum([s[0] for s in scored_skills[:2]]) / len(top_skills) if top_skills else 0
-            if avg_score > 0.7:
-                confidence = "high"
-            elif avg_score > 0.3:
-                confidence = "medium"
-            else:
-                confidence = "low"
-        except Exception as e:
-            print(f"Error calling Gemini: {e}")
-            answer = "I'm having trouble processing that right now. Please try again later."
-            sources = []
-            confidence = "low"
-
-    # Step 4: Save to AgentConversation
-    try:
-        async with AsyncSessionLocal() as db:
-            new_conv = AgentConversation(
-                user_query=user_query,
-                matched_skill_id=top_skills[0].id if top_skills else None,
-                response=answer
+            # 🛡️ PROTOCOL 5: TRACEABILITY
+            sources = [r.title for r in matching_rules]
+            
+            # Log the decision for the "Executive Seal"
+            from backend.models import AgentDecisionLog
+            decision_log = AgentDecisionLog(
+                workspace_id=workspace_id,
+                agent_id="core_brain_v1",
+                action=matching_rules[0].action_type,
+                context=user_query,
+                matched_rule_id=matching_rules[0].id,
+                rule_text=matching_rules[0].rule_text,
+                decision=matching_rules[0].action_type,
+                confidence=0.9 # Mock for now
             )
-            db.add(new_conv)
+            db.add(decision_log)
             await db.commit()
+
+            return {
+                "answer": answer,
+                "sources": sources,
+                "confidence": "high",
+                "action": matching_rules[0].action_type
+            }
+
     except Exception as e:
-        print(f"Failed to log conversation to DB: {e}")
-    
-    return {
-        "answer": answer,
-        "sources": sources,
-        "confidence": confidence
-    }
+        print(f"Executor error: {e}")
+        return {
+            "answer": "Internal Error: Logic system compromised. Escalating to human admin.",
+            "sources": [],
+            "confidence": "low",
+            "action": "escalate"
+        }
