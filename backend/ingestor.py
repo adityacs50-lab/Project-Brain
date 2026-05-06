@@ -42,9 +42,10 @@ async def score_logic_relevance(message_text: str) -> float:
             
     return 0.0
 
-async def save_slack_message(db: AsyncSession, channel_id: str, sender: str, text: str, timestamp: datetime):
+async def save_slack_message(db: AsyncSession, workspace_id: str, channel_id: str, sender: str, text: str, timestamp: datetime):
     """Utility to save a message and update its logic candidate flag."""
     new_msg = SlackMessage(
+        workspace_id=workspace_id,
         channel_id=channel_id,
         sender=sender,
         text=text,
@@ -61,9 +62,9 @@ async def save_slack_message(db: AsyncSession, channel_id: str, sender: str, tex
     await db.commit()
     return new_msg
 
-async def pull_channel_history(channel_id: str, limit: int = 200) -> List[SlackMessage]:
+async def pull_channel_history(workspace_id: str, channel_id: str, limit: int = 200) -> List[SlackMessage]:
     """MODE A: Historical Pull."""
-    print(f"Starting historical pull for {channel_id}...")
+    print(f"Starting historical pull for {channel_id} in {workspace_id}...")
     try:
         response = await slack_client.conversations_history(channel=channel_id, limit=limit)
         messages = response.get("messages", [])
@@ -80,6 +81,7 @@ async def pull_channel_history(channel_id: str, limit: int = 200) -> List[SlackM
                 
                 saved_msg = await save_slack_message(
                     db, 
+                    workspace_id=workspace_id,
                     channel_id=channel_id, 
                     sender=msg.get("user", "unknown"), 
                     text=msg.get("text"), 
@@ -112,39 +114,4 @@ def verify_slack_signature(timestamp: str, signature: str, body: bytes):
     
     return hmac.compare_digest(my_signature, signature)
 
-@router.post("/slack/events")
-async def slack_events(request: Request, background_tasks: BackgroundTasks):
-    body_bytes = await request.body()
-    headers = request.headers
-    
-    timestamp = headers.get("X-Slack-Request-Timestamp")
-    signature = headers.get("X-Slack-Signature")
-    
-    if not timestamp or not signature or not verify_slack_signature(timestamp, signature, body_bytes):
-        raise HTTPException(status_code=400, detail="Invalid request signature")
-        
-    data = json.loads(body_bytes)
-    
-    # URL Verification challenge
-    if data.get("type") == "url_verification":
-        return {"challenge": data.get("challenge")}
-        
-    # Handle message events
-    if data.get("type") == "event_callback":
-        event = data.get("event", {})
-        if event.get("type") == "message" and not event.get("subtype") and event.get("text"):
-            # Background task to save message to keep response < 3s
-            background_tasks.add_task(
-                process_live_message,
-                channel_id=event.get("channel"),
-                sender=event.get("user"),
-                text=event.get("text"),
-                ts=event.get("ts")
-            )
-            
-    return {"status": "ok"}
-
-async def process_live_message(channel_id: str, sender: str, text: str, ts: str):
-    async with AsyncSessionLocal() as db:
-        dt = datetime.fromtimestamp(float(ts))
-        await save_slack_message(db, channel_id, sender, text, dt)
+# Live ingestion is now handled by bot.py via Bolt app listeners

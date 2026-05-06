@@ -7,7 +7,7 @@ import { Search, Workflow, Loader2, ArrowRight, ExternalLink } from "lucide-reac
 import { Rule } from "@/components/RuleCard";
 
 export default function ActiveRules() {
-  const workspaceId = "demo-workspace";
+  const workspaceId = "test-workspace-1";
   const { data: rules, error, isLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
   const [search, setSearch] = useState("");
 

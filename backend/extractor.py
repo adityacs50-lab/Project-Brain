@@ -7,7 +7,8 @@ from typing import List, Dict, Any
 from datetime import datetime
 from sqlalchemy import select, update
 from backend.db import AsyncSessionLocal
-from backend.models import SlackMessage, Rule
+import uuid
+from backend.models import SlackMessage, Rule, Skill
 from backend.versioning import get_model
 load_dotenv()
 
@@ -38,7 +39,7 @@ async def call_gemini_with_retry(prompt: str, retries: int = 3) -> str:
             await asyncio.sleep(wait_time)
     return ""
 
-async def extract_skills_from_messages(messages: List[SlackMessage]) -> List[Skill]:
+async def extract_skills_from_messages(messages: List[SlackMessage]) -> List[Rule]:
     """MODE A: Historical Pull."""
     if not messages:
         return []
@@ -76,6 +77,7 @@ skills:
       - "keyword1"
       - "keyword2"
     description: "One sentence description of what this skill handles"
+    action_type: "permitted | denied | escalate"
     steps:
       - step: 1
         action: "What to do first"
@@ -97,26 +99,30 @@ skills: []
                     print("Warning: Gemini API key is dummy/invalid. Using mock extraction for demo...")
                     yaml_resp = """
 skills:
-  - name: "Late Night Snack Policy"
+  - name: "Software Subscription Policy"
+    action_type: "escalate"
     trigger_keywords:
-      - "dinner"
-      - "snack"
-      - "8 PM"
-      - "expense"
-    description: "Reimbursement policy for meals when working late."
+      - "software"
+      - "subscription"
+      - "$50"
+      - "CTO"
+    description: "All software subscriptions over $50/month require CTO approval."
     steps:
       - step: 1
-        action: "Work past 8 PM to qualify"
+        action: "Identify software subscription cost"
       - step: 2
-        action: "Expense up to $30"
+        action: "If cost > $50/month, request CTO approval"
       - step: 3
-        action: "Upload valid receipt to portal"
-    approval_required: false
-    notes: "Applies to all employees working in the office after hours."
+        action: "Log approval in procurement system"
+    approval_required: true
+    approver_role: "CTO"
+    notes: "Effective immediately as per Slack announcement."
 """
                 else:
                     raise e
-                
+            
+            # 🛡️ FIXED: Processing now happens for both happy path and mock fallback
+            try:
                 # Clean up markdown backticks if Gemini ignores instructions
                 if yaml_resp.startswith("```yaml"):
                     yaml_resp = yaml_resp.replace("```yaml", "").replace("```", "").strip()
@@ -141,9 +147,10 @@ skills:
                     
                     new_rule = Rule(
                         id=uuid.uuid4(),
-                        workspace_id="demo-workspace", # Default for demo, should be fetched from message context in prod
+                        workspace_id=group[0].workspace_id, # FIXED: Use actual workspace ID from context
                         title=s_data.get("name"),
                         rule_text=rule_text,
+                        action_type=s_data.get("action_type", "permitted"), # NEW: Deterministic action type
                         status="pending",
                         confidence=0.85,
                         source_message=messages_text[:500],
@@ -153,7 +160,7 @@ skills:
                         created_at=datetime.utcnow()
                     )
                     db.add(new_rule)
-                    created_skills.append(new_rule) # Keep list for return value (refers to Rule now)
+                    created_skills.append(new_rule)
                 
                 await db.commit()
             except Exception as e:

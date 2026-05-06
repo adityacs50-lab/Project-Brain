@@ -85,6 +85,7 @@ class Rule(Base):
     channel_id = Column(String)
     version = Column(Integer, default=1)
     parent_rule_id = Column(UUID(as_uuid=True), ForeignKey("rules.id"), nullable=True)
+    action_type = Column(String) # "permitted" | "denied" | "escalate"
     embedding = Column(Vector(384))
     created_at = Column(DateTime, default=datetime.utcnow)
 

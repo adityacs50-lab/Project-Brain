@@ -22,6 +22,7 @@ app = FastAPI(title="Company Brain API", version="0.1.0")
 
 class AskRequest(BaseModel):
     query: str
+    workspace_id: str
 
 # CORS middleware
 app.add_middleware(
@@ -62,7 +63,7 @@ async def ask_agent(request: AskRequest):
     import google.generativeai as genai
 
     query_text = request.query
-    workspace_id = "demo-workspace"
+    workspace_id = request.workspace_id
     
     model = get_model()
     embedding = model.encode(query_text).tolist()

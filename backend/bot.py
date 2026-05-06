@@ -139,15 +139,31 @@ async def handle_app_mention_events(body, say):
     await handle_query(query_text, workspace_id, say, user_id)
 
 @app.event("message")
-async def handle_message_events(body, say):
+async def handle_message_events(body, say, logger):
+    """Saves all messages as logic candidates and handles DM queries."""
     event = body.get("event", {})
-    # Only respond to direct messages
-    if event.get("channel_type") == "im" and not event.get("bot_id"):
-        query_text = event.get("text", "")
-        workspace_id = body.get("team_id", "")
-        user_id = event.get("user", "")
+    if event.get("bot_id") or event.get("subtype") == "bot_message":
+        return
         
-        await handle_query(query_text, workspace_id, say, user_id)
+    text = event.get("text", "")
+    workspace_id = body.get("team_id", "")
+    user_id = event.get("user", "")
+    channel_id = event.get("channel")
+    ts = event.get("ts")
+    
+    # 1. Save all messages to DB for logic extraction
+    from backend.ingestor import save_slack_message
+    from backend.db import AsyncSessionLocal
+    try:
+        async with AsyncSessionLocal() as db:
+            dt = datetime.fromtimestamp(float(ts))
+            await save_slack_message(db, workspace_id, channel_id, user_id, text, dt)
+    except Exception as e:
+        logger.error(f"Error saving live message: {e}")
+
+    # 2. Handle queries if it's a DM (IM)
+    if event.get("channel_type") == "im":
+        await handle_query(text, workspace_id, say, user_id)
 
 @app.action("flag_rule")
 async def handle_flag_rule(ack, body, respond):

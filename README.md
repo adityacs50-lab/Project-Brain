@@ -1,5 +1,11 @@
 # 🧠 Company Brain: The Rules Layer for AI Agents
 
+## 👨‍💻 Founder-Market Fit
+**Architected by a B.Tech AI/ML Specialist from MGM University.**  
+The Company Brain was born from a deep understanding of the reliability gap in modern neural architectures. Our founder’s background at MGM University in AI/ML provided the foundational insight needed to build a "Regulatory Organ" for the enterprise—fusing probabilistic intelligence with deterministic execution.
+
+---
+
 ![Company Brain Hero](assets/hero.png)
 
 > **"Turning conversational chaos into a living, executable map of your business."**

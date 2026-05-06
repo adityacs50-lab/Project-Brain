@@ -58,6 +58,10 @@ async def query_agent(request: AgentQueryRequest):
     Query the agent decision API to determine if an action is permitted.
     Uses semantic search with pgvector to find matching rules.
     """
+    # 🛡️ DETERMINISTIC CONTROL PLANE: Actor Identity Verification
+    if not request.agent_id or len(request.agent_id) < 3:
+        raise HTTPException(status_code=403, detail="Actor Identity (agent_id) is invalid or missing.")
+    
     # Build natural language query from action + context
     query_text = f"{request.action}. Context: {json.dumps(request.context)}"
     
@@ -108,25 +112,18 @@ async def query_agent(request: AgentQueryRequest):
                 source_channel = top_rule.channel_id
                 rule_version = top_rule.version
                 
-                # Decision logic based on rule_text keywords
-                rule_lower = rule_text.lower() if rule_text else ""
+                confidence = min(1.0, float(similarity_score) * 1.8)
+                source_channel = top_rule.channel_id
+                rule_version = top_rule.version
                 
-                if ("requires approval" in rule_lower or 
-                    "escalate" in rule_lower or 
-                    "vp" in rule_lower or 
-                    "manager" in rule_lower):
-                    decision = "escalate"
+                # ✅ DETERMINISTIC ENFORCEMENT: Use action_type from DB
+                decision = top_rule.action_type if top_rule.action_type else "permitted"
+                
+                if decision == "escalate":
                     # Prefer explicit escalation targets from full rule text.
                     escalate_to = _extract_escalation_target(rule_text)
                     if not escalate_to:
                         escalate_to = "human operator"
-                elif ("not permitted" in rule_lower or 
-                      "denied" in rule_lower or 
-                      "cannot" in rule_lower or 
-                      "not allowed" in rule_lower):
-                    decision = "denied"
-                else:
-                    decision = "permitted"
         
         # Log to AgentDecisionLog
         decision_log = AgentDecisionLog(
