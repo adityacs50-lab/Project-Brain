@@ -24,8 +24,8 @@ def get_shared_word_count(text1: str, text2: str) -> int:
     words2 = {w.lower().strip(".,!?") for w in text2.split() if w.lower().strip(".,!?") not in STOPWORDS}
     return len(words1.intersection(words2))
 
-async def call_gemini_with_retry(prompt: str, retries: int = 3) -> str:
-    """Calls Gemini API with exponential backoff."""
+async def call_gemini_with_retry(prompt: str, retries: int = 5) -> str:
+    """Calls Gemini API with exponential backoff and 429 awareness."""
     for i in range(retries):
         try:
             response = await asyncio.to_thread(model.generate_content, prompt)
@@ -34,8 +34,15 @@ async def call_gemini_with_retry(prompt: str, retries: int = 3) -> str:
             if i == retries - 1:
                 print(f"Gemini API error after {retries} attempts: {e}")
                 raise e
-            wait_time = 2 ** i
-            print(f"Gemini API error: {e}. Retrying in {wait_time}s...")
+            
+            # If rate limited, wait longer
+            if "429" in str(e):
+                wait_time = (i + 1) * 15 # Wait 15s, 30s, 45s...
+                print(f"Rate limited (429). Waiting {wait_time}s before retry {i+1}/{retries}...")
+            else:
+                wait_time = 2 ** i
+                print(f"Gemini API error: {e}. Retrying in {wait_time}s...")
+                
             await asyncio.sleep(wait_time)
     return ""
 
