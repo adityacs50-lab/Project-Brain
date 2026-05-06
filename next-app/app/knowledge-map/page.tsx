@@ -7,6 +7,7 @@ import 'reactflow/dist/style.css';
 const nodeStyles = {
   active: { background: '#22C55E', color: 'white', border: 'none', borderRadius: '8px', padding: '12px' },
   pending: { background: '#EAB308', color: 'white', border: 'none', borderRadius: '8px', padding: '12px', boxShadow: '0 0 15px rgba(234, 179, 8, 0.3)' },
+  conflict: { background: '#EF4444', color: 'white', border: '2px solid #B91C1C', borderRadius: '8px', padding: '12px', boxShadow: '0 0 20px rgba(239, 68, 68, 0.5)' },
   archived: { background: '#3F3F46', color: '#A1A1AA', border: 'none', borderRadius: '8px', padding: '12px', opacity: 0.6 }
 };
 
@@ -25,17 +26,29 @@ export default function KnowledgeMapPage() {
         const response = await fetch(`${API_BASE_URL}/graph`);
         const data = await response.json();
         
-        const rfNodes = data.nodes.map((n: any, i: number) => ({
-          id: n.id,
-          data: { label: (
-            <div className="text-center">
-              <div className="font-bold text-xs">{n.label}</div>
-              <div className="text-[9px] mt-1 uppercase opacity-80">{n.type}</div>
-            </div>
-          ) },
-          position: { x: (i % 3) * 280, y: Math.floor(i / 3) * 180 },
-          style: nodeStyles[n.status as keyof typeof nodeStyles] || nodeStyles.active
-        }));
+        // Conflict Detection Logic
+        const titleCounts: Record<string, number> = {};
+        data.nodes.forEach((n: any) => {
+          titleCounts[n.label] = (titleCounts[n.label] || 0) + 1;
+        });
+
+        const rfNodes = data.nodes.map((n: any, i: number) => {
+          const isConflict = titleCounts[n.label] > 1;
+          const status = isConflict ? 'conflict' : n.status;
+
+          return {
+            id: n.id,
+            data: { label: (
+              <div className="text-center">
+                <div className="font-bold text-xs">{n.label}</div>
+                {isConflict && <div className="text-[8px] font-black tracking-tighter mt-1 bg-white/20 px-1 rounded">CONFLICT DETECTED</div>}
+                <div className="text-[9px] mt-1 uppercase opacity-80">{n.type}</div>
+              </div>
+            ) },
+            position: { x: (i % 3) * 280, y: Math.floor(i / 3) * 180 },
+            style: nodeStyles[status as keyof typeof nodeStyles] || nodeStyles.active
+          };
+        });
 
         const rfEdges = data.edges.map((e: any, i: number) => ({
           id: `e-${i}`,
@@ -43,6 +56,7 @@ export default function KnowledgeMapPage() {
           target: e.to,
           label: e.type,
           animated: e.type === 'requires',
+          markerEnd: { type: 'arrowclosed', color: '#4B5563' },
           style: { stroke: '#4B5563', strokeWidth: 2 }
         }));
 

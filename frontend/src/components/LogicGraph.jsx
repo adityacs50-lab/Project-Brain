@@ -3,9 +3,10 @@ import ReactFlow, { Background, Controls, MiniMap } from 'reactflow';
 import 'reactflow/dist/style.css';
 
 const nodeStyles = {
-  active: { background: '#dcfce7', border: '1px solid #16a34a', borderRadius: '8px', padding: '10px' },
-  pending: { background: '#fef9c3', border: '1px solid #ca8a04', borderRadius: '8px', padding: '10px', boxShadow: '0 0 10px rgba(234, 179, 8, 0.5)' },
-  archived: { background: '#f3f4f6', border: '1px solid #4b5563', borderRadius: '8px', padding: '10px', opacity: 0.6 }
+  active: { background: '#22C55E', color: 'white', border: 'none', borderRadius: '8px', padding: '12px' },
+  pending: { background: '#EAB308', color: 'white', border: 'none', borderRadius: '8px', padding: '12px', boxShadow: '0 0 15px rgba(234, 179, 8, 0.3)' },
+  conflict: { background: '#EF4444', color: 'white', border: '2px solid #B91C1C', borderRadius: '8px', padding: '12px', boxShadow: '0 0 20px rgba(239, 68, 68, 0.5)' },
+  archived: { background: '#3F3F46', color: '#A1A1AA', border: 'none', borderRadius: '8px', padding: '12px', opacity: 0.6 }
 };
 
 const LogicGraph = () => {
@@ -23,18 +24,30 @@ const LogicGraph = () => {
         const response = await fetch(`${API_BASE_URL}/graph`);
         const data = await response.json();
         
+        // Conflict Detection Logic
+        const titleCounts = {};
+        data.nodes.forEach(n => {
+          titleCounts[n.label] = (titleCounts[n.label] || 0) + 1;
+        });
+
         // Transform nodes for ReactFlow
-        const rfNodes = data.nodes.map((n, i) => ({
-          id: n.id,
-          data: { label: (
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontWeight: 'bold', fontSize: '12px' }}>{n.label}</div>
-              <div style={{ fontSize: '10px', marginTop: '4px', textTransform: 'uppercase', opacity: 0.7 }}>{n.type}</div>
-            </div>
-          ) },
-          position: { x: (i % 3) * 250, y: Math.floor(i / 3) * 150 },
-          style: nodeStyles[n.status] || nodeStyles.active
-        }));
+        const rfNodes = data.nodes.map((n, i) => {
+          const isConflict = titleCounts[n.label] > 1;
+          const status = isConflict ? 'conflict' : n.status;
+
+          return {
+            id: n.id,
+            data: { label: (
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontWeight: 'bold', fontSize: '12px' }}>{n.label}</div>
+                {isConflict && <div style={{ fontSize: '8px', fontWeight: 'bold', marginTop: '4px', background: 'rgba(255,255,255,0.2)', borderRadius: '2px' }}>CONFLICT</div>}
+                <div style={{ fontSize: '10px', marginTop: '4px', textTransform: 'uppercase', opacity: 0.7 }}>{n.type}</div>
+              </div>
+            ) },
+            position: { x: (i % 3) * 250, y: Math.floor(i / 3) * 150 },
+            style: nodeStyles[status] || nodeStyles.active
+          };
+        });
 
         // Transform edges for ReactFlow
         const rfEdges = data.edges.map((e, i) => ({
@@ -43,7 +56,8 @@ const LogicGraph = () => {
           target: e.to,
           label: e.type,
           animated: e.type === 'requires',
-          style: { stroke: '#94a3b8' }
+          markerEnd: { type: 'arrowclosed', color: '#94a3b8' },
+          style: { stroke: '#94a3b8', strokeWidth: 2 }
         }));
 
         setNodes(rfNodes);
