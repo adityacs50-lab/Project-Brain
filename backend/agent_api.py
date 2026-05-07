@@ -266,7 +266,7 @@ async def get_decisions(workspace_id: str):
                     "audit_id": str(d.id),
                     "agent_id": d.agent_id,
                     "action": d.action,
-                    "context": json.loads(d.context) if d.context else {},
+                    "context": (lambda x: (json.loads(x) if x and x.startswith('{') else x))(d.context) if d.context else {},
                     "decision": d.decision,
                     "matched_rule_id": str(d.matched_rule_id) if d.matched_rule_id else None,
                     "escalate_to": d.escalate_to,

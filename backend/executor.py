@@ -99,7 +99,7 @@ QUESTION: {user_query}"""
                 workspace_id=workspace_id,
                 agent_id="core_brain_v1",
                 action=user_query[:200], # Query is the intent
-                context=user_query,
+                context=json.dumps({"query": user_query}),
                 matched_rule_id=matched_rule_id,
                 rule_text=matched_rule_text,
                 decision=final_action,
