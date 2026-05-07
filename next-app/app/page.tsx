@@ -1,15 +1,15 @@
 "use client";
 
 import useSWR from "swr";
-import { Activity, Brain, CheckCircle2, AlertTriangle, ArrowRight, Zap, ShieldCheck, Loader2 } from "lucide-react";
+import { Activity, Brain, ArrowRight, Zap, ShieldCheck, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { fetcher, getRules, getStats } from "@/lib/api";
 import { StatsBar } from "@/components/StatsBar";
 
 export default function Dashboard() {
   const workspaceId = "T0B27A94NN4";
-  const { data: rules, error: rulesError, isLoading: rulesLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
-  const { data: stats, error: statsError } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
+  const { data: rules, isLoading: rulesLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
+  const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
 
   if (rulesLoading) {
     return (
@@ -55,7 +55,7 @@ export default function Dashboard() {
           
           <div className="divide-y divide-zinc-100">
             {recentRules.length > 0 ? (
-              recentRules.map((rule, i) => (
+              recentRules.map((rule: any, i) => (
                 <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-zinc-50 transition-colors cursor-pointer group">
                   <div className="flex items-center gap-4">
                     <div className={`p-2 rounded-lg ${rule.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'}`}>

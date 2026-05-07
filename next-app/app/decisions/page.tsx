@@ -2,11 +2,20 @@
 
 import useSWR from "swr";
 import { fetcher, getDecisions, getStats, submitFeedback } from "@/lib/api";
-import { Brain, Search, Loader2, AlertCircle, CheckCircle2, XCircle, HelpCircle, Flag } from "lucide-react";
+import { Brain, Loader2, AlertCircle, CheckCircle2, XCircle, HelpCircle, Flag } from "lucide-react";
+
+interface Decision {
+  audit_id: string;
+  action: string;
+  decision: string;
+  confidence: number;
+  created_at: string;
+  agent_feedback?: string;
+}
 
 export default function AgentDecisions() {
   const workspaceId = "T0B27A94NN4";
-  const { data, error, isLoading, mutate } = useSWR(getDecisions(workspaceId), fetcher, { refreshInterval: 30000 });
+  const { data, isLoading, mutate } = useSWR(getDecisions(workspaceId), fetcher, { refreshInterval: 30000 });
   const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
 
   const handleFlag = async (auditId: string) => {
@@ -92,7 +101,7 @@ export default function AgentDecisions() {
           </thead>
           <tbody className="divide-y divide-zinc-100">
             {decisions.length > 0 ? (
-              decisions.map((d: any) => (
+              decisions.map((d: Decision) => (
                 <tr key={d.audit_id} className="hover:bg-zinc-50 transition-colors group">
                   <td className="px-6 py-4">
                     <div className="flex flex-col">

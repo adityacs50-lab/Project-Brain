@@ -7,7 +7,7 @@ import { ClipboardCheck, Sparkles, Loader2 } from "lucide-react";
 
 export default function ReviewQueue() {
   const workspaceId = "T0B27A94NN4";
-  const { data: rules, error, isLoading, mutate } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
+  const { data: rules, isLoading, mutate } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
 
   if (isLoading) {
     return (

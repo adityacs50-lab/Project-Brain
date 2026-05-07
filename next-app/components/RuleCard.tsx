@@ -2,10 +2,8 @@
 
 import { useState } from "react";
 import { updateRuleStatus } from "@/lib/api";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Check, X, Edit2, ShieldAlert, ShieldCheck, History, MessageSquare, Shield } from "lucide-react";
+import { Check, X, Edit2, MessageSquare } from "lucide-react";
 
 export interface Rule {
   id: string;
@@ -14,6 +12,7 @@ export interface Rule {
   status: string;
   confidence: number;
   source_message: string;
+  source_channel?: string;
   channel_id: string;
   version: number;
 }

@@ -1,11 +1,9 @@
 import useSWR from "swr";
-import { fetcher, getRules, getContradictions, getStats } from "@/lib/api";
-import { useEffect, useState } from "react";
-import { CheckCircle2, Clock, AlertOctagon, Zap } from "lucide-react";
+import { fetcher, getRules, getStats } from "@/lib/api";
+import { CheckCircle2, Clock, Zap } from "lucide-react";
 
 export function StatsBar({ workspaceId }: { workspaceId: string }) {
   const { data: rules } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
-  const { data: contradictions } = useSWR(getContradictions(workspaceId), fetcher, { refreshInterval: 30000 });
   const { data: statsData } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
 
   const totalActive = rules?.filter((r: {status: string}) => r.status === "active").length || 0;

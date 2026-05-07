@@ -11,10 +11,24 @@ const nodeStyles = {
   archived: { background: '#3F3F46', color: '#A1A1AA', border: 'none', borderRadius: '8px', padding: '12px', opacity: 0.6 }
 };
 
+interface GraphNode {
+  id: string;
+  label: string;
+  status: string;
+  type: string;
+  has_conflict: boolean;
+}
+
+interface GraphEdge {
+  from: string;
+  to: string;
+  type: string;
+}
+
 export default function KnowledgeMapPage() {
   const workspaceId = "T0B27A94NN4";
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
+  const [nodes, setNodes] = useState<any[]>([]);
+  const [edges, setEdges] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
@@ -28,7 +42,7 @@ export default function KnowledgeMapPage() {
         const data = await response.json();
         
         // Transform nodes using backend deterministic truth
-        const rfNodes = data.nodes.map((n: any, i: number) => {
+        const rfNodes = data.nodes.map((n: GraphNode, i: number) => {
           const isConflict = n.has_conflict;
           const status = isConflict ? 'conflict' : n.status;
 
@@ -50,12 +64,12 @@ export default function KnowledgeMapPage() {
         const validNodeIds = new Set(rfNodes.map((n: any) => n.id));
 
         const rfEdges = data.edges
-          .filter((e: any) => {
+          .filter((e: GraphEdge) => {
             const hasSource = validNodeIds.has(e.from);
             const hasTarget = validNodeIds.has(e.to);
             return hasSource && hasTarget;
           })
-          .map((e: any, i: number) => ({
+          .map((e: GraphEdge, i: number) => ({
             id: `e-${i}`,
             source: e.from,
             target: e.to,
