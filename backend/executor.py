@@ -1,4 +1,6 @@
 import os
+import uuid
+from datetime import datetime
 from typing import List, Dict, Any
 from sqlalchemy import select
 from backend.db import AsyncSessionLocal
@@ -13,8 +15,6 @@ groq_client = AsyncOpenAI(
     api_key=os.getenv("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
 )
-
-import uuid
 
 async def answer_query(user_query: str, workspace_id: str) -> Dict[str, Any]:
     """🛡️ THIEL PROTOCOL RULE 3: DETERMINISTIC ENFORCEMENT.
