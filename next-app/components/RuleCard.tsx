@@ -15,6 +15,7 @@ export interface Rule {
   source_channel?: string;
   channel_id: string;
   version: number;
+  created_at: string;
 }
 
 export function RuleCard({ rule, onRemoved }: { rule: Rule, onRemoved: () => void }) {
