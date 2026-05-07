@@ -241,6 +241,18 @@ async def submit_feedback(request: AgentFeedbackRequest):
             "rule_sent_to_review": rule_sent_to_review
         }
 
+def safe_parse_context(context_str):
+    if not context_str:
+        return {}
+    if isinstance(context_str, str):
+        if context_str.strip().startswith('{'):
+            try:
+                return json.loads(context_str)
+            except json.JSONDecodeError:
+                pass
+        return {"raw": context_str}
+    return context_str
+
 # ========================================
 # GET /agent/decisions/{workspace_id}
 # ========================================
@@ -266,7 +278,7 @@ async def get_decisions(workspace_id: str):
                     "audit_id": str(d.id),
                     "agent_id": d.agent_id,
                     "action": d.action,
-                    "context": (lambda x: (json.loads(x) if x and x.startswith('{') else x))(d.context) if d.context else {},
+                    "context": safe_parse_context(d.context),
                     "decision": d.decision,
                     "matched_rule_id": str(d.matched_rule_id) if d.matched_rule_id else None,
                     "escalate_to": d.escalate_to,
