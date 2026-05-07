@@ -2,14 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Brain, LayoutDashboard, ClipboardCheck, Workflow, GitBranch } from "lucide-react";
+import { Brain, LayoutDashboard, ClipboardCheck, Workflow } from "lucide-react";
 
 export function Sidebar() {
   const pathname = usePathname();
 
   const links = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
-    { href: "/knowledge-map", label: "Knowledge Map", icon: GitBranch }, // Corrected comment
     { href: "/review", label: "Review Queue", icon: ClipboardCheck },
     { href: "/active-rules", label: "Active Rules", icon: Workflow },
     { href: "/decisions", label: "Agent Decisions", icon: Brain },
