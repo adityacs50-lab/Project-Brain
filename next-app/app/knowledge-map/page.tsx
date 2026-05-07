@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, MarkerType } from 'reactflow';
+import ReactFlow, { Background, Controls, MiniMap, MarkerType, Node, Edge } from 'reactflow';
 import 'reactflow/dist/style.css';
 
 const nodeStyles = {
@@ -27,8 +27,8 @@ interface GraphEdge {
 
 export default function KnowledgeMapPage() {
   const workspaceId = "T0B27A94NN4";
-  const [nodes, setNodes] = useState<any[]>([]);
-  const [edges, setEdges] = useState<any[]>([]);
+  const [nodes, setNodes] = useState<Node[]>([]);
+  const [edges, setEdges] = useState<Edge[]>([]);
   const [loading, setLoading] = useState(true);
 
   const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname === 'localhost' 
@@ -42,7 +42,7 @@ export default function KnowledgeMapPage() {
         const data = await response.json();
         
         // Transform nodes using backend deterministic truth
-        const rfNodes = data.nodes.map((n: GraphNode, i: number) => {
+        const rfNodes: Node[] = data.nodes.map((n: GraphNode, i: number) => {
           const isConflict = n.has_conflict;
           const status = isConflict ? 'conflict' : n.status;
 
@@ -61,7 +61,7 @@ export default function KnowledgeMapPage() {
         });
 
         // Get a set of all valid node IDs for validation
-        const validNodeIds = new Set(rfNodes.map((n: any) => n.id));
+        const validNodeIds = new Set(rfNodes.map((n: Node) => n.id));
 
         const rfEdges = data.edges
           .filter((e: GraphEdge) => {

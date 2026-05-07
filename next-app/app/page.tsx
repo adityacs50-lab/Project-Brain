@@ -5,6 +5,7 @@ import { Activity, Brain, ArrowRight, Zap, ShieldCheck, Loader2 } from "lucide-r
 import Link from "next/link";
 import { fetcher, getRules, getStats } from "@/lib/api";
 import { StatsBar } from "@/components/StatsBar";
+import { Rule } from "@/components/RuleCard";
 
 export default function Dashboard() {
   const workspaceId = "T0B27A94NN4";
@@ -55,7 +56,7 @@ export default function Dashboard() {
           
           <div className="divide-y divide-zinc-100">
             {recentRules.length > 0 ? (
-              recentRules.map((rule: any, i) => (
+              recentRules.map((rule: Rule, i) => (
                 <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-zinc-50 transition-colors cursor-pointer group">
                   <div className="flex items-center gap-4">
                     <div className={`p-2 rounded-lg ${rule.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'}`}>
