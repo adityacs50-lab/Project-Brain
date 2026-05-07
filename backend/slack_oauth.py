@@ -24,6 +24,9 @@ REQUIRED_SCOPES = [
     "groups:history", 
     "groups:read", 
     "im:history", 
+    "im:read",
+    "mpim:history",
+    "mpim:read",
     "users:read", 
     "team:info"
 ]
@@ -187,8 +190,8 @@ async def sync_workspace(workspace_id: str):
         client = AsyncWebClient(token=workspace.bot_token)
         
         try:
-            # 1. Get all accessible channels (public + private + im)
-            types = "public_channel,private_channel,im"
+            # 1. Get all accessible channels (public + private + im + mpim)
+            types = "public_channel,private_channel,im,mpim"
             response = await client.conversations_list(types=types, exclude_archived=True, limit=1000)
             channels = response.get("channels", [])
             
@@ -222,7 +225,7 @@ async def run_scheduled_sync():
             print(f"Syncing workspace {ws.team_name} ({ws.workspace_id})...")
             client = AsyncWebClient(token=ws.bot_token)
             try:
-                response = await client.conversations_list(types="public_channel,private_channel,im", exclude_archived=True)
+                response = await client.conversations_list(types="public_channel,private_channel,im,mpim", exclude_archived=True)
                 channels = response.get("channels", [])
                 for ch in channels:
                     if ch.get("is_member", True):
