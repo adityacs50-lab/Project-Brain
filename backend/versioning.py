@@ -1,12 +1,24 @@
-import uuid
+import os
+from typing import List, Dict, Any, Optional
 from datetime import datetime
 from fastapi import APIRouter, HTTPException, Body
 from pydantic import BaseModel
 from sqlalchemy import select, desc
 from backend.db import AsyncSessionLocal
 from backend.models import Rule, Contradiction
+from openai import AsyncOpenAI
+from dotenv import load_dotenv
+import uuid
+
+load_dotenv()
 
 router = APIRouter(prefix="/rules", tags=["Rule Versioning"])
+
+# Configure Groq (OpenAI compatible)
+groq_client = AsyncOpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
+)
 
 # Lazy load the model to avoid blocking on import
 model = None
@@ -364,14 +376,16 @@ async def query_rules(request: QueryRequest):
             ])
 
             try:
-                import google.generativeai as genai
                 prompt = f"""SYSTEM: Answer using ONLY company rules below.\n\n{rules_context}\n\nQuestion: {request.query}\n\nAnswer:"""
-                response = await genai.GenerativeModel('gemini-2.5-flash').generate_content_async(prompt)
-                answer = response.text.strip()
+                response = await groq_client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=[{"role": "user", "content": prompt}]
+                )
+                answer = response.choices[0].message.content.strip()
                 sources = [r.title for r in matching_rules]
                 confidence = "high"
             except Exception as e:
-                print(f"Gemini error: {e}")
+                print(f"Groq error: {e}")
                 answer = matching_rules[0].rule_text
                 sources = [matching_rules[0].title]
                 confidence = "medium"
