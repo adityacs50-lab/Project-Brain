@@ -1,16 +1,18 @@
 import os
-import google.generativeai as genai
 from typing import List, Dict, Any
 from sqlalchemy import select
 from backend.db import AsyncSessionLocal
 from backend.models import Skill, AgentConversation
 from dotenv import load_dotenv
+from openai import AsyncOpenAI
 
 load_dotenv()
 
-# Configure Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-2.5-flash')
+# Configure Groq (OpenAI compatible)
+groq_client = AsyncOpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
+)
 
 async def answer_query(user_query: str, workspace_id: str) -> Dict[str, Any]:
     """🛡️ THIEL PROTOCOL RULE 3: DETERMINISTIC ENFORCEMENT.
@@ -19,7 +21,6 @@ async def answer_query(user_query: str, workspace_id: str) -> Dict[str, Any]:
     from backend.versioning import get_model
     from backend.models import Rule
     from sqlalchemy import select
-    import google.generativeai as genai
 
     model_instance = get_model()
     embedding = model_instance.encode(user_query).tolist()
@@ -43,11 +44,6 @@ async def answer_query(user_query: str, workspace_id: str) -> Dict[str, Any]:
                     "action": "escalate"
                 }
 
-            # 🛡️ PROTOCOL 3: HARD SIMILARITY THRESHOLD
-            # If the closest rule is too far away, we escalate instead of guessing.
-            # (Note: cosine_distance is 1 - similarity)
-            # We don't have the distance here easily without raw SQL, but we'll assume matching_rules are candidates.
-            
             rules_context = "\n---\n".join([f"Rule: {r.title} (Action: {r.action_type})\n{r.rule_text}" for r in matching_rules])
             
             prompt = f"""SYSTEM: You are a high-precision company operations assistant. 
@@ -63,8 +59,12 @@ PROCEDURES:
 
 QUESTION: {user_query}"""
             
-            response = await genai.GenerativeModel('gemini-2.5-flash').generate_content_async(prompt)
-            answer = response.text.strip()
+            # Use Groq for deterministic enforcement
+            response = await groq_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": prompt}]
+            )
+            answer = response.choices[0].message.content.strip()
             
             # 🛡️ PROTOCOL 5: TRACEABILITY
             sources = [r.title for r in matching_rules]

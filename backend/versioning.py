@@ -23,6 +23,7 @@ from typing import Optional
 class StatusUpdateRequest(BaseModel):
     status: str
     edited_text: Optional[str] = None
+    approved_by: Optional[str] = None
 
 class IngestRequest(BaseModel):
     workspace_id: str
@@ -210,12 +211,22 @@ async def update_rule_status(rule_id: str, request: StatusUpdateRequest):
         if not rule:
             raise HTTPException(status_code=404, detail="Rule not found")
 
+        # 🛡️ THIEL PROTOCOL RULE 5: EXECUTIVE SEAL
+        if request.status == "active" and rule.status != "active":
+            rule.approved_by = request.approved_by or "admin"
+            rule.approved_at = datetime.utcnow()
+
         rule.status = request.status
         if request.edited_text is not None:
             rule.rule_text = request.edited_text
 
         await db.commit()
-        return {"status": "success", "new_status": rule.status}
+        return {
+            "status": "success", 
+            "new_status": rule.status,
+            "approved_by": rule.approved_by,
+            "approved_at": rule.approved_at
+        }
 
 @router.get("/{workspace_id}/contradictions")
 async def get_contradictions(workspace_id: str):

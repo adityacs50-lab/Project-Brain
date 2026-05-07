@@ -25,7 +25,7 @@ export function RuleCard({ rule, onRemoved }: { rule: Rule, onRemoved: () => voi
   
   const handleAction = async (status: string, useEditedText = false) => {
     try {
-      await updateRuleStatus(rule.id, status, useEditedText ? editedText : undefined);
+      await updateRuleStatus(rule.id, status, useEditedText ? editedText : undefined, "admin");
       setIsRemoving(true);
       setTimeout(() => {
         onRemoved();

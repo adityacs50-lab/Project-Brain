@@ -13,3 +13,4 @@ apscheduler==3.10.4
 sentence-transformers==2.7.0
 slack-bolt==1.19.0
 aiohttp
+openai

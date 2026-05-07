@@ -12,6 +12,7 @@ const nodeStyles = {
 };
 
 export default function KnowledgeMapPage() {
+  const workspaceId = "test-workspace-1";
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,17 +24,12 @@ export default function KnowledgeMapPage() {
   useEffect(() => {
     const fetchGraph = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/graph`);
+        const response = await fetch(`${API_BASE_URL}/graph?workspace_id=${workspaceId}`);
         const data = await response.json();
         
-        // Conflict Detection Logic
-        const titleCounts: Record<string, number> = {};
-        data.nodes.forEach((n: any) => {
-          titleCounts[n.label] = (titleCounts[n.label] || 0) + 1;
-        });
-
+        // Transform nodes using backend deterministic truth
         const rfNodes = data.nodes.map((n: any, i: number) => {
-          const isConflict = titleCounts[n.label] > 1;
+          const isConflict = n.has_conflict;
           const status = isConflict ? 'conflict' : n.status;
 
           return {
@@ -57,9 +53,6 @@ export default function KnowledgeMapPage() {
           .filter((e: any) => {
             const hasSource = validNodeIds.has(e.from);
             const hasTarget = validNodeIds.has(e.to);
-            if (!hasSource || !hasTarget) {
-              console.warn(`Skipping edge: Source(${e.from}) exists: ${hasSource}, Target(${e.to}) exists: ${hasTarget}`);
-            }
             return hasSource && hasTarget;
           })
           .map((e: any, i: number) => ({
@@ -75,7 +68,6 @@ export default function KnowledgeMapPage() {
             style: { stroke: '#4B5563', strokeWidth: 2 }
           }));
 
-        console.log(`Successfully mapped ${rfNodes.length} nodes and ${rfEdges.length} edges.`);
         setNodes(rfNodes);
         setEdges(rfEdges);
       } catch (err) {
@@ -86,7 +78,7 @@ export default function KnowledgeMapPage() {
     };
 
     fetchGraph();
-  }, [API_BASE_URL]);
+  }, [API_BASE_URL, workspaceId]);
 
   return (
     <div className="space-y-6 h-[calc(100vh-160px)]">

@@ -4,6 +4,7 @@ import yaml
 import asyncio
 from dotenv import load_dotenv
 import google.generativeai as genai
+from openai import AsyncOpenAI
 from typing import List, Dict, Any
 from datetime import datetime
 from sqlalchemy import select, update
@@ -12,9 +13,11 @@ from backend.models import SlackMessage, Rule, Skill
 from backend.versioning import get_model
 load_dotenv()
 
-# Configure Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-2.5-flash')
+# Configure Groq (OpenAI compatible)
+groq_client = AsyncOpenAI(
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
+)
 
 STOPWORDS = {"the", "a", "an", "is", "are", "was", "were", "to", "from", "in", "on", "at", "with", "and", "or", "but", "for", "of"}
 
@@ -24,24 +27,27 @@ def get_shared_word_count(text1: str, text2: str) -> int:
     words2 = {w.lower().strip(".,!?") for w in text2.split() if w.lower().strip(".,!?") not in STOPWORDS}
     return len(words1.intersection(words2))
 
-async def call_gemini_with_retry(prompt: str, retries: int = 5) -> str:
-    """Calls Gemini API with exponential backoff and 429 awareness."""
+async def call_groq_with_retry(prompt: str, retries: int = 5) -> str:
+    """Calls Groq API with exponential backoff and 429 awareness."""
     for i in range(retries):
         try:
-            response = await asyncio.to_thread(model.generate_content, prompt)
-            return response.text.strip()
+            response = await groq_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return response.choices[0].message.content.strip()
         except Exception as e:
             if i == retries - 1:
-                print(f"Gemini API error after {retries} attempts: {e}")
+                print(f"Groq API error after {retries} attempts: {e}")
                 raise e
             
             # If rate limited, wait longer
             if "429" in str(e):
-                wait_time = (i + 1) * 15 # Wait 15s, 30s, 45s...
+                wait_time = (i + 1) * 10
                 print(f"Rate limited (429). Waiting {wait_time}s before retry {i+1}/{retries}...")
             else:
                 wait_time = 2 ** i
-                print(f"Gemini API error: {e}. Retrying in {wait_time}s...")
+                print(f"Groq API error: {e}. Retrying in {wait_time}s...")
                 
             await asyncio.sleep(wait_time)
     return ""
@@ -115,10 +121,10 @@ skills: []
 """
             
             try:
-                yaml_resp = await call_gemini_with_retry(prompt)
+                yaml_resp = await call_groq_with_retry(prompt)
             except Exception as e:
-                if "API key not valid" in str(e) or os.getenv("GEMINI_API_KEY") == "dummy":
-                    print("Warning: Gemini API key is dummy/invalid. Using mock extraction for demo...")
+                if "API key not valid" in str(e) or os.getenv("GROQ_API_KEY") == "dummy":
+                    print("Warning: Groq API key is dummy/invalid. Using mock extraction for demo...")
                     yaml_resp = """
 skills:
   - name: "Software Subscription Policy"
@@ -176,7 +182,7 @@ Only respond with valid YAML."""
                     
                     try:
                         # Use a second pass for verification
-                        yaml_resp = await call_gemini_with_retry(verification_prompt)
+                        yaml_resp = await call_groq_with_retry(verification_prompt)
                         # Re-clean and re-load
                         if yaml_resp.startswith("```yaml"):
                             yaml_resp = yaml_resp.replace("```yaml", "").replace("```", "").strip()
@@ -235,7 +241,7 @@ dependencies:
     type: "requires | conflicts | refines"
 
 If no link exists, respond with dependencies: []"""
-                            dep_yaml = await call_gemini_with_retry(dep_prompt)
+                            dep_yaml = await call_groq_with_retry(dep_prompt)
                             # Simple parsing
                             if "dependencies:" in dep_yaml:
                                 dep_data = yaml.safe_load(dep_yaml)

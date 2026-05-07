@@ -63,24 +63,43 @@ async def ask_agent(request: AskRequest):
     return result
 
 @app.get("/graph")
-async def get_logic_graph():
+async def get_logic_graph(workspace_id: str):
     """🛡️ THIEL PROTOCOL RULE 4: GRAPH EXPORT.
-    Returns nodes (rules) and edges (dependencies) for visual mapping.
+    Returns nodes (rules) and edges (dependencies) for visual mapping,
+    strictly filtered by workspace_id with deterministic conflict detection.
     """
-    from backend.models import Rule, RuleDependency
-    from sqlalchemy import select
+    from backend.models import Rule, RuleDependency, Contradiction
+    from sqlalchemy import select, or_
     from backend.db import AsyncSessionLocal
 
     async with AsyncSessionLocal() as db:
-        # Get all rules
-        rules_stmt = select(Rule)
+        # 1. Fetch rules for this workspace only
+        rules_stmt = select(Rule).where(Rule.workspace_id == workspace_id)
         rules_result = await db.execute(rules_stmt)
         rules = rules_result.scalars().all()
+        rule_ids = [r.id for r in rules]
         
-        # Get all dependencies
-        deps_stmt = select(RuleDependency)
+        # 2. Fetch dependencies for these rules
+        if not rule_ids:
+            return {"nodes": [], "edges": []}
+            
+        deps_stmt = select(RuleDependency).where(RuleDependency.rule_id.in_(rule_ids))
         deps_result = await db.execute(deps_stmt)
         deps = deps_result.scalars().all()
+        
+        # 3. Fetch active contradictions for this workspace
+        contra_stmt = select(Contradiction).where(
+            Contradiction.workspace_id == workspace_id,
+            or_(Contradiction.resolution == None, Contradiction.resolution == "manual")
+        )
+        contra_result = await db.execute(contra_stmt)
+        contradictions = contra_result.scalars().all()
+        
+        # Build set of rule IDs that are currently in conflict
+        conflicting_rule_ids = set()
+        for c in contradictions:
+            conflicting_rule_ids.add(c.rule_a_id)
+            conflicting_rule_ids.add(c.rule_b_id)
         
         nodes = []
         for r in rules:
@@ -88,7 +107,8 @@ async def get_logic_graph():
                 "id": str(r.id),
                 "label": r.title,
                 "status": r.status,
-                "type": r.action_type
+                "type": r.action_type,
+                "has_conflict": r.id in conflicting_rule_ids
             })
             
         edges = []

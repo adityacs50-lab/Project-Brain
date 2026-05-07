@@ -1,13 +1,23 @@
 "use client";
 
 import useSWR from "swr";
-import { fetcher, getDecisions, getStats } from "@/lib/api";
+import { fetcher, getDecisions, getStats, submitFeedback } from "@/lib/api";
 import { Brain, Search, Loader2, AlertCircle, CheckCircle2, XCircle, HelpCircle, Flag } from "lucide-react";
 
 export default function AgentDecisions() {
   const workspaceId = "test-workspace-1";
-  const { data, error, isLoading } = useSWR(getDecisions(workspaceId), fetcher, { refreshInterval: 30000 });
+  const { data, error, isLoading, mutate } = useSWR(getDecisions(workspaceId), fetcher, { refreshInterval: 30000 });
   const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
+
+  const handleFlag = async (auditId: string) => {
+    try {
+      await submitFeedback(auditId, "incorrect", "Flagged via dashboard");
+      mutate(); // Refresh the list to show flagged state
+    } catch (err) {
+      console.error(err);
+      alert("Failed to flag decision");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -110,7 +120,10 @@ export default function AgentDecisions() {
                     <span className="text-xs text-zinc-500">{new Date(d.created_at).toLocaleString()}</span>
                   </td>
                   <td className="px-6 py-4 text-center">
-                    <button className={`${d.agent_feedback ? 'text-red-500' : 'text-zinc-300 hover:text-zinc-500'} transition-colors`}>
+                    <button 
+                      onClick={() => !d.agent_feedback && handleFlag(d.audit_id)}
+                      className={`${d.agent_feedback ? 'text-red-500' : 'text-zinc-300 hover:text-zinc-500'} transition-colors`}
+                    >
                       <Flag className="w-3.5 h-3.5 mx-auto" />
                     </button>
                   </td>

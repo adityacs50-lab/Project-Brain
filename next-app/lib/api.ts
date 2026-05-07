@@ -19,12 +19,22 @@ export const getStats = (workspaceId: string) => {
     return `${BASE_URL}/agent/stats/${workspaceId}`;
 };
 
-export const updateRuleStatus = async (ruleId: string, status: string, editedText?: string) => {
+export const updateRuleStatus = async (ruleId: string, status: string, editedText?: string, approvedBy?: string) => {
     const res = await fetch(`${BASE_URL}/rules/${ruleId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, edited_text: editedText })
+        body: JSON.stringify({ status, edited_text: editedText, approved_by: approvedBy })
     });
     if (!res.ok) throw new Error("Failed to update status");
+    return res.json();
+};
+
+export const submitFeedback = async (auditId: string, outcome: string, notes?: string) => {
+    const res = await fetch(`${BASE_URL}/agent/feedback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ audit_id: auditId, outcome, notes })
+    });
+    if (!res.ok) throw new Error("Failed to submit feedback");
     return res.json();
 };
