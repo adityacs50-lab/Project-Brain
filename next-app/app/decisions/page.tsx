@@ -5,7 +5,7 @@ import { fetcher, getDecisions, getStats, submitFeedback } from "@/lib/api";
 import { Brain, Search, Loader2, AlertCircle, CheckCircle2, XCircle, HelpCircle, Flag } from "lucide-react";
 
 export default function AgentDecisions() {
-  const workspaceId = "test-workspace-1";
+  const workspaceId = "T0B27A94NN4";
   const { data, error, isLoading, mutate } = useSWR(getDecisions(workspaceId), fetcher, { refreshInterval: 30000 });
   const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
 

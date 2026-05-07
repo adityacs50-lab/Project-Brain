@@ -12,7 +12,7 @@ const nodeStyles = {
 };
 
 export default function KnowledgeMapPage() {
-  const workspaceId = "test-workspace-1";
+  const workspaceId = "T0B27A94NN4";
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [loading, setLoading] = useState(true);
