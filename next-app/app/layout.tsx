@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Sidebar } from "@/components/Sidebar";
 import { Topbar } from "@/components/Topbar";
+import { WorkspaceProvider } from "@/components/WorkspaceContext";
+import { Suspense } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +24,11 @@ export default function RootLayout({
             <Topbar />
             <main className="flex-1 p-8 overflow-y-auto">
               <div className="max-w-6xl mx-auto">
-                {children}
+                <Suspense fallback={<div>Loading workspace...</div>}>
+                  <WorkspaceProvider>
+                    {children}
+                  </WorkspaceProvider>
+                </Suspense>
               </div>
             </main>
           </div>

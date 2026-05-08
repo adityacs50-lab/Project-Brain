@@ -3,6 +3,7 @@
 import useSWR from "swr";
 import { fetcher, getDecisions, getStats, submitFeedback } from "@/lib/api";
 import { Brain, Loader2, AlertCircle, CheckCircle2, XCircle, HelpCircle, Flag } from "lucide-react";
+import { useWorkspace } from "@/components/WorkspaceContext";
 
 interface Decision {
   audit_id: string;
@@ -14,7 +15,7 @@ interface Decision {
 }
 
 export default function AgentDecisions() {
-  const workspaceId = "T0B27A94NN4";
+  const { workspaceId } = useWorkspace();
   const { data, isLoading, mutate } = useSWR(getDecisions(workspaceId), fetcher, { refreshInterval: 30000 });
   const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
 

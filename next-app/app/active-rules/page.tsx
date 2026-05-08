@@ -5,9 +5,10 @@ import useSWR from "swr";
 import { fetcher, getRules } from "@/lib/api";
 import { Search, Workflow, Loader2, ExternalLink } from "lucide-react";
 import { Rule } from "@/components/RuleCard";
+import { useWorkspace } from "@/components/WorkspaceContext";
 
 export default function ActiveRules() {
-  const workspaceId = "T0B27A94NN4";
+  const { workspaceId } = useWorkspace();
   const { data: rules, isLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
   const [search, setSearch] = useState("");
 

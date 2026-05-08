@@ -11,6 +11,7 @@ class SlackWorkspace(Base):
     workspace_id = Column(String, primary_key=True)
     bot_token = Column(String)
     team_name = Column(String)
+    api_key = Column(String, unique=True, index=True, nullable=True)
     installed_at = Column(DateTime, default=datetime.utcnow)
 
 class SlackMessage(Base):
@@ -87,6 +88,10 @@ class Rule(Base):
     parent_rule_id = Column(UUID(as_uuid=True), ForeignKey("rules.id"), nullable=True)
     action_type = Column(String) # "permitted" | "denied" | "escalate"
     embedding = Column(Vector(384))
+    
+    threshold_value = Column(Float, nullable=True)
+    threshold_currency = Column(String, nullable=True)
+    operator = Column(String, nullable=True)
     
     # 🛡️ THIEL PROTOCOL RULE 5: EXECUTIVE SEAL
     approved_by = Column(String, nullable=True)

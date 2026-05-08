@@ -2,11 +2,27 @@ import json
 import re
 import uuid
 from datetime import datetime
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy import select, desc, delete, cast, Float, text
 from backend.db import AsyncSessionLocal
-from backend.models import Rule, AgentDecisionLog
+from backend.models import Rule, AgentDecisionLog, SlackWorkspace
+import operator as op
+
+OPERATORS = {
+    ">": op.gt,
+    "<": op.lt,
+    ">=": op.ge,
+    "<=": op.le,
+    "==": op.eq,
+    "=": op.eq,
+}
+
+def parse_action_for_threshold(action_text: str):
+    match = re.search(r"(\$|€|£)?\s*(\d+(?:\.\d+)?)", action_text)
+    if match:
+        return float(match.group(2)), match.group(1)
+    return None, None
 
 router = APIRouter(prefix="/agent", tags=["Agent API"])
 
@@ -53,33 +69,74 @@ def _extract_escalation_target(rule_text: str | None) -> str | None:
 # POST /agent/query
 # ========================================
 @router.post("/query")
-async def query_agent(request: AgentQueryRequest):
+async def query_agent(request: AgentQueryRequest, http_request: Request):
     """
     Query the agent decision API to determine if an action is permitted.
-    Uses semantic search with pgvector to find matching rules.
+    Uses exact threshold matching before falling back to semantic search.
     """
-    # 🛡️ DETERMINISTIC CONTROL PLANE: Actor Identity Verification
-    if not request.agent_id or len(request.agent_id) < 3:
-        raise HTTPException(status_code=403, detail="Actor Identity (agent_id) is invalid or missing.")
+    api_key = http_request.headers.get("x-api-key") or http_request.headers.get("authorization")
+    if not api_key:
+        raise HTTPException(status_code=401, detail="Missing API Key")
+    if api_key.startswith("Bearer "):
+        api_key = api_key[7:]
     
-    # Build natural language query from action + context
-    query_text = f"{request.action}. Context: {json.dumps(request.context)}"
+    # Extract query value
+    req_val, req_curr = parse_action_for_threshold(request.action)
     
     # Get the singleton model and generate embedding
     model_instance = get_model()
+    query_text = f"{request.action}. Context: {json.dumps(request.context)}"
     query_embedding = model_instance.encode(query_text).tolist()
     
     async with AsyncSessionLocal() as db:
-        # Query active rules for this workspace using pgvector cosine distance
-        # Similarity >= 0.75 means cosine_distance <= 0.25
-        stmt = select(Rule).where(
-            Rule.workspace_id == request.workspace_id,
-            Rule.status == "active"
-        ).order_by(Rule.embedding.cosine_distance(query_embedding)).limit(3)
+        # Validate API key
+        stmt_workspace = select(SlackWorkspace).where(SlackWorkspace.api_key == api_key, SlackWorkspace.workspace_id == request.workspace_id)
+        result_workspace = await db.execute(stmt_workspace)
+        if not result_workspace.scalar_one_or_none():
+            raise HTTPException(status_code=403, detail="Invalid API Key for this workspace")
+
+        # First try exact matching on thresholds
+        exact_match_rule = None
+        if req_val is not None:
+            stmt_active = select(Rule).where(
+                Rule.workspace_id == request.workspace_id,
+                Rule.status == "active",
+                Rule.threshold_value.isnot(None),
+                Rule.operator.isnot(None)
+            )
+            result_active = await db.execute(stmt_active)
+            rules_with_threshold = result_active.scalars().all()
+            for r in rules_with_threshold:
+                op_func = OPERATORS.get(r.operator)
+                if op_func and op_func(req_val, r.threshold_value):
+                    if not r.threshold_currency or r.threshold_currency == req_curr:
+                        exact_match_rule = r
+                        break
         
-        result = await db.execute(stmt)
-        matching_rules = result.scalars().all()
-        
+        matching_rules = []
+        if exact_match_rule:
+            matching_rules = [exact_match_rule]
+            similarity_score = 1.0 # exact match
+        else:
+            # Query active rules for this workspace using pgvector cosine distance
+            # Similarity >= 0.75 means cosine_distance <= 0.25
+            stmt = select(Rule).where(
+                Rule.workspace_id == request.workspace_id,
+                Rule.status == "active"
+            ).order_by(Rule.embedding.cosine_distance(query_embedding)).limit(3)
+            
+            result = await db.execute(stmt)
+            matching_rules = result.scalars().all()
+            
+            if matching_rules:
+                top_rule = matching_rules[0]
+                stmt_sim = select(
+                    cast(1 - Rule.embedding.cosine_distance(query_embedding), Float)
+                ).where(Rule.id == top_rule.id)
+                result_sim = await db.execute(stmt_sim)
+                sim_row = result_sim.scalar_one()
+                similarity_score = float(sim_row) if sim_row is not None else 0.0
+
         # Track if we found a match
         decision = "no_rule_found"
         rule_id = None
@@ -89,29 +146,15 @@ async def query_agent(request: AgentQueryRequest):
         confidence = None
         source_channel = None
         rule_version = None
-        similarity_score = None
         
         if matching_rules:
-            # Calculate similarity score (1 - cosine_distance)
             top_rule = matching_rules[0]
-            
-            # Get similarity by computing 1 - cosine distance
-            stmt_sim = select(
-                cast(1 - Rule.embedding.cosine_distance(query_embedding), Float)
-            ).where(Rule.id == top_rule.id)
-            result_sim = await db.execute(stmt_sim)
-            sim_row = result_sim.scalar_one()
-            similarity_score = float(sim_row) if sim_row is not None else 0.0
             
             if similarity_score >= 0.75:
                 # We have a match - apply decision logic
                 rule_id = top_rule.id
                 rule_title = top_rule.title
                 rule_text = top_rule.rule_text
-                confidence = min(1.0, float(similarity_score) * 1.8)
-                source_channel = top_rule.channel_id
-                rule_version = top_rule.version
-                
                 confidence = min(1.0, float(similarity_score) * 1.8)
                 source_channel = top_rule.channel_id
                 rule_version = top_rule.version
@@ -390,12 +433,16 @@ async def seed_agent_rules(workspace_id: str):
             workspace_id=workspace_id,
             title="Refund Approval Policy",
             rule_text=rule1_text,
+            action_type="escalate",
             status="active",
             confidence=1.0,
             source_message="Refunds over $200 require VP of Customer Success approval",
             channel_id="support-policies",
             version=1,
             embedding=embedding1,
+            threshold_value=200.0,
+            threshold_currency="$",
+            operator=">",
             created_at=datetime.utcnow()
         )
         db.add(rule1)

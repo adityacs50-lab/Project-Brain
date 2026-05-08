@@ -6,9 +6,10 @@ import Link from "next/link";
 import { fetcher, getRules, getStats } from "@/lib/api";
 import { StatsBar } from "@/components/StatsBar";
 import { Rule } from "@/components/RuleCard";
+import { useWorkspace } from "@/components/WorkspaceContext";
 
 export default function Dashboard() {
-  const workspaceId = "T0B27A94NN4";
+  const { workspaceId } = useWorkspace();
   const { data: rules, isLoading: rulesLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
   const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
 

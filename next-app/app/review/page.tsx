@@ -4,9 +4,10 @@ import useSWR from "swr";
 import { fetcher, getRules } from "@/lib/api";
 import { RuleCard, Rule } from "@/components/RuleCard";
 import { ClipboardCheck, Sparkles, Loader2 } from "lucide-react";
+import { useWorkspace } from "@/components/WorkspaceContext";
 
 export default function ReviewQueue() {
-  const workspaceId = "T0B27A94NN4";
+  const { workspaceId } = useWorkspace();
   const { data: rules, isLoading, mutate } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
 
   if (isLoading) {
