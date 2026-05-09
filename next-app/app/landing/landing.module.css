@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,100..900&family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
+
+.landingBody {
+  background-color: #000000;
+  color: #FFFFFF;
+  font-family: 'DM Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.mono {
+  font-family: 'DM Mono', monospace;
+}
+
+.serif {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.accent {
+  color: #60FFB4;
+}
+
+/* Nav */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  transition: all 0.3s ease;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid transparent;
+}
+
+/* Particle Field */
+.particleContainer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(96, 255, 180, 0.3);
+  border-radius: 50%;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(100vh) scale(1); opacity: 0; }
+  20% { opacity: 0.5; }
+  80% { opacity: 0.5; }
+  100% { transform: translateY(-10vh) scale(0.5); opacity: 0; }
+}
+
+/* Scanline Effect */
+.scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(96, 255, 180, 0.02) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 10;
+  animation: scan 10s linear infinite;
+}
+
+@keyframes scan {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+/* Marquee */
+.marqueeContainer {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  padding: 4rem 0;
+}
+
+.marquee {
+  display: flex;
+  width: fit-content;
+  gap: 4rem;
+  animation: marquee 30s linear infinite;
+}
+
+.marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.logo {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  opacity: 0.3;
+  color: #FFFFFF;
+  white-space: nowrap;
+}
+
+/* Code Block */
+.codeBlock {
+  background: #0A0A0A;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #D1D5DB;
+  position: relative;
+  overflow: hidden;
+}
+
+.blink {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: #60FFB4;
+  margin-left: 2px;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+.pulseRed {
+  animation: pulseRed 0.5s ease-out;
+}
+
+@keyframes pulseRed {
+  0% { color: #EF4444; text-shadow: 0 0 10px rgba(239, 68, 68, 0.5); }
+  100% { color: #EF4444; text-shadow: none; }
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8rem 0;
+  overflow: hidden;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  color: #60FFB4;
+}
+
+.headline {
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 2rem;
+  letter-spacing: -0.02em;
+}
+
+/* Stats */
+.gridLine {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 1px;
+  background: #1a1a1a;
+  transform: translateX(-50%);
+}
+
+.submitBtn {
+  width: 100%;
+  background: #60FFB4;
+  color: #000000;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submitBtn:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 40px rgba(96, 255, 180, 0.4);
+}
+
+.pulseScale {
+  animation: pulseScale 3s ease-in-out infinite;
+}
+
+@keyframes pulseScale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.problemCard {
+  background: #050505;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 2.5rem;
+  border-radius: 12px;
+  height: 100%;
+  text-align: left;
+}
+
+/* Sections */
+.sectionReveal {
+  padding: 8rem 0;
+}

@@ -1,13 +1,22 @@
 import type { Metadata } from "next";
-import { Sidebar } from "@/components/Sidebar";
-import { Topbar } from "@/components/Topbar";
-import { WorkspaceProvider } from "@/components/WorkspaceContext";
-import { Suspense } from "react";
+import { Fraunces, DM_Mono } from "next/font/google";
 import "./globals.css";
 
+const fraunces = Fraunces({ 
+  subsets: ["latin"], 
+  variable: "--font-fraunces",
+  style: ["italic"]
+});
+
+const dmMono = DM_Mono({ 
+  subsets: ["latin"], 
+  variable: "--font-dm-mono",
+  weight: ["400", "500"]
+});
+
 export const metadata: Metadata = {
-  title: "Company Brain | Dashboard",
-  description: "Living Operating System for Teams",
+  title: "Company Brain | Deterministic Control Plane",
+  description: "Enterprise Guardrails for Autonomous Agents",
 };
 
 export default function RootLayout({
@@ -17,22 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased font-sans text-zinc-900 bg-zinc-50">
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <div className="flex-1 flex flex-col pl-64">
-            <Topbar />
-            <main className="flex-1 p-8 overflow-y-auto">
-              <div className="max-w-6xl mx-auto">
-                <Suspense fallback={<div>Loading workspace...</div>}>
-                  <WorkspaceProvider>
-                    {children}
-                  </WorkspaceProvider>
-                </Suspense>
-              </div>
-            </main>
-          </div>
-        </div>
+      <body className={`${fraunces.variable} ${dmMono.variable} antialiased`}>
+        {children}
       </body>
     </html>
   );
