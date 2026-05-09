@@ -26,10 +26,9 @@ export async function POST(req: Request) {
       }])
 
     if (error && error.code !== '23505') {
-      // 23505 = duplicate email, handle gracefully
       console.error('Supabase Error:', error)
       return NextResponse.json(
-        { error: 'Failed to save' }, 
+        { error: `Supabase Error: ${error.message || 'Unknown'}` }, 
         { status: 500 }
       )
     }

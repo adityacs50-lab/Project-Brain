@@ -159,10 +159,12 @@ export default function LandingPage() {
   const [company, setCompany] = useState("");
   const [agentsCount, setAgentsCount] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
+    setErrorMessage("");
 
     try {
       const res = await fetch("/api/waitlist", {
@@ -171,6 +173,8 @@ export default function LandingPage() {
         body: JSON.stringify({ email, company, agents_count: agentsCount }),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         setStatus("success");
         setEmail("");
@@ -178,10 +182,12 @@ export default function LandingPage() {
         setAgentsCount("");
       } else {
         setStatus("error");
+        setErrorMessage(data.error || "Something went wrong.");
       }
     } catch (err) {
       console.error(err);
       setStatus("error");
+      setErrorMessage("Network error. Please try again.");
     }
   };
 
@@ -501,7 +507,7 @@ export default function LandingPage() {
                 />
                 {status === "error" && (
                   <p className="text-red-500 text-xs font-mono mt-1 text-left">
-                    Something went wrong. Email us: aditya@companybrain.ai
+                    Error: {errorMessage}
                   </p>
                 )}
                 <button 
