@@ -155,6 +155,36 @@ export default function LandingPage() {
     "SLACK", "SALESFORCE", "AWS", "ZENDESK", "LANGCHAIN", "OPENAI", "CREWAI", "ANTHROPIC"
   ];
 
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [agentsCount, setAgentsCount] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("loading");
+
+    try {
+      const res = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, company, agents_count: agentsCount }),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        setEmail("");
+        setCompany("");
+        setAgentsCount("");
+      } else {
+        setStatus("error");
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+    }
+  };
+
   return (
     <div className="bg-black text-white selection:bg-[#60FFB4] selection:text-black min-h-screen relative overflow-x-hidden">
       <CursorGlow />
@@ -434,14 +464,55 @@ export default function LandingPage() {
               Secure your spot in the Deterministic Era.
             </p>
 
-            <form className="max-w-md mx-auto flex flex-col gap-3">
-              <input type="email" placeholder="Work Email" className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#60FFB4] focus:outline-none w-full transition-colors" />
-              <input type="text" placeholder="Company Name" className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#60FFB4] focus:outline-none w-full transition-colors" />
-              <input type="number" placeholder="How many AI agents in production?" className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#60FFB4] focus:outline-none w-full transition-colors" />
-              <button className="w-full bg-[#60FFB4] text-black font-semibold py-4 rounded-lg hover:bg-[#7affc2] transition-colors mt-2" style={{ animation: 'pulseGreen 3s ease-in-out infinite' }}>
-                Secure My Spot →
-              </button>
-            </form>
+            {status === "success" ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="bg-zinc-950 border border-[#60FFB4]/30 rounded-xl p-8 text-center max-w-md mx-auto"
+              >
+                <p className="text-[#60FFB4] font-mono text-lg mb-2">✓ You&apos;re on the list.</p>
+                <p className="text-zinc-500 text-sm">Check your email. We&apos;ll reach out within 24 hours.</p>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit} className="max-w-md mx-auto flex flex-col gap-3">
+                <input 
+                  type="email" 
+                  required
+                  placeholder="Work Email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#60FFB4] focus:outline-none w-full transition-colors" 
+                />
+                <input 
+                  type="text" 
+                  required
+                  placeholder="Company Name" 
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#60FFB4] focus:outline-none w-full transition-colors" 
+                />
+                <input 
+                  type="number" 
+                  required
+                  placeholder="How many AI agents in production?" 
+                  value={agentsCount}
+                  onChange={(e) => setAgentsCount(e.target.value)}
+                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#60FFB4] focus:outline-none w-full transition-colors" 
+                />
+                {status === "error" && (
+                  <p className="text-red-500 text-xs font-mono mt-1 text-left">
+                    Something went wrong. Email us: aditya@companybrain.ai
+                  </p>
+                )}
+                <button 
+                  disabled={status === "loading"}
+                  className="w-full bg-[#60FFB4] text-black font-semibold py-4 rounded-lg hover:bg-[#7affc2] transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed" 
+                  style={{ animation: status === "idle" ? 'pulseGreen 3s ease-in-out infinite' : 'none' }}
+                >
+                  {status === "loading" ? "Securing..." : "Secure My Spot →"}
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </section>
