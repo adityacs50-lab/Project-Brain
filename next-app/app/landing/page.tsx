@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useMemo } from "react";
-import { motion, useScroll, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useScroll, useMotionValue, useSpring } from "framer-motion";
 
 // --- Components ---
 
@@ -67,7 +67,7 @@ const Nav = () => {
 
 const HeroBackground = () => {
   const particles = useMemo(() => {
-    return Array.from({ length: 80 }).map((_, _i) => ({
+    return Array.from({ length: 80 }).map(() => ({
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
       duration: `${Math.random() * 15 + 10}s`,
@@ -130,7 +130,7 @@ const HeroCodeBlock = () => {
         <div className="w-2.5 h-2.5 rounded-full bg-zinc-800" />
       </div>
       <div className="space-y-1">
-        {lines.slice(0, visibleCount).map((line, _i) => (
+        {lines.slice(0, visibleCount).map((line, i) => (
           <div key={i} className={line.color}>
             {line.text}
           </div>
@@ -230,7 +230,7 @@ export default function LandingPage() {
         </div>
         <div className="flex whitespace-nowrap overflow-hidden">
           <div className="flex gap-16 items-center animate-marquee">
-            {[...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, _i) => (
+            {[...marqueeItems, ...marqueeItems, ...marqueeItems, ...marqueeItems].map((item, i) => (
               <span key={i} className="font-mono text-sm text-zinc-600 hover:text-zinc-300 transition-colors uppercase tracking-widest">
                 {item}
               </span>
