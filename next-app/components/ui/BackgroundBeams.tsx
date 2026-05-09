@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { cn } from "@/lib/utils";
 
 export const BackgroundBeams = ({ className }: { className?: string }) => {
