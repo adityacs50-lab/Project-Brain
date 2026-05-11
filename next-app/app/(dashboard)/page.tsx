@@ -1,7 +1,7 @@
 "use client";
 
 import useSWR from "swr";
-import { Activity, Brain, ArrowRight, Zap, ShieldCheck, Loader2 } from "lucide-react";
+import { Activity, ArrowRight, Zap, ShieldCheck, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { fetcher, getRules, getStats } from "@/lib/api";
 import { StatsBar } from "@/components/StatsBar";
