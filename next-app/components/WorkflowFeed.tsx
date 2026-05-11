@@ -40,7 +40,7 @@ export function WorkflowFeed({ workspaceId }: { workspaceId: string }) {
       
       <div className="divide-y divide-zinc-100 max-h-[400px] overflow-y-auto">
         {workflows.length > 0 ? (
-          workflows.map((wf, i) => (
+          workflows.map((wf) => (
             <div key={wf.id} className="px-6 py-4 flex items-center justify-between hover:bg-zinc-50 transition-colors group">
               <div className="flex items-center gap-4">
                 <div className={`p-2 rounded-lg ${
