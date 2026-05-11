@@ -18,7 +18,7 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const urlWs = searchParams.get("workspaceId");
+    const urlWs = searchParams.get("workspaceId") || searchParams.get("workspace_id");
     if (urlWs) {
       setWorkspaceId(urlWs);
       localStorage.setItem("workspaceId", urlWs);

@@ -92,8 +92,8 @@ export default function Dashboard() {
         <div className="bg-white border border-zinc-200 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-sm h-fit">
           <div className="absolute top-4 left-6">
             <h2 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
-              <Brain className="w-4 h-4 text-purple-600" />
-              Brain Health
+              <ShieldCheck className="w-4 h-4 text-blue-600" />
+              Governance Health
             </h2>
           </div>
 

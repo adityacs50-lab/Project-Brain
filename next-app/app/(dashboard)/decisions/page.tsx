@@ -2,7 +2,7 @@
 
 import useSWR from "swr";
 import { fetcher, getDecisions, getStats, submitFeedback } from "@/lib/api";
-import { Brain, Loader2, AlertCircle, CheckCircle2, XCircle, HelpCircle, Flag } from "lucide-react";
+import { ShieldCheck, Loader2, AlertCircle, CheckCircle2, XCircle, HelpCircle, Flag } from "lucide-react";
 import { useWorkspace } from "@/components/WorkspaceContext";
 
 interface Decision {
@@ -39,7 +39,7 @@ export default function AgentDecisions() {
 
   const decisions = data?.decisions || [];
   const accuracy = stats?.hallucination_free || 100;
-  const brainHealth = stats?.brain_health || 100;
+  const avgConfidence = stats?.brain_health || 100;
   const healthStatus = stats?.health_status || "OPTIMAL";
 
   const getDecisionBadge = (decision: string) => {
@@ -60,7 +60,7 @@ export default function AgentDecisions() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-600/10 rounded-lg">
-            <Brain className="w-5 h-5 text-blue-600" />
+            <ShieldCheck className="w-5 h-5 text-blue-600" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-zinc-900 tracking-tight">Agent Decisions</h1>
@@ -76,7 +76,7 @@ export default function AgentDecisions() {
           <div className="w-px h-8 bg-zinc-200" />
           <div className="flex flex-col">
             <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Avg. Confidence</span>
-            <span className="text-lg font-bold text-blue-600">{brainHealth}%</span>
+            <span className="text-lg font-bold text-blue-600">{avgConfidence}%</span>
           </div>
           <div className="w-px h-8 bg-zinc-200" />
           <div className="flex flex-col">

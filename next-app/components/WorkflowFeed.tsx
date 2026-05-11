@@ -90,7 +90,7 @@ export function WorkflowFeed({ workspaceId }: { workspaceId: string }) {
         ) : (
           <div className="p-12 text-center">
             <p className="text-sm text-zinc-400">No active workflows detected.</p>
-            <p className="text-[10px] text-zinc-400 mt-1 uppercase tracking-widest">Awaiting brain trigger...</p>
+            <p className="text-[10px] text-zinc-400 mt-1 uppercase tracking-widest">Awaiting policy trigger...</p>
           </div>
         )}
       </div>

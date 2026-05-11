@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Brain, LayoutDashboard, ClipboardCheck, Workflow } from "lucide-react";
+import { ShieldCheck, LayoutDashboard, ClipboardCheck, Workflow } from "lucide-react";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -11,7 +11,7 @@ export function Sidebar() {
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/review", label: "Review Queue", icon: ClipboardCheck },
     { href: "/active-rules", label: "Active Rules", icon: Workflow },
-    { href: "/decisions", label: "Agent Decisions", icon: Brain },
+    { href: "/decisions", label: "Agent Decisions", icon: ShieldCheck },
   ];
 
   return (
@@ -19,7 +19,7 @@ export function Sidebar() {
       <div className="h-16 flex items-center px-6 border-b border-white/5">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-blue-600/20 rounded-lg">
-            <Brain className="w-5 h-5 text-blue-500" />
+            <ShieldCheck className="w-5 h-5 text-blue-500" />
           </div>
           <span className="font-bold text-lg text-white tracking-tight">Statelock</span>
         </div>
