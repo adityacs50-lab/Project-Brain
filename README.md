@@ -1,68 +1,61 @@
-# 🧠 Company Brain: The Deterministic Control Plane for Enterprise AI
+# 🧠 COMPANY BRAIN: THE DETERMINISTIC OS
 
-**Architected by a B.Tech AI/ML Specialist from MGM University.**  
-*Forging a reliable link between human decision-making and AI execution.*
+> **The missing layer between raw enterprise data and reliable AI automation.**
 
----
-
-## 🌐 Live Experience
-**Landing Page**: [Company Brain - The Invisible Vibe](https://project-brain.vercel.app/landing)  
-**Dashboard**: [Secure Rule Management & Audit Logs](https://project-brain.vercel.app/)
+![Company Brain Design](https://img.shields.io/badge/AESTHETIC-CYBER--INDUSTRIAL-FF3800)
+![Status](https://img.shields.io/badge/STATUS-LIVE--FIRE--VERIFIED-green)
+![Vercel](https://img.shields.io/badge/DEPLOYMENT-VERCEL-black)
 
 ---
 
-## 🚀 The Vision
-Most AI agents ignore company policy because it's trapped in Slack and PDFs. **Company Brain** extracts your team's tribal knowledge and enforces it as a real-time **API Firewall**. We turn conversational chaos into a living, executable map of your business.
+## 🚀 OVERVIEW
 
-### 💎 Strategic Edge (Zero to One)
-The Brain is not just a tool; it's a strategic moat. We have ingested and codified the core principles of high-scale enterprise dominance:
-*   **7 Powers Framework**: Codifying *Scale Economies*, *Network Effects*, and *Cornered Resources* into agent behavior.
-*   **Thiel’s Zero to One**: Enforcing niche dominance and proprietary technology guardrails.
+While others build "shared memory" for agents, **Company Brain** builds **Shared Governance.** We turn fragmented tribal knowledge from Slack, Email, and Zendesk into an **Executable Skills File** that mathematically enforces company policy at the OS level.
 
----
-
-## 🛡️ Hardened Technical Architecture
-
-### 🎯 100% Deterministic Enforcement
-The Brain achieved **100% accuracy** in our latest diagnostic suite. It doesn't just match keywords; it understands the *intent* of your company's operating procedures.
-
-| Challenge | Engine Decision | Logic Applied | Confidence |
-| :--- | :--- | :--- | :--- |
-| "Process refund of $350..." | **ESCALATE** | Routes to **VP of Customer Success** | 100% |
-| "Waive fee for 2yr customer..." | **PERMITTED** | Applies **Loyalty Waiver Protocol** | 100% |
-| "Handle urgent outage..." | **ESCALATE** | Routes to **On-Call Engineer** | 100% |
-
-### 🛠️ Technology Stack
-*   **Orchestration**: FastAPI (Python), SQLAlchemy, PostgreSQL + **pgvector**
-*   **Intelligence**: Google Gemini 1.5 Flash (Logic Extraction), Sentence-Transformers (Embeddings)
-*   **Interface**: Next.js 14, **Framer Motion** (Invisible Aesthetic), Tailwind CSS
-*   **Deployment**: Vercel (Frontend), Railway (Backend)
+### ⚖️ The Multi-Agent Supreme Court
+Our core adjudication engine intercepts every AI agent action. If a task violates a compiled rule (e.g., a $200 refund against a $50 policy), the Supreme Court physically blocks the execution and triggers an escalation webhook.
 
 ---
 
-## 🏁 Current Status: **Production Ready**
+## 🛠️ OMNI-SOURCE INGESTION
 
-1.  **Invisible Landing Page**: Fully functional marketing site with high-performance animations and terminal-based simulation.
-2.  **Logic Graph**: Real-time visualization of company dependencies and decision nodes.
-3.  **Deterministic Gateway**: API endpoint `/agent/query` permits or denies AI actions in **<50ms**.
-4.  **Strategic Knowledge Base**: Ingested 1,000+ nodes of business strategy logic (Hamilton Helmer & Peter Thiel).
+Company Brain creates a living map of your business by synthesizing data from:
+*   **Communication**: Slack channels and Email threads (Gmail/Outlook).
+*   **Operations**: Support tickets (Zendesk/Intercom).
+*   **Ground Truth**: SQL Databases (Postgres/Snowflake).
 
 ---
 
-## 🛠️ Developer Quick Start
+## 🧪 LIVE-FIRE DEMO PROTOCOL
 
-### 1. Launch the System
-```powershell
-./start_all.bat
-```
+We don't trust probabilistic "safe" agents. We verify them. Run the local stress test to watch the Supreme Court in action:
 
-### 2. Run Diagnostics
 ```bash
-# Verify the Enforcement Engine:
-curl http://localhost:8000/agent/demo/run
+cd company-brain
+python scratch/live_fire_demo.py
 ```
+
+**Expected Result:**
+1. **[SENSE]** Extracts rules from mock Slack payloads.
+2. **[COMPILE]** Generates the `skills-lock.json` lockfile.
+3. **[INTERCEPT]** Blocks unauthorized $200 Stripe refunds in real-time.
 
 ---
 
-### Built for the Future of Autonomous Business Operations.
-*Forging the link between human wisdom and machine speed.*
+## 📦 TECH STACK
+
+- **Frontend**: Next.js 14, TailwindCSS, Framer Motion (Cyber-Industrial Theme)
+- **Backend**: Python (FastAPI), SQLAlchemy, PGVector
+- **Intelligence**: Llama 3.3 (Groq), Gemini 1.5 Pro
+- **Deployment**: Vercel
+
+---
+
+## 🔒 SECURITY
+
+- **Zero Leakage**: No environment variables or local databases are ever committed.
+- **Deterministic**: Business logic is compiled into a read-only lockfile, preventing LLM drift.
+
+---
+
+&copy; 2026 Company Brain | Outworking the Competition.

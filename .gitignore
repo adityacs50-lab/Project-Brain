@@ -1,4 +1,4 @@
-# --- Company Brain: The Firewall ---
+# --- Company Brain: The Clean Release ---
 
 # Python
 __pycache__/
@@ -27,12 +27,15 @@ dist/
 postgres-data/
 dump.rdb
 
-# Company Brain Specific
+# Internal Assistant Metadata & Dev Artifacts
+.agents/
+.windsurf/
+.zencoder/
+.temp/
+.tempmediaStorage/
 scratch/
 skills-lock.json
 *.log
-temp/
-.temp/
 
 # IDE & OS
 .vscode/
@@ -40,8 +43,3 @@ temp/
 .DS_Store
 Thumbs.db
 *.swp
-
-# Deployment Artifacts
-.vercel/
-.next/
-node_modules/
