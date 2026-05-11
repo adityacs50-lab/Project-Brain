@@ -9,6 +9,7 @@ export function StatsBar({ workspaceId }: { workspaceId: string }) {
   const totalActive = rules?.filter((r: {status: string}) => r.status === "active").length || 0;
   const pendingReview = rules?.filter((r: {status: string}) => r.status === "pending").length || 0;
   const totalROI = statsData?.total_roi || 0.0;
+  const totalDecisions = statsData?.total_decisions || 0;
 
   const stats = [
     {
