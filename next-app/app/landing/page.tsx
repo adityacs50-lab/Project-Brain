@@ -55,9 +55,9 @@ const Nav = ({ onWaitlistClick }: { onWaitlistClick: () => void }) => {
       }`}
     >
       <div className="max-w-5xl mx-auto px-8 w-full flex justify-between items-center">
-        <Link href="/landing" className="flex items-center gap-3 font-mono text-sm text-white uppercase tracking-widest">
+        <Link href="/landing" className="flex items-center gap-3 font-mono text-sm text-white uppercase tracking-widest font-bold">
           <div className="w-2 h-2 rounded-full bg-[#FF3800] pulse-dot" />
-          COMPANY BRAIN
+          STATE<span className="text-zinc-500">LOCK</span>
         </Link>
         <button 
           onClick={onWaitlistClick}
@@ -239,10 +239,9 @@ export default function LandingPage() {
             initial="initial"
             animate="animate"
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="font-serif italic text-6xl md:text-8xl leading-none tracking-tight text-white max-w-4xl mb-8"
+            className="text-7xl md:text-9xl font-black leading-none tracking-tighter text-white max-w-4xl mb-8 uppercase"
           >
-            The Deterministic OS <br />
-            for Agentic Enterprises.
+            STATE<span className="text-[#FF3800]">LOCK</span>
           </motion.h1>
 
           <motion.p
