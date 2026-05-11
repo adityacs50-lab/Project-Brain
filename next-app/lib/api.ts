@@ -19,6 +19,14 @@ export const getStats = (workspaceId: string) => {
     return `${BASE_URL}/agent/stats/${workspaceId}`;
 };
 
+export const getWorkflows = (workspaceId: string) => {
+    return `${BASE_URL}/agent/dashboard/workflows/${workspaceId}`;
+};
+
+export const getBilling = (workspaceId: string) => {
+    return `${BASE_URL}/agent/dashboard/billing/${workspaceId}`;
+};
+
 export const updateRuleStatus = async (ruleId: string, status: string, editedText?: string, approvedBy?: string) => {
     const res = await fetch(`${BASE_URL}/rules/${ruleId}/status`, {
         method: "PATCH",

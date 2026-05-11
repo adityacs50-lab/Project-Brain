@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import { motion, useScroll, useMotionValue, useSpring } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
 
 // --- Components ---
 
@@ -34,7 +36,7 @@ const CursorGlow = () => {
   );
 };
 
-const Nav = () => {
+const Nav = ({ onWaitlistClick }: { onWaitlistClick: () => void }) => {
   const { scrollY } = useScroll();
   const [scrolled, setScrolled] = useState(false);
 
@@ -53,11 +55,14 @@ const Nav = () => {
       }`}
     >
       <div className="max-w-5xl mx-auto px-8 w-full flex justify-between items-center">
-        <div className="flex items-center gap-3 font-mono text-sm text-white uppercase tracking-widest">
-          <div className="w-2 h-2 rounded-full bg-[#60FFB4] pulse-dot" />
+        <Link href="/landing" className="flex items-center gap-3 font-mono text-sm text-white uppercase tracking-widest">
+          <div className="w-2 h-2 rounded-full bg-[#FF3800] pulse-dot" />
           COMPANY BRAIN
-        </div>
-        <button className="border border-zinc-700 text-white px-4 py-2 text-sm font-mono hover:border-[#60FFB4] hover:text-[#60FFB4] transition-all duration-200">
+        </Link>
+        <button 
+          onClick={onWaitlistClick}
+          className="border border-zinc-700 text-white px-4 py-2 text-sm font-mono hover:border-[#FF3800] hover:text-[#FF3800] transition-all duration-200"
+        >
           Request Access
         </button>
       </div>
@@ -81,7 +86,7 @@ const HeroBackground = () => {
       {particles.map((p, i) => (
         <div
           key={i}
-          className="absolute w-1 h-1 rounded-full bg-[#60FFB4] animate-float-up"
+          className="absolute w-1 h-1 rounded-full bg-[#FF3800] animate-float-up"
           style={{
             left: p.left,
             top: p.top,
@@ -97,17 +102,18 @@ const HeroBackground = () => {
 
 const HeroCodeBlock = () => {
   const lines = [
-    {text: "POST /v1/agent/query", color: "text-zinc-400"},
+    {text: "POST /v1/agent/execute", color: "text-zinc-400"},
     {text: "{", color: "text-zinc-500"},
-    {text: '  "action": "issue_refund",', color: "text-zinc-300"},
-    {text: '  "amount": 10000', color: "text-yellow-500"},
+    {text: '  "action": "wire_transfer",', color: "text-zinc-300"},
+    {text: '  "amount": 50000,', color: "text-yellow-500"},
+    {text: '  "target": "external_vendor_42"', color: "text-zinc-300"},
     {text: "}", color: "text-zinc-500"},
-    {text: "↓ Company Brain enforces in 47ms", color: "text-[#60FFB4]"},
+    {text: "↓ Supreme Court Adjudicating (32ms)", color: "text-[#FF3800]"},
     {text: "{", color: "text-zinc-500"},
-    {text: '  "decision": "DENIED",', color: "text-red-400"},
-    {text: '  "rule": "Refunds >$500 require approval.",', color: "text-zinc-300"},
-    {text: '  "source": "#finance-ops · 2024-11-03",', color: "text-blue-400"},
-    {text: '  "confidence": 0.97', color: "text-yellow-500"},
+    {text: '  "status": "HALTED",', color: "text-red-500"},
+    {text: '  "reason": "Policy Violation: Vendor not in Whitelist.",', color: "text-zinc-300"},
+    {text: '  "kernel_log": "Rule #904 [Procurement-V2]",', color: "text-blue-400"},
+    {text: '  "governance": "Deterministic Enforcement"', color: "text-zinc-500"},
     {text: "}", color: "text-zinc-500"},
   ];
 
@@ -136,7 +142,7 @@ const HeroCodeBlock = () => {
           </div>
         ))}
         {visibleCount === lines.length && (
-          <span className="inline-block w-2 h-4 bg-[#60FFB4] ml-1 blink-cursor" />
+          <span className="inline-block w-2 h-4 bg-[#FF3800] ml-1 blink-cursor" />
         )}
       </div>
     </div>
@@ -146,18 +152,25 @@ const HeroCodeBlock = () => {
 // --- Main Page ---
 
 export default function LandingPage() {
+  const waitlistRef = useRef<HTMLDivElement>(null);
+
+  const scrollToWaitlist = () => {
+    waitlistRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const reveal = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
   };
 
   const marqueeItems = [
-    "SLACK", "SALESFORCE", "AWS", "ZENDESK", "LANGCHAIN", "OPENAI", "CREWAI", "ANTHROPIC"
+    "SLACK", "GMAIL", "OUTLOOK", "ZENDESK", "POSTGRES", "SALESFORCE", "AWS", "SNOWFLAKE", "OPENAI"
   ];
 
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [agentsCount, setAgentsCount] = useState("");
+  const [notes, setNotes] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -170,7 +183,7 @@ export default function LandingPage() {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, company, agents_count: agentsCount }),
+        body: JSON.stringify({ email, company, agents_count: agentsCount, notes }),
       });
 
       const data = await res.json();
@@ -180,6 +193,7 @@ export default function LandingPage() {
         setEmail("");
         setCompany("");
         setAgentsCount("");
+        setNotes("");
       } else {
         setStatus("error");
         setErrorMessage(data.error || "Something went wrong.");
@@ -194,10 +208,20 @@ export default function LandingPage() {
   return (
     <div className="bg-black text-white selection:bg-[#60FFB4] selection:text-black min-h-screen relative overflow-x-hidden">
       <CursorGlow />
-      <Nav />
+      <Nav onWaitlistClick={scrollToWaitlist} />
 
       {/* Hero */}
       <section className="relative min-h-screen flex items-center pt-[120px]">
+        <div className="absolute inset-0 z-0">
+          <Image 
+            src="/deterministic_os_kernel_hero.png" 
+            alt="Deterministic OS Kernel" 
+            fill 
+            className="object-cover opacity-30 mix-blend-screen"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
+        </div>
         <HeroBackground />
         <div className="max-w-5xl mx-auto px-8 w-full relative z-10">
           <motion.div
@@ -205,7 +229,7 @@ export default function LandingPage() {
             initial="initial"
             animate="animate"
             transition={{ duration: 0.5, delay: 0 }}
-            className="inline-block px-3 py-1 rounded-full border border-[#60FFB4]/20 bg-[#60FFB4]/5 text-[#60FFB4] font-mono text-xs mb-8"
+            className="inline-block px-3 py-1 rounded-full border border-[#FF3800]/20 bg-[#FF3800]/5 text-[#FF3800] font-mono text-xs mb-8"
           >
             PRIVATE BETA · LIMITED TO 50 COMPANIES
           </motion.div>
@@ -217,8 +241,8 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="font-serif italic text-6xl md:text-8xl leading-none tracking-tight text-white max-w-4xl mb-8"
           >
-            The Deterministic Control Plane <br />
-            for Enterprise AI.
+            The Deterministic OS <br />
+            for Agentic Enterprises.
           </motion.h1>
 
           <motion.p
@@ -228,8 +252,8 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-zinc-400 text-lg max-w-xl mb-10 leading-relaxed"
           >
-            Most AI agents ignore company policy because it&apos;s trapped in Slack and PDFs. 
-            Company Brain extracts your team&apos;s tribal knowledge and enforces it as a real-time API firewall.
+            We build the missing layer between raw company data and reliable AI automation. 
+            Company Brain synthesizes your **Slack, Email, Tickets, and Databases** into a deterministic **Executable Skills File** that agents use to work safely.
           </motion.p>
 
           <motion.div
@@ -239,12 +263,15 @@ export default function LandingPage() {
             transition={{ duration: 0.5, delay: 0.45 }}
             className="flex flex-wrap gap-4 mb-16"
           >
-            <button className="bg-[#60FFB4] text-black font-semibold px-6 py-3 text-sm hover:bg-[#7affc2] transition-all duration-200 rounded-md">
+            <button 
+              onClick={scrollToWaitlist}
+              className="bg-[#FF3800] text-white font-semibold px-6 py-3 text-sm hover:bg-[#ff5522] transition-all duration-200 rounded-md"
+            >
               Join Private Beta
             </button>
-            <button className="border border-zinc-700 text-white px-6 py-3 text-sm font-mono hover:border-zinc-500 transition-all duration-200 rounded-md">
-              Read Documentation
-            </button>
+            <Link href="/blog" className="border border-zinc-700 text-white px-6 py-3 text-sm font-mono hover:border-zinc-500 transition-all duration-200 rounded-md flex items-center gap-2">
+              Read the Insights <span className="text-[#FF3800] animate-pulse">●</span>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -286,22 +313,25 @@ export default function LandingPage() {
           Why LLMs Fail in the Enterprise.
         </motion.h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-12 gap-6 mt-16">
           {[
             {
               id: "[01]",
               title: "Stale Knowledge",
-              body: "Your company policies change in Slack every day. Your AI model was trained 6 months ago."
+              body: "Your company policies change in Slack every day. Your AI model was trained 6 months ago.",
+              span: "col-span-12 md:col-span-8"
             },
             {
               id: "[02]",
               title: "No Guardrails",
-              body: "Prompt engineering isn't enough. Without a deterministic gateway, your agent will hallucinate a $0 refund into a $10,000 disaster."
+              body: "Prompt engineering isn't enough. Without a deterministic gateway, your agent will hallucinate a $10,000 disaster.",
+              span: "col-span-12 md:col-span-4"
             },
             {
               id: "[03]",
-              title: "Shadow Logic",
-              body: "Tribal knowledge lives in the heads of your senior staff. When they leave, your AI stays dumb."
+              title: "Lack of Governance",
+              body: "Memory isn't enough. Without the Multi-Agent Supreme Court, your agents operate in a vacuum without accountability or conflict resolution.",
+              span: "col-span-12"
             }
           ].map((card, i) => (
             <motion.div
@@ -310,12 +340,13 @@ export default function LandingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.15 }}
-              whileHover={{ y: -4, borderColor: "#60FFB4" }}
-              className="bg-zinc-950 border border-zinc-800 rounded-xl p-8 transition-all duration-300 group"
+              whileHover={{ y: -4, borderColor: "#FF3800" }}
+              className={`${card.span} bg-zinc-950 border border-zinc-800 rounded-2xl p-10 transition-all duration-300 group relative overflow-hidden`}
             >
-              <div className="font-mono text-xs text-[#60FFB4] mb-4">{card.id}</div>
-              <h3 className="text-white font-semibold text-lg mb-3">{card.title}</h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">{card.body}</p>
+              <div className="font-mono text-xs text-[#FF3800] mb-4">{card.id}</div>
+              <h3 className="text-white font-semibold text-2xl mb-4 italic font-serif">{card.title}</h3>
+              <p className="text-zinc-500 text-lg leading-relaxed">{card.body}</p>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF3800]/5 blur-3xl rounded-full" />
             </motion.div>
           ))}
         </div>
@@ -334,17 +365,17 @@ export default function LandingPage() {
               {[
                 {
                   num: "01",
-                  title: "Passive Ingestion",
-                  body: "Connect our bot to your Slack channels. We use LLMs to extract business rules, permissions, and logic from natural conversations.",
+                  title: "Passive Ingestion (Omni-Source)",
+                  body: "Connect Slack, Gmail, Zendesk, and your SQL databases. We extract tribal knowledge and operational constraints across every fragmented silo.",
                   code: [
-                    '[#finance-ops] @sarah: "Any refund over $500 needs manager sign-off going forward"',
-                    '→ Rule extracted: threshold=$500, action=refund, requires=manager_approval ✓'
+                    '[Zendesk] Ticket #882: "Client needs a manual credit for downtime."',
+                    '→ Rule extracted: action=apply_credit, max=$200, requires=uptime_verification ✓'
                   ]
                 },
                 {
                   num: "02",
-                  title: "The Executive Seal",
-                  body: "Review extracted rules in a premium dashboard. Your legal/ops team signs off on every logic branch before it goes live.",
+                  title: "Multi-Agent Supreme Court",
+                  body: "Every high-stakes decision is adjudicated by a specialized cluster of agents. They resolve conflicts and ensure absolute compliance with your core business logic.",
                   component: (
                     <div className="flex flex-wrap items-center gap-4 text-xs font-mono uppercase tracking-tighter">
                       <motion.div 
@@ -441,7 +472,7 @@ export default function LandingPage() {
             ))}
           </div>
 
-          <div className="text-center pt-40 border-t border-zinc-900">
+          <div ref={waitlistRef} className="text-center pt-40 border-t border-zinc-900">
             <div className="overflow-hidden mb-2">
               <motion.h2 
                 initial={{ x: -50, opacity: 0 }}
@@ -459,7 +490,7 @@ export default function LandingPage() {
                 whileInView={{ x: 0, opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-5xl md:text-7xl font-serif italic text-[#60FFB4]"
+                className="text-5xl md:text-7xl font-serif italic text-[#FF3800]"
               >
                 Start Enforcing.
               </motion.h2>
@@ -487,7 +518,7 @@ export default function LandingPage() {
                   placeholder="Work Email" 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#60FFB4] focus:outline-none w-full transition-colors" 
+                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#FF3800] focus:outline-none w-full transition-colors" 
                 />
                 <input 
                   type="text" 
@@ -495,7 +526,7 @@ export default function LandingPage() {
                   placeholder="Company Name" 
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
-                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#60FFB4] focus:outline-none w-full transition-colors" 
+                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#FF3800] focus:outline-none w-full transition-colors" 
                 />
                 <input 
                   type="number" 
@@ -503,7 +534,13 @@ export default function LandingPage() {
                   placeholder="How many AI agents in production?" 
                   value={agentsCount}
                   onChange={(e) => setAgentsCount(e.target.value)}
-                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#60FFB4] focus:outline-none w-full transition-colors" 
+                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#FF3800] focus:outline-none w-full transition-colors" 
+                />
+                <textarea 
+                  placeholder="How can we help? (Optional)" 
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-white text-sm font-mono placeholder:text-zinc-600 focus:border-[#FF3800] focus:outline-none w-full transition-colors min-h-[100px] resize-none" 
                 />
                 {status === "error" && (
                   <p className="text-red-500 text-xs font-mono mt-1 text-left">
@@ -512,13 +549,57 @@ export default function LandingPage() {
                 )}
                 <button 
                   disabled={status === "loading"}
-                  className="w-full bg-[#60FFB4] text-black font-semibold py-4 rounded-lg hover:bg-[#7affc2] transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed" 
-                  style={{ animation: status === "idle" ? 'pulseGreen 3s ease-in-out infinite' : 'none' }}
+                  className="w-full bg-[#FF3800] text-white font-semibold py-4 rounded-lg hover:bg-[#ff5522] transition-colors mt-2 disabled:opacity-50 disabled:cursor-not-allowed" 
+                  style={{ animation: status === "idle" ? 'pulseRed 3s ease-in-out infinite' : 'none' }}
                 >
                   {status === "loading" ? "Securing..." : "Secure My Spot →"}
                 </button>
               </form>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* Latest Insights Section */}
+      <section className="py-40 border-t border-zinc-900 bg-zinc-950/30">
+        <div className="max-w-5xl mx-auto px-8">
+          <div className="flex justify-between items-end mb-16">
+            <div>
+              <div className="font-mono text-xs text-[#60FFB4] mb-4 uppercase tracking-widest">THE KNOWLEDGE BASE</div>
+              <h2 className="text-5xl font-serif italic text-white">Latest Insights.</h2>
+            </div>
+            <Link href="/blog" className="text-zinc-500 font-mono text-xs uppercase tracking-widest hover:text-white transition-colors mb-2">View All Posts →</Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Link href="/blog/end-of-hallucination" className="group">
+              <div className="bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden hover:border-[#60FFB4]/50 transition-all duration-300">
+                <div className="aspect-video bg-zinc-800 relative overflow-hidden">
+                  <Image src="/blog-hero.png" alt="End of Hallucination" fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                </div>
+                <div className="p-8">
+                  <div className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest mb-3">May 10 • 5 Min Read</div>
+                  <h3 className="text-2xl font-serif italic text-white mb-4 group-hover:text-[#60FFB4] transition-colors">The End of Hallucination: Building the Deterministic Control Plane.</h3>
+                  <p className="text-zinc-400 text-sm leading-relaxed line-clamp-2">Moving from probabilistic prompting to deterministic programming for enterprise-grade reliability.</p>
+                </div>
+              </div>
+            </Link>
+            
+            <div className="space-y-6">
+              {[
+                { title: "Why Your Company's AI is Failing", slug: "ai-is-failing", date: "May 10" },
+                { title: "Zero to One: Building an AI OS", slug: "building-ai-os", date: "May 8" },
+                { title: "The 7 Powers of the Company Brain", slug: "seven-powers", date: "May 6" }
+              ].map((post, i) => (
+                <Link key={i} href={`/blog/${post.slug}`} className="block p-6 bg-zinc-900/20 border border-zinc-800/50 rounded-xl hover:border-zinc-700 transition-all group">
+                  <div className="flex justify-between items-start gap-4">
+                    <h4 className="text-lg text-zinc-300 group-hover:text-white transition-colors leading-snug">{post.title}</h4>
+                    <span className="font-mono text-[10px] text-zinc-600 uppercase tracking-widest pt-1">{post.date}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>

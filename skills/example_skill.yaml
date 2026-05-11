@@ -4,6 +4,7 @@ trigger_keywords:
   - "approval"
   - "reimbursement"
 description: "Handles customer refund requests and required management approvals."
+value_per_run: 10.00
 steps:
   - step: 1
     action: "Verify receipt and product return status."

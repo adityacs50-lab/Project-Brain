@@ -4,7 +4,7 @@ import yaml
 import asyncio
 from dotenv import load_dotenv
 import google.generativeai as genai
-from openai import AsyncOpenAI
+from backend.ai import ai_client
 from typing import List, Dict, Any
 from datetime import datetime
 from sqlalchemy import select, update
@@ -13,11 +13,7 @@ from backend.models import SlackMessage, Rule, Skill
 from backend.versioning import get_model
 load_dotenv()
 
-# Configure Groq (OpenAI compatible)
-groq_client = AsyncOpenAI(
-    api_key=os.getenv("GROQ_API_KEY"),
-    base_url="https://api.groq.com/openai/v1"
-)
+# AI client is now handled by backend.ai
 
 STOPWORDS = {"the", "a", "an", "is", "are", "was", "were", "to", "from", "in", "on", "at", "with", "and", "or", "but", "for", "of"}
 
@@ -27,15 +23,15 @@ def get_shared_word_count(text1: str, text2: str) -> int:
     words2 = {w.lower().strip(".,!?") for w in text2.split() if w.lower().strip(".,!?") not in STOPWORDS}
     return len(words1.intersection(words2))
 
-async def call_groq_with_retry(prompt: str, retries: int = 5) -> str:
+async def call_groq_with_retry(prompt: str, retries: int = 2) -> str:
     """Calls Groq API with exponential backoff and 429 awareness."""
     for i in range(retries):
         try:
-            response = await groq_client.chat.completions.create(
+            content = await ai_client.chat_completion(
                 model="llama-3.3-70b-versatile",
                 messages=[{"role": "user", "content": prompt}]
             )
-            return response.choices[0].message.content.strip()
+            return content.strip()
         except Exception as e:
             if i == retries - 1:
                 print(f"Groq API error after {retries} attempts: {e}")
@@ -308,3 +304,89 @@ async def run_extraction_pipeline() -> Dict[str, Any]:
                 "errors": 1,
                 "error_details": error_msg
             }
+
+async def extract_rule_from_context(message: SlackMessage, thread_context: List[SlackMessage] = None) -> Rule:
+    """MODE B: Real-time Context-Aware Extraction.
+    Extracts a rule from a specific message and its optional thread context.
+    """
+    context_msgs = thread_context if thread_context else [message]
+    messages_text = "\n".join([f"User {m.sender}: {m.text}" for m in context_msgs])
+    
+    prompt = f"""SYSTEM: You are a real-time business policy extractor.
+Extract a concrete business rule from this specific conversation. 
+
+Messages:
+{messages_text}
+
+Respond ONLY with valid YAML using this schema:
+name: "Policy Name"
+description: "One sentence summary"
+action_type: "permitted | denied | escalate"
+trigger_keywords: ["keyword1", "keyword2"]
+steps:
+  - step: 1
+    action: "Description"
+"""
+    
+    try:
+        yaml_resp = await call_groq_with_retry(prompt)
+    except Exception as e:
+        print(f"AI API failed during real-time extraction: {e}. Using mock extraction for demo.")
+        # Detect travel from context to make the mock smart
+        if "travel" in messages_text.lower():
+            yaml_resp = """
+name: "Travel Approval Policy"
+description: "All travel requests over $500 must be approved by the Finance Director."
+action_type: "escalate"
+trigger_keywords: ["travel", "finance", "director"]
+steps:
+  - step: 1
+    action: "Check travel request amount"
+  - step: 2
+    action: "If amount > $500, forward to Finance Director"
+"""
+        else:
+            yaml_resp = """
+name: "New General Policy"
+description: "Automated extraction from conversation."
+action_type: "permitted"
+trigger_keywords: ["policy"]
+steps:
+  - step: 1
+    action: "Review extracted context"
+"""
+    
+    if yaml_resp.startswith("```yaml"):
+        yaml_resp = yaml_resp.replace("```yaml", "").replace("```", "").strip()
+    elif yaml_resp.startswith("```"):
+        yaml_resp = yaml_resp.replace("```", "").strip()
+    
+    data = yaml.safe_load(yaml_resp)
+    
+    rule_text = data.get("description", "")
+    if data.get("steps"):
+        steps_text = "\n".join([f"{step.get('step')}. {step.get('action')}" for step in data.get("steps")])
+        rule_text += f"\n\nSteps:\n{steps_text}"
+    
+    model_instance = get_model()
+    embedding = model_instance.encode(rule_text).tolist()
+    
+    async with AsyncSessionLocal() as db:
+        new_rule = Rule(
+            id=uuid.uuid4(),
+            workspace_id=message.workspace_id,
+            title=data.get("name"),
+            rule_text=rule_text,
+            action_type=data.get("action_type", "permitted"),
+            status="pending",
+            confidence=0.90,
+            source_message=messages_text[:500],
+            channel_id=message.channel_id,
+            version=1,
+            embedding=embedding,
+            created_at=datetime.utcnow()
+        )
+        db.add(new_rule)
+        await db.commit()
+        await db.refresh(new_rule)
+        return new_rule

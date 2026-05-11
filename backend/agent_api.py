@@ -4,9 +4,9 @@ import uuid
 from datetime import datetime
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
-from sqlalchemy import select, desc, delete, cast, Float, text
+from sqlalchemy import select, desc, delete, cast, Float, text, func
 from backend.db import AsyncSessionLocal
-from backend.models import Rule, AgentDecisionLog, SlackWorkspace
+from backend.models import Rule, AgentDecisionLog, SlackWorkspace, WorkflowRun, BillingEvent, WorkflowStepLog
 import operator as op
 
 OPERATORS = {
@@ -364,13 +364,72 @@ async def get_agent_stats(workspace_id: str):
         flagged_count = sum([1 for d in decisions if d.agent_feedback and ("incorrect" in d.agent_feedback.lower() or "overridden" in d.agent_feedback.lower())])
         hallucination_free = (1 - (flagged_count / total_decisions)) if total_decisions > 0 else 1.0
 
+        # 4. Total ROI (Value Generated)
+        stmt_roi = select(func.sum(BillingEvent.value_amount)).where(BillingEvent.workspace_id == workspace_id)
+        result_roi = await db.execute(stmt_roi)
+        total_roi = result_roi.scalar() or 0.0
+
         return {
             "workspace_id": workspace_id,
             "brain_health": int(avg_confidence * 100),
             "hallucination_free": int(hallucination_free * 100),
             "total_decisions": total_decisions,
             "active_rules": total_rules,
+            "total_roi": float(total_roi),
             "health_status": "OPTIMAL" if avg_confidence > 0.8 else "STABLE" if avg_confidence > 0.5 else "CRITICAL"
+        }
+
+# ========================================
+# GET /agent/dashboard/workflows/{workspace_id}
+# ========================================
+@router.get("/dashboard/workflows/{workspace_id}")
+async def get_dashboard_workflows(workspace_id: str):
+    async with AsyncSessionLocal() as db:
+        stmt = select(WorkflowRun).where(
+            WorkflowRun.workspace_id == workspace_id
+        ).order_by(desc(WorkflowRun.created_at)).limit(20)
+        
+        result = await db.execute(stmt)
+        runs = result.scalars().all()
+        
+        return {
+            "workflows": [
+                {
+                    "id": str(r.id),
+                    "title": r.title,
+                    "status": r.status,
+                    "current_step": r.current_step_index,
+                    "value_generated": r.value_generated,
+                    "created_at": r.created_at.isoformat()
+                }
+                for r in runs
+            ]
+        }
+
+# ========================================
+# GET /agent/dashboard/billing/{workspace_id}
+# ========================================
+@router.get("/agent/dashboard/billing/{workspace_id}")
+async def get_dashboard_billing(workspace_id: str):
+    async with AsyncSessionLocal() as db:
+        stmt = select(BillingEvent).where(
+            BillingEvent.workspace_id == workspace_id
+        ).order_by(desc(BillingEvent.created_at)).limit(50)
+        
+        result = await db.execute(stmt)
+        events = result.scalars().all()
+        
+        return {
+            "events": [
+                {
+                    "id": str(e.id),
+                    "type": e.event_type,
+                    "amount": e.value_amount,
+                    "currency": e.currency,
+                    "created_at": e.created_at.isoformat()
+                }
+                for e in events
+            ]
         }
 
 # ========================================

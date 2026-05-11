@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy import select, desc
 from backend.db import AsyncSessionLocal
 from backend.models import Rule, Contradiction
-from openai import AsyncOpenAI
+from backend.ai import ai_client
 from dotenv import load_dotenv
 import uuid
 
@@ -14,11 +14,7 @@ load_dotenv()
 
 router = APIRouter(prefix="/rules", tags=["Rule Versioning"])
 
-# Configure Groq (OpenAI compatible)
-groq_client = AsyncOpenAI(
-    api_key=os.getenv("GROQ_API_KEY"),
-    base_url="https://api.groq.com/openai/v1"
-)
+# AI client is now handled by backend.ai
 
 # Lazy load the model to avoid blocking on import
 model = None
@@ -377,11 +373,10 @@ async def query_rules(request: QueryRequest):
 
             try:
                 prompt = f"""SYSTEM: Answer using ONLY company rules below.\n\n{rules_context}\n\nQuestion: {request.query}\n\nAnswer:"""
-                response = await groq_client.chat.completions.create(
+                answer = await ai_client.chat_completion(
                     model="llama-3.3-70b-versatile",
                     messages=[{"role": "user", "content": prompt}]
                 )
-                answer = response.choices[0].message.content.strip()
                 sources = [r.title for r in matching_rules]
                 confidence = "high"
             except Exception as e:

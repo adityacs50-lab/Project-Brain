@@ -1,17 +1,19 @@
 {
-  "version": 1,
-  "skills": {
-    "supabase": {
-      "source": "supabase/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/supabase/SKILL.md",
-      "computedHash": "45a3cdccc364a4bbd6cdf700fc069e9f24ebc0428098746cbfbf8b18a5e160d2"
+  "version": "1.0.0",
+  "workspace_id": "live_fire_ws",
+  "compiled_at": "2026-05-11T19:54:30.187702",
+  "rules": [
+    {
+      "id": "35dfd6d9-da6f-4fa6-9886-d265f38a916c",
+      "title": "Refund Limit Policy",
+      "logic": "No refunds over $50 without manager approval. Effective immediately.",
+      "action": "escalate"
     },
-    "supabase-postgres-best-practices": {
-      "source": "supabase/agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
-      "computedHash": "d606a1146be6d54fb9e73f718b5320b9acac5ff2ba2d7230a555df4b5a923b4a"
+    {
+      "id": "57812ee5-a543-4c8d-819f-91cf54cbc451",
+      "title": "DB Recovery Skill [Error 404]",
+      "logic": "Fixed by running 'SQL: RECOVER_PROFILE_INDEX_V2'. This restores user pointers.",
+      "action": "permitted"
     }
-  }
+  ]
 }

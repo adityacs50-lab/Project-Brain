@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
     const body = await req.json();
-    const { email, company, agents_count } = body
+    const { email, company, agents_count, notes } = body
 
     // 1. SAVE TO SUPABASE
     const { error } = await supabase
@@ -22,6 +22,7 @@ export async function POST(req: Request) {
         email,
         company,
         agents_count,
+        notes,
         source: 'landing-page'
       }])
 
@@ -43,6 +44,7 @@ export async function POST(req: Request) {
                 `📧 Email: ${email}\n` +
                 `🏢 Company: ${company}\n` +
                 `🤖 Agents in prod: ${agents_count}\n` +
+                `📝 Notes: ${notes || 'N/A'}\n` +
                 `🕐 Time: ${new Date().toISOString()}`
         })
       })
@@ -106,6 +108,7 @@ export async function POST(req: Request) {
           email,
           company,
           agents_count,
+          notes,
           timestamp: new Date().toISOString(),
           source: 'landing-page'
         })

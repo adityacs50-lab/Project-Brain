@@ -1,3 +1,5 @@
+# --- Company Brain: The Firewall ---
+
 # Python
 __pycache__/
 *.py[cod]
@@ -7,28 +9,39 @@ venv/
 ENV/
 env/
 .env
+.env.*
+!.env.example
 
 # Node
 node_modules/
+.next/
+out/
+build/
 dist/
-dist-ssr
-*.local
+.vercel
 
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Database
+# Database & Data
 *.db
 *.sqlite
+*.sqlite3
+postgres-data/
+dump.rdb
 
-# Tool specific
-.agents/
-.windsurf/
-.zencoder/
-alter_db.py
-insert_workspace.py
+# Company Brain Specific
+scratch/
+skills-lock.json
+*.log
+temp/
+.temp/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# Deployment Artifacts
+.vercel/
+.next/
+node_modules/

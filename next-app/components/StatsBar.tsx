@@ -8,9 +8,16 @@ export function StatsBar({ workspaceId }: { workspaceId: string }) {
 
   const totalActive = rules?.filter((r: {status: string}) => r.status === "active").length || 0;
   const pendingReview = rules?.filter((r: {status: string}) => r.status === "pending").length || 0;
-  const totalDecisions = statsData?.total_decisions || 0;
+  const totalROI = statsData?.total_roi || 0.0;
 
   const stats = [
+    {
+      title: "Total ROI",
+      value: `$${totalROI.toFixed(2)}`,
+      icon: Zap,
+      color: "text-purple-600",
+      bg: "bg-purple-600/10",
+    },
     {
       title: "Active Rules",
       value: totalActive,
@@ -19,7 +26,7 @@ export function StatsBar({ workspaceId }: { workspaceId: string }) {
       bg: "bg-green-500/10",
     },
     {
-      title: "Total AI Decisions",
+      title: "AI Decisions",
       value: totalDecisions,
       icon: Zap,
       color: "text-blue-500",
@@ -35,7 +42,7 @@ export function StatsBar({ workspaceId }: { workspaceId: string }) {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-3 w-full">
+    <div className="grid gap-4 md:grid-cols-4 w-full">
       {stats.map((stat, i) => (
         <div key={i} className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors shadow-sm">
           <div className="flex items-center justify-between mb-2">

@@ -5,8 +5,9 @@ from slack_bolt.async_app import AsyncApp
 from slack_bolt.adapter.fastapi.async_handler import AsyncSlackRequestHandler
 from sqlalchemy import select, asc
 from backend.db import AsyncSessionLocal
-from backend.models import Rule, QueryLog
+from backend.models import Rule, QueryLog, SlackMessage
 from backend.versioning import get_model
+from backend.extractor import extract_rule_from_context
 
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN", "")
 SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET", "")
@@ -199,3 +200,43 @@ async def handle_flag_rule(ack, body, respond):
         text="Got it — flagged for your Ops team to review ✅",
         replace_original=True
     )
+
+@app.event("reaction_added")
+async def handle_reaction_added(body, client, say, logger, context):
+    """🧠 LIVE-SYNC MEMORY: Extracts a rule when a message is tagged with the brain emoji."""
+    event = body.get("event", {})
+    reaction = event.get("reaction")
+    
+    if reaction == "brain":
+        workspace_id = context.get("team_id")
+        channel_id = event.get("item", {}).get("channel")
+        ts = event.get("item", {}).get("ts")
+        
+        async with AsyncSessionLocal() as db:
+            # 1. Fetch the original message from our DB
+            stmt = select(SlackMessage).where(
+                SlackMessage.workspace_id == workspace_id,
+                SlackMessage.channel_id == channel_id,
+                SlackMessage.ts == ts
+            )
+            result = await db.execute(stmt)
+            message = result.scalars().first()
+            
+            if message:
+                try:
+                    # 2. Extract rule instantly
+                    new_rule = await extract_rule_from_context(message)
+                    
+                    # 3. Post confirmation in thread
+                    await client.chat_postMessage(
+                        channel=channel_id,
+                        thread_ts=ts,
+                        text=f"Institutional Memory Captured! \nI've drafted a new policy: *{new_rule.title}*. \nReview it in the Pending Queue: <https://company-brain.vercel.app/dashboard/rules?status=pending|Review Rules>"
+                    )
+                except Exception as e:
+                    logger.error(f"Live-Sync Extraction failed: {e}")
+                    await client.chat_postMessage(
+                        channel=channel_id,
+                        thread_ts=ts,
+                        text="I tried to capture that logic, but my reasoning engine hit a snag. I've flagged it for manual review."
+                    )

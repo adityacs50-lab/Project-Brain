@@ -7,11 +7,12 @@ import { fetcher, getRules, getStats } from "@/lib/api";
 import { StatsBar } from "@/components/StatsBar";
 import { Rule } from "@/components/RuleCard";
 import { useWorkspace } from "@/components/WorkspaceContext";
+import { WorkflowFeed } from "@/components/WorkflowFeed";
 
 export default function Dashboard() {
   const { workspaceId } = useWorkspace();
   const { data: rules, isLoading: rulesLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
-  const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
+  const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 5000 });
 
   if (rulesLoading) {
     return (
@@ -32,10 +33,10 @@ export default function Dashboard() {
     <div className="flex flex-col gap-8 animate-in fade-in duration-700">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Company Brain</h1>
-          <div className="flex items-center gap-2 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-[10px] font-bold text-green-600 uppercase tracking-wider">Online</span>
+          <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Operation Command Center</h1>
+          <div className="flex items-center gap-2 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20">
+            <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">Live Monitoring</span>
           </div>
         </div>
       </div>
@@ -43,47 +44,52 @@ export default function Dashboard() {
       <StatsBar workspaceId={workspaceId} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Activity Feed */}
-        <div className="lg:col-span-2 bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
-          <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
-            <h2 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
-              <Activity className="w-4 h-4 text-blue-600" />
-              Recent Rule Activity
-            </h2>
-            <Link href="/active-rules" className="text-xs text-zinc-500 hover:text-blue-600 transition-colors flex items-center gap-1">
-              View all <ArrowRight className="w-3 h-3" />
-            </Link>
-          </div>
-          
-          <div className="divide-y divide-zinc-100">
-            {recentRules.length > 0 ? (
-              recentRules.map((rule: Rule, i) => (
-                <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-zinc-50 transition-colors cursor-pointer group">
-                  <div className="flex items-center gap-4">
-                    <div className={`p-2 rounded-lg ${rule.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'}`}>
-                      {rule.status === 'active' ? <ShieldCheck className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Workflow Feed */}
+          <WorkflowFeed workspaceId={workspaceId} />
+
+          {/* Activity Feed */}
+          <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
+            <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
+              <h2 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
+                <Activity className="w-4 h-4 text-blue-600" />
+                Recent Rule Activity
+              </h2>
+              <Link href="/active-rules" className="text-xs text-zinc-500 hover:text-blue-600 transition-colors flex items-center gap-1">
+                View all <ArrowRight className="w-3 h-3" />
+              </Link>
+            </div>
+            
+            <div className="divide-y divide-zinc-100">
+              {recentRules.length > 0 ? (
+                recentRules.map((rule: Rule, i) => (
+                  <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-zinc-50 transition-colors cursor-pointer group">
+                    <div className="flex items-center gap-4">
+                      <div className={`p-2 rounded-lg ${rule.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'}`}>
+                        {rule.status === 'active' ? <ShieldCheck className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
+                      </div>
+                      <div>
+                        <h3 className="text-sm font-medium text-zinc-900 group-hover:text-blue-600 transition-colors">{rule.title}</h3>
+                        <p className="text-xs text-zinc-500 mt-0.5">{rule.source_channel || "#general"}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-sm font-medium text-zinc-900 group-hover:text-blue-600 transition-colors">{rule.title}</h3>
-                      <p className="text-xs text-zinc-500 mt-0.5">{rule.source_channel || "#general"}</p>
+                    <div className="text-right">
+                      <p className="text-xs text-zinc-400">{new Date(rule.created_at).toLocaleDateString()}</p>
+                      <p className="text-[10px] font-mono text-zinc-500 mt-1 uppercase tracking-tighter">{rule.status}</p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-zinc-400">{new Date(rule.created_at).toLocaleDateString()}</p>
-                    <p className="text-[10px] font-mono text-zinc-500 mt-1 uppercase tracking-tighter">{rule.status}</p>
-                  </div>
+                ))
+              ) : (
+                <div className="p-12 text-center">
+                  <p className="text-sm text-zinc-400">No recent activity found.</p>
                 </div>
-              ))
-            ) : (
-              <div className="p-12 text-center">
-                <p className="text-sm text-zinc-400">No recent activity found.</p>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
         {/* Intelligence Health */}
-        <div className="bg-white border border-zinc-200 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-sm">
+        <div className="bg-white border border-zinc-200 rounded-xl p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-sm h-fit">
           <div className="absolute top-4 left-6">
             <h2 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
               <Brain className="w-4 h-4 text-purple-600" />

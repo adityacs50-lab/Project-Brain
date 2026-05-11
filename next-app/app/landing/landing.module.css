@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,100..900&family=DM+Sans:ital,opsz,wght@0,100..1000;1,100..1000&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
 
 .landingBody {
-  background-color: #000000;
-  color: #FFFFFF;
+  background-color: #0b0a09; /* Deep Charcoal Industrial */
+  color: #E8E8E8;
   font-family: 'DM Sans', sans-serif;
   margin: 0;
   padding: 0;
@@ -25,7 +25,7 @@
 }
 
 .accent {
-  color: #60FFB4;
+  color: #FF3800; /* Hyper Red/Orange */
 }
 
 /* Nav */
@@ -55,7 +55,7 @@
   position: absolute;
   width: 2px;
   height: 2px;
-  background: rgba(96, 255, 180, 0.3);
+  background: rgba(255, 56, 0, 0.3);
   border-radius: 50%;
   animation: floatUp linear infinite;
 }
@@ -137,7 +137,7 @@
   display: inline-block;
   width: 2px;
   height: 1.2em;
-  background: #60FFB4;
+  background: #FF3800;
   margin-left: 2px;
   vertical-align: middle;
   animation: blink 1s step-end infinite;
@@ -172,14 +172,14 @@
   align-items: center;
   padding: 0.5rem 1rem;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 56, 0, 0.2);
+  background: rgba(255, 56, 0, 0.05);
   font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin-bottom: 2rem;
-  color: #60FFB4;
+  color: #FF3800;
 }
 
 .headline {
@@ -202,8 +202,8 @@
 
 .submitBtn {
   width: 100%;
-  background: #60FFB4;
-  color: #000000;
+  background: #FF3800;
+  color: #FFFFFF;
   padding: 1rem;
   border: none;
   border-radius: 8px;
@@ -214,7 +214,7 @@
 
 .submitBtn:hover {
   transform: scale(1.04);
-  box-shadow: 0 0 40px rgba(96, 255, 180, 0.4);
+  box-shadow: 0 0 40px rgba(255, 56, 0, 0.4);
 }
 
 .pulseScale {
@@ -226,23 +226,56 @@
   50% { transform: scale(1.02); }
 }
 
-/* Grid */
-.grid {
+/* Bento Grid Styles */
+.bentoGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 4rem;
 }
 
-.problemCard {
-  background: #050505;
+.bentoItem {
+  background: #141312;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
   padding: 2.5rem;
-  border-radius: 12px;
-  height: 100%;
-  text-align: left;
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Sections */
+.bentoItem:hover {
+  border-color: rgba(255, 56, 0, 0.3);
+  background: #1a1918;
+  transform: translateY(-5px);
+}
+
+.bentoLarge {
+  grid-column: span 8;
+}
+
+.bentoSmall {
+  grid-column: span 4;
+}
+
+/* MacOS Window Controls */
+.windowControls {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dotRed { background: #FF5F56; }
+.dotYellow { background: #FFBD2E; }
+.dotGreen { background: #27C93F; }
+
 .sectionReveal {
   padding: 8rem 0;
 }
