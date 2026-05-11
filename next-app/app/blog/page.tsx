@@ -77,7 +77,7 @@ export default function BlogIndex() {
     <div className="bg-[#FCFBF7] text-[#1A1A1A] min-h-screen selection:bg-[#60FFB4]/30">
       <nav className="h-16 flex items-center border-b border-zinc-100 mb-20 px-6 sticky top-0 bg-white/80 backdrop-blur-md z-50">
         <div className="max-w-5xl mx-auto w-full flex justify-between items-center">
-          <Link href="/" className="font-mono text-[10px] text-black uppercase tracking-widest font-bold">Company Brain / Insights</Link>
+          <Link href="/" className="font-mono text-[10px] text-black uppercase tracking-widest font-bold">Statelock / Insights</Link>
           <div className="flex gap-8 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
             <Link href="/blog" className="text-black font-bold">Archives</Link>
             <Link href="/about" className="hover:text-black transition-colors">Strategy</Link>
@@ -126,7 +126,7 @@ export default function BlogIndex() {
 
       <footer className="py-20 border-t border-zinc-100 text-center">
         <p className="font-mono text-[10px] text-zinc-400 uppercase tracking-widest">
-          &copy; 2026 Company Brain Editorial • Built for the Deterministic Era
+          &copy; 2026 Statelock Editorial • Built for the Deterministic Era
         </p>
       </footer>
     </div>

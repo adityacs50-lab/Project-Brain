@@ -46,7 +46,7 @@ export default function ReviewQueue() {
             </div>
             <h2 className="text-xl font-bold text-zinc-900 mb-2">Queue is clear</h2>
             <p className="text-zinc-500 max-w-xs text-sm">
-              The Company Brain is fully synced. All operational rules are currently verified.
+              The Statelock is fully synced. All operational rules are currently verified.
             </p>
           </div>
         ) : (

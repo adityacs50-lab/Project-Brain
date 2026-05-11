@@ -15,7 +15,7 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Company Brain | Deterministic Control Plane",
+  title: "Statelock | Deterministic Control Plane",
   description: "Enterprise Guardrails for Autonomous Agents",
 };
 

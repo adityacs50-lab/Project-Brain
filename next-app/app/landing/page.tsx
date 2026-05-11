@@ -252,7 +252,7 @@ export default function LandingPage() {
             className="text-zinc-400 text-lg max-w-xl mb-10 leading-relaxed"
           >
             We build the missing layer between raw company data and reliable AI automation. 
-            Company Brain synthesizes your **Slack, Email, Tickets, and Databases** into a deterministic **Executable Skills File** that agents use to work safely.
+            Statelock synthesizes your **Slack, Email, Tickets, and Databases** into a deterministic **Executable Skills File** that agents use to work safely.
           </motion.p>
 
           <motion.div
@@ -264,12 +264,18 @@ export default function LandingPage() {
           >
             <button 
               onClick={scrollToWaitlist}
-              className="bg-[#FF3800] text-white font-semibold px-6 py-3 text-sm hover:bg-[#ff5522] transition-all duration-200 rounded-md"
+              className="bg-[#FF3800] text-white font-bold px-8 py-4 text-sm hover:bg-[#ff5522] transition-all duration-200 rounded-md shadow-[0_0_25px_rgba(255,56,0,0.2)]"
             >
-              Join Private Beta
+              JOIN PRIVATE BETA
             </button>
-            <Link href="/blog" className="border border-zinc-700 text-white px-6 py-3 text-sm font-mono hover:border-zinc-500 transition-all duration-200 rounded-md flex items-center gap-2">
-              Read the Insights <span className="text-[#FF3800] animate-pulse">●</span>
+            <Link 
+              href="/?workspace_id=demo-workspace" 
+              className="border border-zinc-700 text-white px-8 py-4 text-sm font-bold hover:border-[#FF3800] hover:text-[#FF3800] transition-all duration-200 rounded-md backdrop-blur-sm uppercase"
+            >
+              View Live Demo
+            </Link>
+            <Link href="/blog" className="text-zinc-500 hover:text-zinc-300 px-6 py-4 text-sm font-mono transition-all duration-200 flex items-center gap-2">
+              Read the Insights <span className="text-[#FF3800]/50 animate-pulse">●</span>
             </Link>
           </motion.div>
 
@@ -589,7 +595,7 @@ export default function LandingPage() {
               {[
                 { title: "Why Your Company's AI is Failing", slug: "ai-is-failing", date: "May 10" },
                 { title: "Zero to One: Building an AI OS", slug: "building-ai-os", date: "May 8" },
-                { title: "The 7 Powers of the Company Brain", slug: "seven-powers", date: "May 6" }
+                { title: "The 7 Powers of the Statelock", slug: "seven-powers", date: "May 6" }
               ].map((post, i) => (
                 <Link key={i} href={`/blog/${post.slug}`} className="block p-6 bg-zinc-900/20 border border-zinc-800/50 rounded-xl hover:border-zinc-700 transition-all group">
                   <div className="flex justify-between items-start gap-4">
@@ -608,7 +614,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="font-mono text-xs text-zinc-600 uppercase tracking-widest">
-              &copy; 2025 COMPANY BRAIN
+              &copy; 2026 Statelock
             </div>
             <div className="font-mono text-xs text-zinc-600 uppercase tracking-widest">
               BUILT FOR THE DETERMINISTIC ERA

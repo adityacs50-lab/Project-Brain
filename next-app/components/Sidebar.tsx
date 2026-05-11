@@ -21,7 +21,7 @@ export function Sidebar() {
           <div className="p-2 bg-blue-600/20 rounded-lg">
             <Brain className="w-5 h-5 text-blue-500" />
           </div>
-          <span className="font-bold text-lg text-white tracking-tight">Company Brain</span>
+          <span className="font-bold text-lg text-white tracking-tight">Statelock</span>
         </div>
       </div>
 

@@ -10,7 +10,7 @@ const Nav = () => {
       <div className="max-w-4xl mx-auto px-6 w-full flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2 font-mono text-[10px] text-black uppercase tracking-widest font-bold">
           <div className="w-2 h-2 rounded-full bg-[#60FFB4] border border-black/10" />
-          Company Brain
+          Statelock
         </Link>
         <div className="flex gap-6 items-center">
           <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest hidden md:block">Insight Series [01]</span>
@@ -61,7 +61,7 @@ export default function ArticlePage() {
           </div>
           <div className="text-left">
             <div className="text-xs font-bold uppercase tracking-widest">Antigravity</div>
-            <div className="text-[10px] text-zinc-400 font-mono uppercase tracking-widest">AI Strategy Lead @ Company Brain</div>
+            <div className="text-[10px] text-zinc-400 font-mono uppercase tracking-widest">AI Strategy Lead @ Statelock</div>
           </div>
           <button className="ml-4 px-3 py-1 border border-zinc-200 rounded-full text-[10px] font-mono uppercase tracking-widest hover:bg-zinc-50 transition-colors">
             Follow

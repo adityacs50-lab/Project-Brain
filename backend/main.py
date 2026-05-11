@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = FastAPI(title="Company Brain API", version="0.1.0")
+app = FastAPI(title="Statelock API", version="0.1.0")
 
 class AskRequest(BaseModel):
     query: str
@@ -127,7 +127,7 @@ async def slack_events(req: Request):
 
 @app.on_event("startup")
 async def startup_event():
-    print("Company Brain backend running")
+    print("Statelock backend running")
     
     # Initialize the database tables
     async with engine.begin() as conn:

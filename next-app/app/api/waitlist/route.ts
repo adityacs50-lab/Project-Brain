@@ -40,7 +40,7 @@ export async function POST(req: Request) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          text: `🧠 *New Company Brain Lead!*\n` +
+          text: `🧠 *New Statelock Lead!*\n` +
                 `📧 Email: ${email}\n` +
                 `🏢 Company: ${company}\n` +
                 `🤖 Agents in prod: ${agents_count}\n` +
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'Aditya from Company Brain <aditya@companybrain.ai>',
+          from: 'Aditya from Statelock <aditya@companybrain.ai>',
           to: email,
           subject: 'You are on the list.',
           html: `
@@ -68,7 +68,7 @@ export async function POST(req: Request) {
                         max-width:600px;border: 1px solid #1a1a1a">
               <p style="color:#60FFB4;font-size:12px;
                         letter-spacing:0.1em;font-family:monospace">
-                COMPANY BRAIN · PRIVATE BETA
+                Statelock · PRIVATE BETA
               </p>
               <h1 style="font-size:28px;margin:24px 0">
                 You're on the list.
@@ -89,7 +89,7 @@ export async function POST(req: Request) {
                           padding-top:24px">
                 <p style="color:#444;font-size:12px">
                   — Aditya<br>
-                  Founder, Company Brain<br>
+                  Founder, Statelock<br>
                   Built in Chhatrapati Sambhajinagar 🇮🇳
                 </p>
               </div>

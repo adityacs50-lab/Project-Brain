@@ -1,4 +1,4 @@
-# 🚀 Company Brain: Roadmap & Technical Debt
+# 🚀 Statelock: Roadmap & Technical Debt
 
 ## 🛡️ Thiel Protocol Compliance (100% COMPLETED)
 - [x] **Rule 1: 10x Engineering Bar** (Adversarial Verification built)
@@ -25,4 +25,4 @@
 - [ ] **Identity-Aware Enforcement**: Decisions based on the user's role and permissions fetched from SSO.
 
 ---
-*Maintained by the Company Brain Core Team.*
+*Maintained by the Statelock Core Team.*

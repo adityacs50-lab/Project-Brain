@@ -6,7 +6,7 @@ from backend.models import SlackWorkspace, SlackMessage, Rule, Contradiction, Qu
 from sqlalchemy import delete
 
 async def prepare_demo():
-    print("--- Preparing Company Brain Demo ---")
+    print("--- Preparing Statelock Demo ---")
     
     # 1. Initialize Tables
     async with engine.begin() as conn:

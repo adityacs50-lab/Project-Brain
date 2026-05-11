@@ -29,7 +29,7 @@ MOCK_SKILLS = [
 ]
 
 async def run_demo():
-    print("--- COMPANY BRAIN E2E DEMO ---")
+    print("--- Statelock E2E DEMO ---")
     
     # Step 1: Seed
     print("\nStep 1: Seeding fake Slack messages...")
@@ -78,7 +78,7 @@ async def run_demo():
         print("---")
 
     # Step 4: Summary
-    print(f"\nDemo complete. Company Brain ingested 8 messages, extracted 4 skills, answered 3 queries.")
+    print(f"\nDemo complete. Statelock ingested 8 messages, extracted 4 skills, answered 3 queries.")
     print("\nALL CHECKS PASSED")
 
 if __name__ == "__main__":
