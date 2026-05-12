@@ -32,6 +32,14 @@ async def seed_market_ready():
         # 2. Hardened Rules with Numerical Thresholds
         rules_to_seed = [
             {
+            "title": "Standard Reporting",
+            "rule_text": "Employees are permitted to send weekly status reports to their teams",
+            "action_type": "permitted",
+            "threshold_value": None,
+            "threshold_currency": None,
+            "operator": None
+        },
+        {
                 "title": "Refund Cap Enforcement", 
                 "rule_text": "No refund above $50 without manager approval",
                 "threshold_value": 50.0,

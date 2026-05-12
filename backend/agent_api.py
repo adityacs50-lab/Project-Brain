@@ -150,7 +150,7 @@ async def query_agent(request: AgentQueryRequest, http_request: Request):
         if matching_rules:
             top_rule = matching_rules[0]
             
-            if similarity_score >= 0.75:
+            if similarity_score >= 0.65:
                 # We have a match - apply decision logic
                 rule_id = top_rule.id
                 rule_title = top_rule.title
