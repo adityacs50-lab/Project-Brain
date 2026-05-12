@@ -25,7 +25,13 @@ async def seed_market_ready():
         else:
             demo_ws.api_key = "sk-demo-12345678"
 
-        # Clear existing
+        # 0. Clear existing logs for demo-workspace to avoid FK constraints
+        print("Clearing existing logs for demo-workspace...")
+        from backend.models import AgentDecisionLog
+        await db.execute(delete(AgentDecisionLog).where(AgentDecisionLog.workspace_id == "demo-workspace"))
+
+        # 1. Clear existing rules for demo-workspace
+        print("Clearing existing rules for demo-workspace...")
         await db.execute(delete(Rule).where(Rule.workspace_id == "demo-workspace"))
         await db.commit()
 
@@ -82,7 +88,7 @@ async def seed_market_ready():
                 workspace_id="demo-workspace",
                 title=r_data["title"],
                 rule_text=r_data["rule_text"],
-                action_type="denied",
+                action_type=r_data.get("action_type", "denied"),
                 status="active",
                 confidence=1.0,
                 source_message="STATELOCK-SEED-ENGINE",

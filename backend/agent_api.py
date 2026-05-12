@@ -334,6 +334,37 @@ async def get_decisions(workspace_id: str):
         }
 
 # ========================================
+# GET /agent/debug/similarity
+# ========================================
+@router.get("/debug/similarity")
+async def debug_similarity(workspace_id: str, query: str, db: AsyncSession = Depends(get_db)):
+    model_instance = get_model()
+    query_embedding = model_instance.encode(query).tolist()
+    
+    stmt = select(Rule).where(
+        Rule.workspace_id == workspace_id,
+        Rule.status == "active"
+    ).order_by(Rule.embedding.cosine_distance(query_embedding)).limit(5)
+    
+    result = await db.execute(stmt)
+    rules = result.scalars().all()
+    
+    debug_results = []
+    for r in rules:
+        stmt_sim = select(
+            cast(1 - Rule.embedding.cosine_distance(query_embedding), Float)
+        ).where(Rule.id == r.id)
+        result_sim = await db.execute(stmt_sim)
+        sim = result_sim.scalar_one()
+        debug_results.append({
+            "title": r.title,
+            "text": r.rule_text,
+            "similarity": float(sim) if sim is not None else 0.0
+        })
+    
+    return {"query": query, "results": debug_results}
+
+# ========================================
 # GET /agent/stats/{workspace_id}
 # ========================================
 @router.get("/stats/{workspace_id}")
