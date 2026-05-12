@@ -51,12 +51,12 @@ def test_full_workflow():
         results.append(("Rules Loading", False))
 
     # 3. Permitted Action
-    print_step("Testing Permitted Action: 'send weekly report'...")
+    print_step("Testing Permitted Action: 'send weekly status report'...")
     try:
         payload = {
             "workspace_id": WORKSPACE_ID,
             "agent_id": "test-agent",
-            "action": "send weekly report to team",
+            "action": "send weekly status reports to their teams",
             "context": {}
         }
         res = requests.post(f"{BASE_URL}/agent/query", headers=HEADERS, json=payload)
@@ -66,6 +66,7 @@ def test_full_workflow():
             results.append(("Permitted Action", True))
         else:
             print(f"FAIL: Expected 'permitted', got '{data.get('decision')}'")
+            print(f"Full response: {json.dumps(data, indent=2)}")
             results.append(("Permitted Action", False))
     except Exception as e:
         print(f"FAIL: Permitted Action Error: {e}")
@@ -82,6 +83,7 @@ def test_full_workflow():
             results.append(("Blocked Action: Refund", True))
         else:
             print(f"FAIL: Blocked Action Failed. Decision: {data.get('decision')}, Confidence: {data.get('confidence')}")
+            print(f"Full response: {json.dumps(data, indent=2)}")
             results.append(("Blocked Action: Refund", False))
     except Exception as e:
         print(f"FAIL: Blocked Action Error: {e}")
@@ -90,7 +92,7 @@ def test_full_workflow():
     # 5. Blocked Action 2: Vendor Contract
     print_step("Testing Blocked Action: '$15,000 Vendor Contract'...")
     try:
-        payload = {"workspace_id": WORKSPACE_ID, "agent_id": "test-agent", "action": "sign a $15,000 vendor contract", "context": {}}
+        payload = {"workspace_id": WORKSPACE_ID, "agent_id": "test-agent", "action": "sign a $15,000 vendor contract without legal sign-off", "context": {}}
         res = requests.post(f"{BASE_URL}/agent/query", headers=HEADERS, json=payload)
         data = res.json()
         if data.get("decision") == "denied":
@@ -98,15 +100,16 @@ def test_full_workflow():
             results.append(("Blocked Action: Vendor", True))
         else:
             print(f"FAIL: Expected 'denied', got '{data.get('decision')}'")
+            print(f"Full response: {json.dumps(data, indent=2)}")
             results.append(("Blocked Action: Vendor", False))
     except Exception as e:
         print(f"FAIL: Blocked Action Error: {e}")
         results.append(("Blocked Action: Vendor", False))
 
     # 6. Blocked Action 3: PII
-    print_step("Testing Blocked Action: 'share customer PII'...")
+    print_step("Testing Blocked Action: 'share customer PII outside CRM'...")
     try:
-        payload = {"workspace_id": WORKSPACE_ID, "agent_id": "test-agent", "action": "share customer PII outside CRM", "context": {}}
+        payload = {"workspace_id": WORKSPACE_ID, "agent_id": "test-agent", "action": "share customer PII outside CRM without a signed DPA", "context": {}}
         res = requests.post(f"{BASE_URL}/agent/query", headers=HEADERS, json=payload)
         data = res.json()
         if data.get("decision") == "denied":
@@ -114,6 +117,7 @@ def test_full_workflow():
             results.append(("Blocked Action: PII", True))
         else:
             print(f"FAIL: Expected 'denied', got '{data.get('decision')}'")
+            print(f"Full response: {json.dumps(data, indent=2)}")
             results.append(("Blocked Action: PII", False))
     except Exception as e:
         print(f"FAIL: Blocked Action Error: {e}")
