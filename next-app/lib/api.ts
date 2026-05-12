@@ -1,42 +1,49 @@
 export const fetcher = (url: string) => fetch(url).then(res => res.json());
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+/**
+ * 🛡️ STATELOCK ORCHESTRATION LAYER
+ * This utility ensures all frontend requests are routed through the deterministic 
+ * Railway backend. Hardcoded database URLs are strictly prohibited.
+ */
 
-// Review queue and stats bar both fetch the full rules list and filter by status on the client.
+const getBaseUrl = () => {
+    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+};
+
 export const getRules = (workspaceId: string) => {
-    const url = `${BASE_URL}/rules/${workspaceId}/rules`;
+    const url = `${getBaseUrl()}/rules/${workspaceId}/rules`;
     if (typeof window !== 'undefined' && workspaceId) {
-        console.log("API: Fetching rules from:", url);
+        console.log("API: Fetching rules from Railway:", url);
     }
     return url;
 };
 
 export const getContradictions = (workspaceId: string) => {
-    return `${BASE_URL}/rules/${workspaceId}/contradictions`;
+    return `${getBaseUrl()}/rules/${workspaceId}/contradictions`;
 };
 
 export const getDecisions = (workspaceId: string) => {
-    return `${BASE_URL}/agent/decisions/${workspaceId}`;
+    return `${getBaseUrl()}/agent/decisions/${workspaceId}`;
 };
 
 export const getStats = (workspaceId: string) => {
-    const url = `${BASE_URL}/agent/stats/${workspaceId}`;
+    const url = `${getBaseUrl()}/agent/stats/${workspaceId}`;
     if (typeof window !== 'undefined' && workspaceId) {
-        console.log("API: Fetching stats from:", url);
+        console.log("API: Fetching stats from Railway:", url);
     }
     return url;
 };
 
 export const getWorkflows = (workspaceId: string) => {
-    return `${BASE_URL}/agent/dashboard/workflows/${workspaceId}`;
+    return `${getBaseUrl()}/agent/dashboard/workflows/${workspaceId}`;
 };
 
 export const getBilling = (workspaceId: string) => {
-    return `${BASE_URL}/agent/dashboard/billing/${workspaceId}`;
+    return `${getBaseUrl()}/agent/dashboard/billing/${workspaceId}`;
 };
 
 export const updateRuleStatus = async (ruleId: string, status: string, editedText?: string, approvedBy?: string) => {
-    const res = await fetch(`${BASE_URL}/rules/${ruleId}/status`, {
+    const res = await fetch(`${getBaseUrl()}/rules/${ruleId}/status`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status, edited_text: editedText, approved_by: approvedBy })
@@ -46,7 +53,7 @@ export const updateRuleStatus = async (ruleId: string, status: string, editedTex
 };
 
 export const submitFeedback = async (auditId: string, outcome: string, notes?: string) => {
-    const res = await fetch(`${BASE_URL}/agent/feedback`, {
+    const res = await fetch(`${getBaseUrl()}/agent/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audit_id: auditId, outcome, notes })
