@@ -11,10 +11,10 @@ import { WorkflowFeed } from "@/components/WorkflowFeed";
 
 export default function Dashboard() {
   const { workspaceId } = useWorkspace();
-  const { data: rules, isLoading: rulesLoading } = useSWR(getRules(workspaceId), fetcher, { refreshInterval: 30000 });
-  const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 5000 });
+  const { data: rules, isLoading: rulesLoading } = useSWR(workspaceId ? getRules(workspaceId) : null, fetcher, { refreshInterval: 30000 });
+  const { data: stats } = useSWR(workspaceId ? getStats(workspaceId) : null, fetcher, { refreshInterval: 5000 });
 
-  if (rulesLoading) {
+  if (rulesLoading || !workspaceId) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />

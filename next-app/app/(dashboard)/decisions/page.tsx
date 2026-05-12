@@ -16,8 +16,8 @@ interface Decision {
 
 export default function AgentDecisions() {
   const { workspaceId } = useWorkspace();
-  const { data, isLoading, mutate } = useSWR(getDecisions(workspaceId), fetcher, { refreshInterval: 30000 });
-  const { data: stats } = useSWR(getStats(workspaceId), fetcher, { refreshInterval: 10000 });
+  const { data, isLoading, mutate } = useSWR(workspaceId ? getDecisions(workspaceId) : null, fetcher, { refreshInterval: 30000 });
+  const { data: stats } = useSWR(workspaceId ? getStats(workspaceId) : null, fetcher, { refreshInterval: 10000 });
 
   const handleFlag = async (auditId: string) => {
     try {

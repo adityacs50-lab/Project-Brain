@@ -4,7 +4,11 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 // Review queue and stats bar both fetch the full rules list and filter by status on the client.
 export const getRules = (workspaceId: string) => {
-    return `${BASE_URL}/rules/${workspaceId}/rules`;
+    const url = `${BASE_URL}/rules/${workspaceId}/rules`;
+    if (typeof window !== 'undefined' && workspaceId) {
+        console.log("API: Fetching rules from:", url);
+    }
+    return url;
 };
 
 export const getContradictions = (workspaceId: string) => {
@@ -16,7 +20,11 @@ export const getDecisions = (workspaceId: string) => {
 };
 
 export const getStats = (workspaceId: string) => {
-    return `${BASE_URL}/agent/stats/${workspaceId}`;
+    const url = `${BASE_URL}/agent/stats/${workspaceId}`;
+    if (typeof window !== 'undefined' && workspaceId) {
+        console.log("API: Fetching stats from:", url);
+    }
+    return url;
 };
 
 export const getWorkflows = (workspaceId: string) => {
