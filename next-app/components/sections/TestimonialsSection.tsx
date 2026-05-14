@@ -61,7 +61,7 @@ export default function TestimonialsSection() {
               <div>
                 <Quote className="w-8 h-8 text-white/10 mb-6" />
                 <p className="text-white/80 text-lg leading-relaxed mb-8 italic">
-                  "{t.quote}"
+                  &quot;{t.quote}&quot;
                 </p>
               </div>
               <div>

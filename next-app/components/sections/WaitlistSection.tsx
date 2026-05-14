@@ -65,7 +65,7 @@ export default function WaitlistSection() {
               <CheckCircle2 className="w-10 h-10 text-[#10b981] mb-4" />
               <p className="text-white font-medium">Application Received</p>
               <p className="text-white/40 text-xs mt-2 text-center leading-relaxed">
-                We'll reach out within 24 hours to schedule your onboarding.
+                We&apos;ll reach out within 24 hours to schedule your onboarding.
               </p>
             </div>
           ) : (
@@ -101,7 +101,7 @@ export default function WaitlistSection() {
 
         <div className="mt-24 pt-12 border-t border-white/5 flex flex-col items-center gap-6">
           <p className="text-white/20 text-[11px] max-w-sm leading-relaxed text-center italic">
-            "Built from a hostel room in India by 19-year-old Aditya. Obsessed with making AI agents safe for real companies."
+            &quot;Built from a hostel room in India by 19-year-old Aditya. Obsessed with making AI agents safe for real companies.&quot;
           </p>
           <div className="flex items-center gap-8 opacity-40">
             {['No Sales Calls', 'Early Beta (40% Off)', 'Deterministic Era'].map((tag) => (

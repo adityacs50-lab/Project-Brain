@@ -1,7 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
-
 export default function FounderStorySection() {
   return (
     <section id="founder" className="bg-[#050505] py-32 px-6 border-t border-white/5">
@@ -12,9 +10,9 @@ export default function FounderStorySection() {
         
         <div className="space-y-6">
           <p className="text-[#e5e5e5] text-xl md:text-2xl font-light leading-relaxed italic">
-            "I saw companies rushing to deploy AI agents with zero real control. 
+            &quot;I saw companies rushing to deploy AI agents with zero real control. 
             StateLock was built to turn company policy into law — ensuring agents 
-            amplify intelligence without creating new risks."
+            amplify intelligence without creating new risks.&quot;
           </p>
         </div>
 
