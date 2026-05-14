@@ -1,40 +1,36 @@
-# 🔒 STATELOCK: THE DETERMINISTIC OS
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-> **Immutable Governance for the Agentic Enterprise.**
+## Getting Started
 
-![Statelock Design](https://img.shields.io/badge/AESTHETIC-CYBER--INDUSTRIAL-FF3800)
-![Status](https://img.shields.io/badge/STATUS-LIVE--FIRE--VERIFIED-green)
-![Vercel](https://img.shields.io/badge/DEPLOYMENT-VERCEL-black)
-
----
-
-## 🚀 OVERVIEW
-
-**STATELOCK** is the missing layer between raw enterprise data and reliable AI automation. While probabilistic models "hallucinate" or "drift," Statelock enforces company-wide governance logic through a deterministic execution layer.
-
-### ⚖️ The Multi-Agent Supreme Court
-Our core adjudication engine intercepts every AI agent action. If a task violates a compiled rule (e.g., a $200 refund against a $50 policy), the Supreme Court physically blocks the execution and triggers an escalation.
-
----
-
-## 🛠️ OMNI-SOURCE INGESTION
-
-Statelock creates a living map of your business by synthesizing data from:
-*   **Communication**: Slack, Gmail, Outlook.
-*   **Operations**: Zendesk, Intercom.
-*   **Ground Truth**: Postgres, Snowflake, AWS.
-
----
-
-## 🧪 LIVE-FIRE DEMO PROTOCOL
-
-We don't trust "safe" agents. We verify them. Run the local stress test:
+First, run the development server:
 
 ```bash
-cd STATELOCK
-python scratch/live_fire_demo.py
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
----
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-&copy; 2026 STATELOCK | Outworking the Competition.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

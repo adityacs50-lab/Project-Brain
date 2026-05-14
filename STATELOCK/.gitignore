@@ -1,0 +1,45 @@
+# --- Company Brain: The Clean Release ---
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv
+venv/
+ENV/
+env/
+.env
+.env.*
+!.env.example
+
+# Node
+node_modules/
+.next/
+out/
+build/
+dist/
+.vercel
+
+# Database & Data
+*.db
+*.sqlite
+*.sqlite3
+postgres-data/
+dump.rdb
+
+# Internal Assistant Metadata & Dev Artifacts
+.agents/
+.windsurf/
+.zencoder/
+.temp/
+.tempmediaStorage/
+scratch/
+skills-lock.json
+*.log
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
