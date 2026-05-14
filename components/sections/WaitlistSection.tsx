@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
 
 export default function WaitlistSection() {
+  const [name, setName] = useState('');
+  const [role, setRole] = useState('');
   const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [agentsCount, setAgentsCount] = useState('');
@@ -23,6 +25,8 @@ export default function WaitlistSection() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
+          name: name.trim(),
+          role: role.trim(),
           email: email.trim(), 
           company: company.trim(), 
           agents_count: agentsCount, 
@@ -80,6 +84,25 @@ export default function WaitlistSection() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Full Name"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-6 py-4 text-white text-sm outline-none focus:border-[#10b981]/30 focus:bg-white/[0.05] transition-all"
+              />
+              <select
+                required
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-6 py-4 text-white/60 text-sm outline-none focus:border-[#10b981]/30 focus:bg-white/[0.05] transition-all appearance-none"
+              >
+                <option value="" disabled className="bg-[#0a0a0a]">Select Role</option>
+                <option value="founder" className="bg-[#0a0a0a]">Founder</option>
+                <option value="engineering" className="bg-[#0a0a0a]">Engineering</option>
+                <option value="product" className="bg-[#0a0a0a]">Product</option>
+              </select>
               <input
                 type="email"
                 required
