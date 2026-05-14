@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
           email, 
           company: company || 'N/A', 
           agents_count: parseInt(agents_count) || 0, 
-          notes: notes || `Role: ${role || 'N/A'}, Name: ${name || 'N/A'}` // Storing extra info in notes
+          notes: `Name: ${name || 'N/A'} | Role: ${role || 'N/A'} | Notes: ${notes || 'N/A'}` 
         }]);
       
       if (dbError) {
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            text: `🚀 *New Waitlist Signup!*\n*Email:* ${email}\n*Company:* ${company || 'N/A'}\n*Agents:* ${agents_count || '0'}\n*Notes:* ${notes || 'N/A'}`,
+            text: `🚀 *New Pilot Request!*\n*Name:* ${name || 'N/A'}\n*Email:* ${email}\n*Company:* ${company || 'N/A'}\n*Role:* ${role || 'N/A'}\n*Agents:* ${agents_count || '0'}\n*Notes:* ${notes || 'N/A'}`,
           }),
         });
       } catch (slackErr) {
@@ -54,15 +54,37 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 3. Send Email via Resend (if configured)
-    if (process.env.RESEND_API_KEY) {
+    // 3. Update Google Sheets (if configured)
+    if (process.env.GOOGLE_SHEETS_WEBHOOK) {
+      try {
+        await fetch(process.env.GOOGLE_SHEETS_WEBHOOK, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: name || 'N/A',
+            email,
+            company: company || 'N/A',
+            role: role || 'N/A',
+            agents_count: agents_count || '0',
+            notes: notes || 'N/A',
+            timestamp: new Date().toISOString(),
+          }),
+        });
+      } catch (sheetErr) {
+        console.error('Google Sheets Error:', sheetErr);
+      }
+    }
+
+    // 4. Send Email via Resend (if configured)
+    if (process.env.RESEND_API_KEY && !process.env.RESEND_API_KEY.includes('placeholder')) {
       try {
         // To Founder
         await resend.emails.send({
           from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-          to: process.env.FOUNDER_EMAIL || email,
-          subject: `New Pilot Request from ${company || email}`,
-          text: `Email: ${email}\nCompany: ${company || 'N/A'}\nAgents: ${agents_count || '0'}\nNotes: ${notes || 'N/A'}`,
+          to: process.env.FOUNDER_EMAIL || 'adityacs50@gmail.com', // fallback to founder
+          subject: `New Pilot Request: ${company || email}`,
+          text: `Name: ${name || 'N/A'}\nEmail: ${email}\nCompany: ${company || 'N/A'}\nRole: ${role || 'N/A'}\nAgents: ${agents_count || '0'}\nNotes: ${notes || 'N/A'}`,
         });
 
         // To User (Confirmation)
@@ -70,7 +92,7 @@ export async function POST(req: NextRequest) {
           from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
           to: email,
           subject: 'Welcome to the StateLock Private Beta',
-          text: `Hi,\n\nThanks for joining the StateLock private beta list! We're excited to have you.\n\nOur team will review your application and reach out within 24 hours to discuss the deterministic governance program.\n\nBest,\nThe StateLock Team`,
+          text: `Hi ${name || 'there'},\n\nThanks for joining the StateLock private beta list! We're excited to have you.\n\nOur team will review your application and reach out within 24 hours to discuss the deterministic governance program.\n\nBest,\nThe StateLock Team`,
         });
       } catch (resendErr) {
         console.error('Resend Error:', resendErr);
