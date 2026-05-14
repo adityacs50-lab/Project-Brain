@@ -39,18 +39,23 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2. Notify Slack (if configured)
+    // 2. Notify Slack (Improved Error Logging)
     if (process.env.SLACK_WEBHOOK_URL) {
       try {
-        await fetch(process.env.SLACK_WEBHOOK_URL, {
+        const slackRes = await fetch(process.env.SLACK_WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             text: `🚀 *New Pilot Request!*\n*Name:* ${name || 'N/A'}\n*Email:* ${email}\n*Company:* ${company || 'N/A'}\n*Role:* ${role || 'N/A'}\n*Agents:* ${agents_count || '0'}\n*Notes:* ${notes || 'N/A'}`,
           }),
         });
+        
+        if (!slackRes.ok) {
+          const slackError = await slackRes.text();
+          console.error('Slack Response Error:', slackError);
+        }
       } catch (slackErr) {
-        console.error('Slack Notification Error:', slackErr);
+        console.error('Slack Connection Error:', slackErr);
       }
     }
 
