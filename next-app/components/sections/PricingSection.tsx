@@ -1,0 +1,80 @@
+'use client';
+
+import { Check } from 'lucide-react';
+
+export default function PricingSection() {
+  const tiers = [
+    {
+      name: "Starter",
+      price: "$2,500",
+      description: "Small teams, <5 agents",
+      features: ["Core gateway", "3 Court reviews/day", "Basic integrations"]
+    },
+    {
+      name: "Growth",
+      price: "$8,000",
+      description: "Scaling AI teams",
+      features: ["Unlimited reviews", "Advanced integrations", "Priority support", "Conflict detection"],
+      popular: true
+    },
+    {
+      name: "Enterprise",
+      price: "Custom",
+      description: "Large scale deployments",
+      features: ["On-prem / VPC", "SSO & SAML", "Dedicated infra", "Custom rules engine"]
+    }
+  ];
+
+  return (
+    <section id="pricing" className="bg-[#050505] py-32 px-6 border-t border-white/5">
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-20">
+          <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-4">
+            Pricing
+          </p>
+          <h2 className="text-3xl md:text-5xl text-white font-semibold tracking-[-0.02em] leading-tight mb-6">
+            Predictable and Transparent.
+          </h2>
+          <p className="text-[#e5e5e5]/40 text-sm max-w-xl mx-auto">
+            Early beta participants receive a <span className="text-[#10b981]/80 font-medium">40% discount</span> for the first 6 months.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {tiers.map((tier, i) => (
+            <div 
+              key={i}
+              className={`bg-white/[0.02] border ${tier.popular ? 'border-[#10b981]/30 bg-white/[0.04]' : 'border-white/10'} rounded-2xl p-10 flex flex-col`}
+            >
+              <div className="mb-8">
+                <h3 className="text-white/60 text-[10px] tracking-[0.2em] uppercase font-bold mb-4">{tier.name}</h3>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl text-white font-semibold tracking-tight">{tier.price}</span>
+                  {tier.price !== 'Custom' && <span className="text-white/30 text-xs">/mo</span>}
+                </div>
+                <p className="text-white/40 text-xs mt-3">{tier.description}</p>
+              </div>
+
+              <div className="space-y-4 mb-10 flex-grow">
+                {tier.features.map((f, j) => (
+                  <div key={j} className="flex items-start gap-3">
+                    <Check className="w-3.5 h-3.5 text-[#10b981] mt-0.5" />
+                    <span className="text-white/60 text-xs">{f}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button className={`w-full rounded-full py-3 text-xs font-bold uppercase tracking-widest transition-all ${
+                tier.popular 
+                  ? 'bg-[#10b981] text-black hover:bg-[#0e9f6e]' 
+                  : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
+              }`}>
+                Join Private Beta
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
