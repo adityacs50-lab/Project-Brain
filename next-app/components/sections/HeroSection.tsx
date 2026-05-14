@@ -15,9 +15,11 @@ export default function HeroSection() {
 
     const form = e.currentTarget;
     const data = {
-      name: (form.elements.namedItem('name') as HTMLInputElement).value.trim(),
       email: (form.elements.namedItem('email') as HTMLInputElement).value.trim(),
       company: (form.elements.namedItem('company') as HTMLInputElement).value.trim(),
+      agents_count: (form.elements.namedItem('agents_count') as HTMLInputElement).value.trim(),
+      notes: (form.elements.namedItem('notes') as HTMLTextAreaElement).value.trim(),
+      name: (form.elements.namedItem('name') as HTMLInputElement).value.trim(),
       role: (form.elements.namedItem('role') as HTMLSelectElement).value,
     };
 
@@ -179,24 +181,46 @@ export default function HeroSection() {
                       type="text"
                       id="company"
                       name="company"
+                      required
                       className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm outline-none focus:border-[#10b981]/50 focus:bg-white/10 transition-all"
                     />
                   </div>
 
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="agents_count" className="block text-[#e5e5e5]/60 text-xs font-medium mb-1.5">AI Agents</label>
+                      <input
+                        type="number"
+                        id="agents_count"
+                        name="agents_count"
+                        required
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm outline-none focus:border-[#10b981]/50 focus:bg-white/10 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="role" className="block text-[#e5e5e5]/60 text-xs font-medium mb-1.5">Role</label>
+                      <select
+                        id="role"
+                        name="role"
+                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-[#e5e5e5] text-sm outline-none focus:border-[#10b981]/50 focus:bg-white/10 transition-all appearance-none"
+                        defaultValue=""
+                      >
+                        <option value="" disabled className="bg-[#0a0a0a]">Select role</option>
+                        <option value="founder" className="bg-[#0a0a0a]">Founder</option>
+                        <option value="engineering" className="bg-[#0a0a0a]">Engineering</option>
+                        <option value="product" className="bg-[#0a0a0a]">Product</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div>
-                    <label htmlFor="role" className="block text-[#e5e5e5]/60 text-xs font-medium mb-1.5">Role</label>
-                    <select
-                      id="role"
-                      name="role"
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-[#e5e5e5] text-sm outline-none focus:border-[#10b981]/50 focus:bg-white/10 transition-all appearance-none"
-                      defaultValue=""
-                    >
-                      <option value="" disabled className="bg-[#0a0a0a]">Select your role</option>
-                      <option value="founder" className="bg-[#0a0a0a]">Founder / CEO</option>
-                      <option value="engineering" className="bg-[#0a0a0a]">Engineering</option>
-                      <option value="product" className="bg-[#0a0a0a]">Product</option>
-                      <option value="other" className="bg-[#0a0a0a]">Other</option>
-                    </select>
+                    <label htmlFor="notes" className="block text-[#e5e5e5]/60 text-xs font-medium mb-1.5">Use Case (Optional)</label>
+                    <textarea
+                      id="notes"
+                      name="notes"
+                      rows={2}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 text-white text-sm outline-none focus:border-[#10b981]/50 focus:bg-white/10 transition-all resize-none"
+                    />
                   </div>
 
                   {errorMsg && <p className="text-red-400 text-xs mt-2">{errorMsg}</p>}

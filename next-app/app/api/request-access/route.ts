@@ -6,11 +6,11 @@ export async function POST(req: NextRequest) {
   const resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder');
   try {
     const body = await req.json();
-    const { name, email, company, role } = body;
+    const { email, company, agents_count, notes, name, role } = body;
 
-    if (!email || !name) {
+    if (!email) {
       return NextResponse.json(
-        { success: false, error: 'Name and email are required.' },
+        { success: false, error: 'Email is required.' },
         { status: 400 }
       );
     }
@@ -23,15 +23,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Save to Supabase (if configured)
+    // 1. Save to Supabase (matching the user's actual table structure)
     if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
       const { error: dbError } = await supabase
         .from('waitlist')
-        .insert([{ name, email, company, role, created_at: new Date().toISOString() }]);
+        .insert([{ 
+          email, 
+          company: company || 'N/A', 
+          agents_count: parseInt(agents_count) || 0, 
+          notes: notes || `Role: ${role || 'N/A'}, Name: ${name || 'N/A'}` // Storing extra info in notes
+        }]);
       
       if (dbError) {
         console.error('Supabase Error:', dbError);
-        // We continue even if DB fails, or you might want to return error
       }
     }
 
@@ -42,7 +46,7 @@ export async function POST(req: NextRequest) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            text: `🚀 *New Waitlist Signup!*\n*Name:* ${name}\n*Email:* ${email}\n*Company:* ${company || 'N/A'}\n*Role:* ${role || 'N/A'}`,
+            text: `🚀 *New Waitlist Signup!*\n*Email:* ${email}\n*Company:* ${company || 'N/A'}\n*Agents:* ${agents_count || '0'}\n*Notes:* ${notes || 'N/A'}`,
           }),
         });
       } catch (slackErr) {
@@ -56,9 +60,9 @@ export async function POST(req: NextRequest) {
         // To Founder
         await resend.emails.send({
           from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-          to: process.env.FOUNDER_EMAIL || email, // Fallback to user if founder not set
-          subject: `New Pilot Request: ${name} from ${company || 'Unknown'}`,
-          text: `Name: ${name}\nEmail: ${email}\nCompany: ${company || 'N/A'}\nRole: ${role || 'N/A'}`,
+          to: process.env.FOUNDER_EMAIL || email,
+          subject: `New Pilot Request from ${company || email}`,
+          text: `Email: ${email}\nCompany: ${company || 'N/A'}\nAgents: ${agents_count || '0'}\nNotes: ${notes || 'N/A'}`,
         });
 
         // To User (Confirmation)
@@ -66,23 +70,21 @@ export async function POST(req: NextRequest) {
           from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
           to: email,
           subject: 'Welcome to the StateLock Private Beta',
-          text: `Hi ${name},\n\nThanks for joining the StateLock private beta list! We're excited to have you.\n\nOur team will review your application and reach out within 24 hours to discuss the deterministic governance program.\n\nBest,\nThe StateLock Team`,
+          text: `Hi,\n\nThanks for joining the StateLock private beta list! We're excited to have you.\n\nOur team will review your application and reach out within 24 hours to discuss the deterministic governance program.\n\nBest,\nThe StateLock Team`,
         });
       } catch (resendErr) {
         console.error('Resend Error:', resendErr);
       }
     }
 
-    console.log(`--- New Access Request: ${email} ---`);
-
     return NextResponse.json({
       success: true,
-      message: 'Your request has been submitted. We\'ll be in touch soon.',
+      message: 'Your request has been submitted.',
     });
   } catch (err) {
     console.error('API Error:', err);
     return NextResponse.json(
-      { success: false, error: 'Something went wrong. Please try again.' },
+      { success: false, error: 'Something went wrong.' },
       { status: 500 }
     );
   }

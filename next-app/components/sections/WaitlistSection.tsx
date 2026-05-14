@@ -5,6 +5,9 @@ import { ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
 
 export default function WaitlistSection() {
   const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
+  const [agentsCount, setAgentsCount] = useState('');
+  const [notes, setNotes] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -19,13 +22,21 @@ export default function WaitlistSection() {
       const res = await fetch('/api/request-access', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: 'Final CTA', email: email.trim(), company: '', role: 'waitlist' }),
+        body: JSON.stringify({ 
+          email: email.trim(), 
+          company: company.trim(), 
+          agents_count: agentsCount, 
+          notes: notes.trim() 
+        }),
       });
       const result = await res.json();
 
       if (result.success) {
         setStatus('success');
         setEmail('');
+        setCompany('');
+        setAgentsCount('');
+        setNotes('');
       } else {
         setStatus('error');
         setErrorMsg(result.error || 'Something went wrong.');
@@ -55,11 +66,10 @@ export default function WaitlistSection() {
         </h2>
 
         <p className="text-[#e5e5e5]/40 text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto mb-16">
-          We are onboarding only <span className="text-white font-medium italic">5 new companies</span> this month. 
-          Deploy AI with mathematical certainty instead of hope.
+          Deploy AI with mathematical certainty instead of hope. Join the waitlist for our next onboarding batch.
         </p>
 
-        <div className="max-w-md mx-auto">
+        <div className="max-w-xl mx-auto">
           {status === 'success' ? (
             <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-8 flex flex-col items-center">
               <CheckCircle2 className="w-10 h-10 text-[#10b981] mb-4" />
@@ -69,19 +79,42 @@ export default function WaitlistSection() {
               </p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="relative group">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 type="email"
                 required
                 value={email}
-                onChange={(e) => { setEmail(e.target.value); if (status === 'error') setStatus('idle'); }}
-                placeholder="your@company.com"
-                className="w-full bg-white/[0.03] border border-white/10 rounded-full pl-8 pr-48 py-5 text-white text-sm outline-none focus:border-[#10b981]/30 focus:bg-white/[0.05] transition-all"
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Work Email"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-6 py-4 text-white text-sm outline-none focus:border-[#10b981]/30 focus:bg-white/[0.05] transition-all"
+              />
+              <input
+                type="text"
+                required
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder="Company Name"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-6 py-4 text-white text-sm outline-none focus:border-[#10b981]/30 focus:bg-white/[0.05] transition-all"
+              />
+              <input
+                type="number"
+                required
+                value={agentsCount}
+                onChange={(e) => setAgentsCount(e.target.value)}
+                placeholder="Number of AI Agents"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-6 py-4 text-white text-sm outline-none focus:border-[#10b981]/30 focus:bg-white/[0.05] transition-all"
+              />
+              <input
+                type="text"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Any specific use case? (Optional)"
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-6 py-4 text-white text-sm outline-none focus:border-[#10b981]/30 focus:bg-white/[0.05] transition-all"
               />
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="absolute right-2 top-2 bottom-2 bg-white text-black rounded-full px-8 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#10b981] transition-all disabled:opacity-50"
+                className="md:col-span-2 w-full bg-white text-black rounded-xl py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#10b981] transition-all disabled:opacity-50"
               >
                 {status === 'loading' ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -93,7 +126,7 @@ export default function WaitlistSection() {
                 )}
               </button>
               {errorMsg && (
-                <p className="absolute -bottom-8 left-6 text-red-400 text-[10px] uppercase font-bold tracking-widest">{errorMsg}</p>
+                <p className="md:col-span-2 text-red-400 text-[10px] uppercase font-bold tracking-widest text-center mt-2">{errorMsg}</p>
               )}
             </form>
           )}
