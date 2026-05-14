@@ -78,17 +78,17 @@ export default function AboutSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {capabilities.map((cap, index) => (
-            <motion.div
-              key={cap.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.15 + index * 0.1 }}
-              className="liquid-glass rounded-2xl p-6 md:p-8"
-            >
-              <cap.Icon className="w-6 h-6 text-white/60 mb-4" strokeWidth={1.5} />
-              <h3 className="text-white text-lg font-medium mb-3 tracking-tight">{cap.title}</h3>
-              <p className="text-white/50 text-sm leading-relaxed">{cap.description}</p>
-            </motion.div>
+              <motion.div
+                key={cap.title}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.15 + index * 0.1 }}
+                className="liquid-glass rounded-2xl p-6 md:p-8 hover:bg-white/[0.07] hover:border-white/30 hover:-translate-y-1 transition-all duration-300 cursor-default"
+              >
+                <cap.Icon className="w-8 h-8 text-[#10b981] mb-6" strokeWidth={1.5} />
+                <h3 className="text-white text-xl font-medium mb-3 tracking-tight">{cap.title}</h3>
+                <p className="text-white/60 text-base leading-relaxed">{cap.description}</p>
+              </motion.div>
           ))}
         </div>
       </div>

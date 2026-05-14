@@ -61,8 +61,8 @@ export default function WaitlistSection() {
           </span>
         </div>
 
-        <h2 className="text-4xl md:text-6xl text-white font-semibold tracking-[-0.04em] mb-8">
-          Ready for Agents You <br /> Can Actually Trust?
+        <h2 className="text-5xl md:text-7xl text-white font-semibold tracking-[-0.05em] leading-[1.1] mb-8">
+          Ready for Agents You <br className="hidden md:block" /> Can Actually Trust?
         </h2>
 
         <p className="text-[#e5e5e5]/40 text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto mb-16">
@@ -71,7 +71,7 @@ export default function WaitlistSection() {
 
         <div className="max-w-xl mx-auto">
           {status === 'success' ? (
-            <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-8 flex flex-col items-center">
+            <div className="bg-white/[0.02] border border-white/10 rounded-2xl p-8 flex flex-col items-center shadow-2xl">
               <CheckCircle2 className="w-10 h-10 text-[#10b981] mb-4" />
               <p className="text-white font-medium">Application Received</p>
               <p className="text-white/40 text-xs mt-2 text-center leading-relaxed">
@@ -114,14 +114,14 @@ export default function WaitlistSection() {
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="md:col-span-2 w-full bg-white text-black rounded-xl py-4 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#10b981] transition-all disabled:opacity-50"
+                className="md:col-span-2 w-full bg-[#10b981] text-black rounded-xl py-4.5 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#0e9f6e] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(16,185,129,0.15)]"
               >
                 {status === 'loading' ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
                   <>
                     Secure My Spot
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-5 h-5" />
                   </>
                 )}
               </button>

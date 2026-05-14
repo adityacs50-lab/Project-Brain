@@ -69,7 +69,7 @@ export default function HeroSection() {
 
             <button
               onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
-              className="px-5 py-2 text-[#e5e5e5] text-sm font-medium border border-white/10 hover:border-white/20 hover:bg-white/5 rounded-full transition-all"
+              className="px-5 py-2 text-[#10b981] text-sm font-medium border border-[#10b981]/20 hover:border-[#10b981]/40 hover:bg-[#10b981]/5 rounded-full transition-all"
             >
               Sign In
             </button>
@@ -86,7 +86,7 @@ export default function HeroSection() {
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-[80px] text-white font-semibold tracking-[-0.04em] leading-[1.05] mb-8">
+          <h1 className="text-6xl md:text-8xl lg:text-[92px] text-white font-semibold tracking-[-0.05em] leading-[1.0] mb-8">
             AI Agents that <br className="hidden md:block" /> Never Break the Rules.
           </h1>
 
@@ -95,17 +95,17 @@ export default function HeroSection() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-20">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-24">
             <button
               onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
-              className="w-full sm:w-auto bg-[#10b981] hover:bg-[#0e9f6e] text-black font-semibold rounded-full px-8 py-3.5 text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-[#10b981] hover:bg-[#0e9f6e] text-black font-bold rounded-full px-10 py-4.5 text-base transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
             >
               Join Private Beta
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-5 h-5" />
             </button>
             <button
               onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
-              className="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 hover:bg-white/5 text-[#e5e5e5] font-medium rounded-full px-8 py-3.5 text-sm transition-all"
+              className="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 hover:bg-white/5 text-[#e5e5e5] font-semibold rounded-full px-10 py-4.5 text-base transition-all"
             >
               View Live Demo
             </button>
@@ -113,12 +113,12 @@ export default function HeroSection() {
 
           {/* Minimal Social Proof */}
           <div className="w-full px-6 mb-16">
-            <p className="text-center text-[#e5e5e5]/20 text-[10px] font-medium tracking-widest uppercase mb-8">
+            <p className="text-center text-[#e5e5e5]/20 text-[10px] font-medium tracking-[0.2em] uppercase mb-10">
               Trusted by forward-thinking teams
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-20 grayscale">
+            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-40 grayscale-[40%]">
               {['Slack', 'Gmail', 'Zendesk', 'Postgres', 'Salesforce', 'OpenAI', 'AWS'].map((brand) => (
-                <span key={brand} className="text-white font-semibold text-sm md:text-base tracking-tight">{brand}</span>
+                <span key={brand} className="text-white font-semibold text-sm md:text-lg tracking-tight">{brand}</span>
               ))}
             </div>
           </div>
