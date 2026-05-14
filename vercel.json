@@ -1,5 +1,0 @@
-{
-  "buildCommand": "cd STATELOCK/next-app && npm run build",
-  "installCommand": "cd STATELOCK/next-app && npm install",
-  "outputDirectory": "STATELOCK/next-app/.next"
-}
