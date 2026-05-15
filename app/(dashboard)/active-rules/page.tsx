@@ -14,7 +14,6 @@ import {
   MessageSquare, 
   ShieldCheck, 
   Zap,
-  Filter,
   History,
   FileText
 } from "lucide-react";
@@ -238,7 +237,7 @@ export default function ActiveRules() {
                             <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Source Message</span>
                             <span className="text-[10px] font-medium text-zinc-400">{rule.source_channel || "#general"}</span>
                           </div>
-                          <p className="text-sm text-zinc-600 italic">"{rule.source_message}"</p>
+                          <p className="text-sm text-zinc-600 italic">&quot;{rule.source_message}&quot;</p>
                         </div>
                       </div>
                     )}

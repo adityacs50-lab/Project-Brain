@@ -2,21 +2,13 @@
 
 import { 
   ShieldCheck, 
-  Workflow, 
-  Terminal, 
   Zap, 
   CheckCircle2, 
-  ArrowRight, 
-  Code2, 
   MessageSquare, 
-  Scale, 
   Lock,
-  DollarSign,
-  Users,
-  Globe
+  BookOpen
 } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 export default function DocsPage() {
   return (
@@ -75,7 +67,7 @@ export default function DocsPage() {
                <div className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl space-y-3">
                   <CheckCircle2 className="w-6 h-6 text-emerald-500" />
                   <p className="text-sm font-bold">Human Verification</p>
-                  <p className="text-xs text-zinc-500">Every extracted rule requires a human "Seal of Approval" before activation.</p>
+                  <p className="text-xs text-zinc-500">Every extracted rule requires a human &quot;Seal of Approval&quot; before activation.</p>
                </div>
                <div className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl space-y-3">
                   <ShieldCheck className="w-6 h-6 text-emerald-500" />
@@ -92,7 +84,7 @@ export default function DocsPage() {
                <h2 className="text-4xl font-black tracking-tight">Connecting Slack.</h2>
             </div>
             <p className="text-zinc-400 leading-relaxed">
-              StateLock listens to your organization's decision-making channels to extract governance patterns. 
+              StateLock listens to your organization&apos;s decision-making channels to extract governance patterns. 
             </p>
             <div className="bg-zinc-900 border border-white/5 rounded-3xl p-8 space-y-6">
                <div className="flex items-start gap-4">
@@ -101,7 +93,7 @@ export default function DocsPage() {
                </div>
                <div className="flex items-start gap-4">
                   <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-[10px] font-bold text-emerald-500 mt-1">2</div>
-                  <p className="text-zinc-300">Whenever a policy decision is made (e.g. "We shouldn't refund more than $50"), StateLock's ingestion engine flags it as a logic candidate.</p>
+                  <p className="text-zinc-300">Whenever a policy decision is made (e.g. &quot;We shouldn&apos;t refund more than $50&quot;), StateLock&apos;s ingestion engine flags it as a logic candidate.</p>
                </div>
                <div className="flex items-start gap-4">
                   <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-[10px] font-bold text-emerald-500 mt-1">3</div>
@@ -132,7 +124,7 @@ export default function DocsPage() {
                      <Lock className="w-5 h-5 text-emerald-500" />
                      Hard Rule Enforcement
                   </h4>
-                  <p className="text-sm text-zinc-500">Manual "Hard Rules" (e.g. absolute budget caps) always override semantic suggestions. This is the core of StateLock's deterministic safety.</p>
+                  <p className="text-sm text-zinc-500">Manual &quot;Hard Rules&quot; (e.g. absolute budget caps) always override semantic suggestions. This is the core of StateLock&apos;s deterministic safety.</p>
                </div>
             </div>
           </section>

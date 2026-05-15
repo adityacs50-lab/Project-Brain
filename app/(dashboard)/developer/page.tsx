@@ -14,8 +14,8 @@ import {
   BookOpen,
   Cpu
 } from "lucide-react";
+import Link from "next/link";
 import { useWorkspace } from "@/components/WorkspaceContext";
-import { motion } from "framer-motion";
 
 export default function DeveloperPortal() {
   const { workspaceId } = useWorkspace();

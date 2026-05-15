@@ -15,7 +15,6 @@ import {
   Copy,
   RotateCcw,
   Zap,
-  Globe,
   Lock,
   MessageSquare,
   FileText
