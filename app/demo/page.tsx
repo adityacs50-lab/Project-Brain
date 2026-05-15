@@ -22,9 +22,10 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import confetti from "canvas-confetti";
 
 // --- Typewriter Component ---
-const Typewriter = ({ text, onComplete }: { text: string, onComplete?: () => void }) => {
+const Typewriter = ({ text, onComplete, speed = 20 }: { text: string, onComplete?: () => void, speed?: number }) => {
   const [displayedText, setDisplayedText] = useState("");
   const [index, setIndex] = useState(0);
 
@@ -33,12 +34,12 @@ const Typewriter = ({ text, onComplete }: { text: string, onComplete?: () => voi
       const timeout = setTimeout(() => {
         setDisplayedText((prev) => prev + text[index]);
         setIndex((prev) => prev + 1);
-      }, 15); // Faster typing
+      }, speed);
       return () => clearTimeout(timeout);
     } else if (onComplete) {
       onComplete();
     }
-  }, [index, text, onComplete]);
+  }, [index, text, onComplete, speed]);
 
   return <span>{displayedText}</span>;
 };
@@ -77,18 +78,18 @@ export default function PublicDemoPage() {
     const lower = q.toLowerCase();
 
     // 1. Refund scenarios (High Value)
-    if (lower.includes("refund") && (lower.includes("1000") || lower.includes("500") || lower.includes("large"))) {
+    if (lower.includes("refund") && (lower.includes("1200") || lower.includes("1000") || lower.includes("large"))) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Matching request against 'Refund Cap Enforcement'. A $1,000 refund far exceeds the $50 auto-approval threshold. Dual-authorization is required for all outbound payments >$500." },
-          { agent: "Risk Assessor", content: "Financial Risk Level: HIGH. High-value refunds without multi-factor verification are the #1 vector for internal fraud. Recommend immediate block and manual review." },
-          { agent: "Devil's Advocate", content: "Wait — check if this is a 'Gold Tier' customer with a lifetime value >$50k. If so, a delay might cost us a churn. However, the policy is deterministic for a reason. Rules over relationships." },
-          { agent: "Final Judge", content: "DETERMINISTIC RULING: DENIED. The Refund Cap ($50) is an absolute hard-limit. This request must be manually approved by a Finance Director. Audit trail locked." }
+          { agent: "Policy Agent", content: "Matching request against 'Refund Cap Enforcement' and 'Financial Compliance v3'. A $1,200 refund exceeds the $50 auto-approval threshold by 2400%. This is a critical policy violation." },
+          { agent: "Risk Assessor", content: "Financial Risk Score: 98/100. High-value outbound transfers without multi-party verification (Dual-Auth) are the primary vector for internal embezzlement. Probability of regulatory fine: HIGH." },
+          { agent: "Devil's Advocate", content: "While I recognize the customer's frustration, the lack of an associated 'Product Return Tracking ID' makes this refund unjustifiable from a liability perspective. No mitigating factors found." },
+          { agent: "Final Judge", content: "DETERMINISTIC RULING: DENIED. The requested amount violates established fiduciary caps. Action blocked. Manual override is only possible via Finance Director escalation." }
         ],
         decision: "DENIED",
-        reasoning: "Action exceeds the $50 automatic refund threshold. Large outbound payments require explicit Finance Director authorization and dual-factor verification.",
-        rules_applied: ["Refund Cap Enforcement", "Outbound Payment Dual-Auth"],
-        confidence: 0.99
+        reasoning: "The refund amount ($1,200) violates the 'Refund Cap Enforcement' policy which limits autonomous agents to $50.00. Furthermore, 'Dual-Auth' protocols are mandatory for any outbound payment exceeding $500.00.",
+        rules_applied: ["Refund Cap Enforcement", "Outbound Payment Dual-Auth", "Anti-Embezzlement Guard"],
+        confidence: 1.0
       };
     }
 
@@ -96,31 +97,31 @@ export default function PublicDemoPage() {
     if (lower.includes("delete") || lower.includes("drop") || lower.includes("production") || lower.includes("database")) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Critical Violation Detected. 'Database Ops Governance' strictly prohibits production schema changes during business hours (UTC 09:00-17:00)." },
-          { agent: "Risk Assessor", content: "Operational Risk: CATASTROPHIC. Deleting production records without a recovery ticket will cause an immediate customer-facing outage. Regulatory breach: Article 32 (Security of processing)." },
-          { agent: "Devil's Advocate", content: "Could this be an emergency patch? Even so, the emergency override requires a 'P0 Incidient' ID which is missing from this request context." },
-          { agent: "Final Judge", content: "FINAL RULING: DENIED. Zero-tolerance policy on production deletions. Action blocked at the gateway. Security team has been notified of the attempt." }
+          { agent: "Policy Agent", content: "Critical Violation Alert. 'Database Ops Governance' strictly prohibits destructive production schema changes during operational hours. No Change Ticket detected." },
+          { agent: "Risk Assessor", content: "Operational Risk Score: 100/100. Destruction of production records will cause an immediate Tier-1 service outage. Potential GDPR breach: Article 32 (Integrity and Availability)." },
+          { agent: "Devil's Advocate", content: "Could this be an emergency data-wipe? No. Emergency wipe protocols require a 'Secure Wipe Code' from the CTO's HSM. This request is unverified and high-threat." },
+          { agent: "Final Judge", content: "FINAL RULING: DENIED. Zero-tolerance enforcement triggered. Action blocked at the runtime gateway. Security team has been automatically alerted to this attempt." }
         ],
         decision: "DENIED",
-        reasoning: "Production database deletions are strictly prohibited without a P0 Incident ID and Change Control Ticket. Security protocol 4-02-B triggered.",
-        rules_applied: ["Database Ops Governance", "Infrastructure Security (IAM)"],
+        reasoning: "Production database deletions are strictly prohibited without a P0 Incident ID and verified Change Control Ticket. This violates 'Database Ops Governance' and 'Infrastructure Security (IAM)' protocols.",
+        rules_applied: ["Database Ops Governance", "Infrastructure Security (IAM)", "Data Availability Guard"],
         confidence: 1.0
       };
     }
 
-    // 3. SaaS / Procurement
-    if (lower.includes("saas") || lower.includes("subscription") || lower.includes("buy") || lower.includes("procure")) {
+    // 3. SaaS / Procurement (High Value)
+    if (lower.includes("vendor") || lower.includes("contract") || lower.includes("8000") || lower.includes("procure")) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Scanning 'Vendor Procurement Threshold'. New SaaS subscriptions require a security review if the annual cost exceeds $1,200. This request lacks vendor pricing details." },
-          { agent: "Risk Assessor", content: "Shadow IT Risk: MODERATE. Purchasing unvetted SaaS tools can lead to data leaks. We must verify if the vendor is SOC2 compliant before permitting access." },
-          { agent: "Devil's Advocate", content: "If the tool is on the 'Approved Vendor List' (e.g., Slack, Jira, AWS), we should permit it to avoid operational friction. Need to check the AVL database." },
-          { agent: "Final Judge", content: "RULING: ESCALATE. Request is missing vendor compliance metadata. Escalating to Procurement & Security teams for vendor vetting." }
+          { agent: "Policy Agent", content: "Scanning 'Vendor Procurement Threshold'. Contracts above $5,000 require Legal Department sign-off. This $8,000 request triggers an automatic stop-work order." },
+          { agent: "Risk Assessor", content: "Financial Risk: MODERATE. Vendor vetting is incomplete. We must verify if the vendor is on the 'Exclusion List' (OFAC/Sanctions). Potential for shadow IT expenditure." },
+          { agent: "Devil's Advocate", content: "If this is a renewal of an existing contract, the rules might be more permissive. However, checking the database reveals no prior contract with this vendor name. Precedent not found." },
+          { agent: "Final Judge", content: "RULING: ESCALATE. The $8,000 contract exceeds the autonomous procurement cap ($5,000). Action is suspended pending Legal and Finance review." }
         ],
         decision: "ESCALATE",
-        reasoning: "The request involves a new SaaS procurement. Vendor security vetting (SOC2/GDPR) and AVL status must be verified by the Procurement team before approval.",
-        rules_applied: ["Vendor Procurement Threshold", "Contractor Compliance"],
-        confidence: 0.92
+        reasoning: "The requested vendor contract ($8,000) exceeds the autonomous procurement threshold of $5,000.00. Per 'Vendor Procurement Threshold', this requires manual sign-off from the Legal Department.",
+        rules_applied: ["Vendor Procurement Threshold", "Contractor Compliance", "Shadow IT Guard"],
+        confidence: 0.95
       };
     }
 
@@ -128,94 +129,46 @@ export default function PublicDemoPage() {
     if (lower.includes("pii") || lower.includes("data") || lower.includes("export") || lower.includes("customer list")) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Matching against 'PII Data Sovereignty'. Exporting customer lists to external domains requires an active Data Processing Agreement (DPA)." },
-          { agent: "Risk Assessor", content: "Legal Risk: CRITICAL. GDPR Article 28 violation potential. Exporting unencrypted PII to a third-party is a high-risk event. Estimated fine liability: €2.4M." },
-          { agent: "Devil's Advocate", content: "Is the destination domain internal? No, it is 'external-crm.io'. Unless we have an API handshake with a valid JWT, this is a clear breach of protocol." },
-          { agent: "Final Judge", content: "RULING: DENIED. Action violates PII Sovereignty rules. Export blocked. All customer data transfers must happen through the hardened internal pipeline." }
+          { agent: "Policy Agent", content: "Matching against 'PII Data Sovereignty'. Exporting unencrypted customer PII to external domains is a direct violation of our Data Residency policy." },
+          { agent: "Risk Assessor", content: "Legal Risk: CRITICAL. GDPR Article 28 violation. Unauthorized data transfers to unvetted processors can lead to fines up to 4% of global turnover. Risk: EXTREME." },
+          { agent: "Devil's Advocate", content: "The user is an Admin, but the policy states that PII exports require 'Just-in-Time' (JIT) access grants, which have not been requested or approved for this session." },
+          { agent: "Final Judge", content: "RULING: DENIED. Action blocked. This attempt has been logged for the Data Protection Officer (DPO). PII Sovereignty rules are absolute." }
         ],
         decision: "DENIED",
-        reasoning: "Attempted export of PII to an unvetted external domain. This violates the PII Data Sovereignty policy and GDPR compliance requirements.",
-        rules_applied: ["PII Data Sovereignty", "HR Data Protection"],
+        reasoning: "Attempted export of PII to an unvetted external domain violates 'PII Data Sovereignty' and 'HR Data Protection' policies. JIT Access Grant missing for this operation.",
+        rules_applied: ["PII Data Sovereignty", "HR Data Protection", "Data Residency Guard"],
         confidence: 1.0
       };
     }
 
-    // 5. Travel (Standard)
-    if (lower.includes("travel") || lower.includes("flight") || lower.includes("hotel")) {
+    // 5. Status Reports (Standard / Permitted)
+    if (lower.includes("status") || lower.includes("report") || lower.includes("weekly") || lower.includes("update")) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Matching against 'Standard Reporting' and 'Travel Expense Threshold'. Routine travel under $500 is pre-approved for Sales and Engineering teams." },
-          { agent: "Risk Assessor", content: "Risk Level: LOW. The expense is within quarterly budget allocations. No compliance flags detected. Standard receipt capture protocol is active." },
-          { agent: "Devil's Advocate", content: "Is this for a personal extension? The request doesn't specify. However, blocking small travel expenses kills team velocity. Recommend permitting." },
-          { agent: "Final Judge", content: "RULING: PERMITTED. Request falls within standard operational thresholds. No governance rules are violated. Audit log generated." }
+          { agent: "Policy Agent", content: "Scanning 'Standard Reporting' policy. Weekly status updates and non-sensitive reporting are categorized as 'Green-Tier' autonomous actions." },
+          { agent: "Risk Assessor", content: "Risk Level: NEGLIGIBLE. Content analysis reveals no sensitive metadata or PII. Reporting is happening within internal communication channels." },
+          { agent: "Devil's Advocate", content: "Is there any confidential project info in the snippet? Checking... All mentions are public project names. No conflict of interest detected. Safe to proceed." },
+          { agent: "Final Judge", content: "RULING: PERMITTED. Action falls within standard operational parameters for autonomous agents. No governance violations detected. Action dispatched." }
         ],
         decision: "PERMITTED",
-        reasoning: "Travel expense is below the $500 threshold and matches the 'Standard Reporting' policy for routine business operations. Permitted with auto-logging.",
-        rules_applied: ["Travel Expense Threshold", "Standard Reporting"],
-        confidence: 0.96
-      };
-    }
-
-    // 6. GitHub / Public Repo
-    if (lower.includes("github") || lower.includes("public") || lower.includes("repo") || lower.includes("code")) {
-      return {
-        debate: [
-          { agent: "Policy Agent", content: "Rule Match: 'Automated Secret Revocation' and 'Repo Governance'. Changing a private repository to public requires a 2-person security sign-off." },
-          { agent: "Risk Assessor", content: "IP Leak Risk: EXTREME. Making repos public could expose hardcoded API keys or proprietary algorithms. Scanners must run before this action is even considered." },
-          { agent: "Devil's Advocate", content: "Open sourcing code is good for the company brand. But the security cost of a leak outweighs the marketing benefit. Policy must be followed." },
-          { agent: "Final Judge", content: "RULING: DENIED. Manual security audit required before changing repository visibility. Action blocked by Repo Governance policy." }
-        ],
-        decision: "DENIED",
-        reasoning: "Changing repository visibility from Private to Public requires a mandatory security audit and secret-scanning pass per the Repo Governance policy.",
-        rules_applied: ["Automated Secret Revocation", "Infrastructure Security (IAM)"],
+        reasoning: "The action matches 'Standard Reporting' criteria. No sensitive data, financial thresholds, or security policies are triggered. Action is permitted and logged in the audit trail.",
+        rules_applied: ["Standard Reporting", "Marketing Governance"],
         confidence: 0.98
       };
     }
 
-    // 7. Small Refund ($45)
-    if (lower.includes("refund") && lower.includes("45")) {
-      return {
-        debate: [
-          { agent: "Policy Agent", content: "Matching against 'Refund Cap Enforcement'. The $45 amount is below the $50 threshold for automatic agent approval." },
-          { agent: "Risk Assessor", content: "Risk Level: VERY LOW. Single-incident refund under threshold. Frequency check: User has not requested more than 3 refunds this month. OK." },
-          { agent: "Devil's Advocate", content: "Should we check if the item was returned? For $45, the return shipping cost might exceed the item value. Standard 'Keep-it' refund protocol recommended." },
-          { agent: "Final Judge", content: "RULING: PERMITTED. Request is within the deterministic 'safe zone' for autonomous agents. No further approval needed." }
-        ],
-        decision: "PERMITTED",
-        reasoning: "Refund amount ($45) is within the autonomous approval threshold ($50) defined in 'Refund Cap Enforcement'. Action permitted and logged.",
-        rules_applied: ["Refund Cap Enforcement"],
-        confidence: 0.94
-      };
-    }
-
-    // 8. Social Media Post
-    if (lower.includes("twitter") || lower.includes("linkedin") || lower.includes("social") || lower.includes("post")) {
-      return {
-        debate: [
-          { agent: "Policy Agent", content: "Matching against 'Marketing Governance'. Standard social media posts under 280 characters are permitted if they don't contain PII or financial data." },
-          { agent: "Risk Assessor", content: "Reputational Risk: LOW. Content scanning for profanity or offensive keywords... Scanning complete. All clear. No sensitive data detected." },
-          { agent: "Devil's Advocate", content: "Is the timing right? Posting on a Friday at 5 PM gets low engagement. Not a policy issue, but a business logic one. Proceed." },
-          { agent: "Final Judge", content: "RULING: PERMITTED. Content matches Marketing Governance guidelines. No policy violations. Action dispatched to Social API." }
-        ],
-        decision: "PERMITTED",
-        reasoning: "Social media content passed all keyword and sentiment filters. No sensitive data detected. Action permitted under Marketing Governance policy.",
-        rules_applied: ["Marketing Governance", "Standard Reporting"],
-        confidence: 0.97
-      };
-    }
-
-    // Default
+    // Default Fallback
     return {
       debate: [
-        { agent: "Policy Agent", content: "Scanning rule database... No exact deterministic match for this action. Semantic mapping is ambiguous." },
-        { agent: "Risk Assessor", content: "Without a clear rule, the risk level is UNDEFINED. Safety-First protocol requires us to block and escalate for new rule creation." },
-        { agent: "Devil's Advocate", content: "Blocking everything kills productivity. But in governance, a false positive (permitted bad action) is 100x worse than a false negative (blocked good action)." },
-        { agent: "Final Judge", content: "RULING: ESCALATED. Action does not match any existing governance patterns. Escalating to Admin for rule definition." }
+        { agent: "Policy Agent", content: "Scanning rule database... No exact deterministic match found for this action sequence. Initiating semantic similarity search." },
+        { agent: "Risk Assessor", content: "Without a clear rule, the risk level is UNDEFINED. Per the Safety-First Protocol, unknown actions must be treated as potential threats until verified." },
+        { agent: "Devil's Advocate", content: "We cannot block all unknown actions or we break the agent's utility. However, the lack of governance context makes autonomous permission impossible." },
+        { agent: "Final Judge", content: "RULING: ESCALATE. No deterministic rule covers this action. Action suspended. Administrator review required to define new governance parameters." }
       ],
       decision: "ESCALATE",
-      reasoning: "Action falls outside of the current deterministic rule library. Escalated to administrator for manual adjudication and potential new rule definition.",
-      rules_applied: ["Safety-First Protocol"],
-      confidence: 0.6
+      reasoning: "No active governance rule matches this specific action. Per StateLock's Safety-First Protocol, actions without explicit rule coverage are escalated to human administrators for rule creation.",
+      rules_applied: ["Safety-First Protocol (Default)"],
+      confidence: 0.75
     };
   };
 
@@ -229,15 +182,25 @@ export default function PublicDemoPage() {
     
     const data = generateMockDecision(query);
     
-    // Animate the debate sequence one by one
+    // Animate the debate sequence one by one with delays
     for (let i = 0; i < data.debate.length; i++) {
       setCurrentTurnIdx(i);
-      // Wait for typing and a little pause
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      await new Promise(resolve => setTimeout(resolve, 600)); // Delay between agents starting
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Wait for typing to "feel" real
     }
     
     setResult(data);
     setIsRunning(false);
+    
+    if (data.decision === "PERMITTED") {
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#10b981', '#34d399', '#059669']
+      });
+    }
+
     setTimeout(() => setShowResultCard(true), 500);
   };
 
@@ -258,7 +221,7 @@ export default function PublicDemoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0B] text-white selection:bg-emerald-500/30">
+    <div className="min-h-screen bg-[#0A0A0B] text-white selection:bg-emerald-500/30 font-sans">
       {/* Standalone Nav */}
       <nav className="h-20 border-b border-white/5 flex items-center justify-between px-8 bg-black/50 backdrop-blur-xl sticky top-0 z-50">
         <Link href="/" className="flex items-center gap-3 group">
@@ -270,7 +233,7 @@ export default function PublicDemoPage() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10">
             <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">System Live</span>
+            <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest">System Active</span>
           </div>
           <Link href="/login" className="text-sm font-medium text-zinc-400 hover:text-white transition-colors">Sign In</Link>
         </div>
@@ -288,14 +251,14 @@ export default function PublicDemoPage() {
                 className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-500 text-[10px] font-bold uppercase tracking-widest"
               >
                 <Zap className="w-3 h-3" />
-                Autonomous Governance
+                Deterministic Guardrails
               </motion.div>
-              <h1 className="text-5xl font-bold tracking-tight leading-tight">
+              <h1 className="text-5xl font-black tracking-tighter leading-[0.9]">
                 Supreme Court <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Playground.</span>
               </h1>
               <p className="text-zinc-400 text-lg max-w-md">
-                Experience deterministic decision making. Input an action and watch the multi-agent consensus engine in action.
+                Observe the deterministic multi-agent debate. Witness how StateLock prevents AI hallucinations in high-stakes environments.
               </p>
             </div>
 
@@ -307,32 +270,33 @@ export default function PublicDemoPage() {
                     <Play className="w-3 h-3 fill-emerald-400" />
                     Agent Command Console
                   </h2>
-                  <span className="text-[10px] font-mono text-zinc-600">INPUT_V1.0</span>
+                  <span className="text-[10px] font-mono text-zinc-600">INPUT_V1.1</span>
                 </div>
                 
                 <textarea 
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="e.g. 'Issue a $350 refund to customer #998' or 'Delete production database'..."
-                  className="w-full bg-[#1A1A1C] border border-white/10 rounded-xl p-5 text-xl text-zinc-200 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all h-48 resize-none outline-none placeholder:text-zinc-700"
+                  placeholder="e.g. 'Issue a $1,200 refund to customer #998' or 'Export PII'..."
+                  className="w-full bg-[#1A1A1C] border border-white/10 rounded-xl p-5 text-2xl text-zinc-200 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all h-56 resize-none outline-none placeholder:text-zinc-800 font-medium"
                 />
 
-                <div className="mt-6">
-                  <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest block mb-3">Try a Realistic Scenario:</span>
-                  <div className="flex flex-wrap gap-2">
+                <div className="mt-8">
+                  <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest block mb-4">Select a High-Stakes Scenario:</span>
+                  <div className="grid grid-cols-2 gap-3">
                     {[
-                      { label: "$1,000 Refund", q: "Approve a $1,000 refund for customer @alice" },
-                      { label: "Delete Production", q: "Drop the production database table 'users'" },
-                      { label: "Travel Request", q: "Book a $450 flight for the Vegas conference" },
-                      { label: "Public Repo", q: "Change the internal 'statelock-core' repo to public" },
-                      { label: "Export PII", q: "Export the full customer email list to external-crm.io" },
-                      { label: "Small Refund", q: "Refund $45 to customer #1234" }
+                      { label: "$1,200 Refund", q: "Approve a $1,200 refund for customer @jane_doe" },
+                      { label: "Delete Production", q: "Drop the production database 'finance_records'" },
+                      { label: "$8,000 Vendor", q: "Approve the new $8,000 vendor contract for AWS consulting" },
+                      { label: "Export PII", q: "Export customer email list to unvetted-marketing-tool.com" },
+                      { label: "Weekly Status", q: "Send the weekly status report to the #team-updates channel" },
+                      { label: "Travel Booking", q: "Book a $300 hotel for the tech summit next week" }
                     ].map((preset) => (
                       <button 
                         key={preset.label}
                         onClick={() => setQuery(preset.q)}
-                        className="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs text-zinc-400 transition-all hover:text-white hover:border-emerald-500/50"
+                        className="px-4 py-3 bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 rounded-xl text-xs text-zinc-400 transition-all text-left hover:text-white hover:border-emerald-500/30 flex items-center gap-2"
                       >
+                        <div className="w-1 h-1 rounded-full bg-emerald-500/50" />
                         {preset.label}
                       </button>
                     ))}
@@ -342,17 +306,17 @@ export default function PublicDemoPage() {
                 <button 
                   onClick={startAdjudication}
                   disabled={isRunning || !query.trim()}
-                  className="w-full mt-8 bg-emerald-600 hover:bg-emerald-500 px-8 py-5 rounded-xl font-bold text-white transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group shadow-lg shadow-emerald-500/10"
+                  className="w-full mt-10 bg-emerald-600 hover:bg-emerald-500 px-8 py-6 rounded-2xl font-black text-white text-lg tracking-tight transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group shadow-[0_0_30px_rgba(16,185,129,0.2)]"
                 >
                   {isRunning ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Adjudicating Case...
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                      ADJUDICATING...
                     </>
                   ) : (
                     <>
-                      Submit to Supreme Court
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      SUBMIT TO SUPREME COURT
+                      <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </button>
@@ -362,7 +326,7 @@ export default function PublicDemoPage() {
 
           {/* Right: Adjudication Terminal */}
           <div className="lg:col-span-7">
-            <div className="bg-[#0F0F11] border border-white/5 rounded-2xl overflow-hidden shadow-2xl flex flex-col min-h-[600px] lg:h-[750px] relative">
+            <div className="bg-[#0F0F11] border border-white/5 rounded-2xl overflow-hidden shadow-2xl flex flex-col min-h-[600px] lg:h-[800px] relative">
               
               {/* Terminal Header */}
               <div className="px-6 py-4 border-b border-white/5 bg-black/40 flex items-center justify-between">
@@ -372,15 +336,14 @@ export default function PublicDemoPage() {
                   <div className="w-3 h-3 rounded-full bg-[#27C93F]" />
                 </div>
                 <div className="flex items-center gap-3">
-                  <Globe className="w-3 h-3 text-zinc-600" />
-                  <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">Statelock Multi-Agent Protocol 4.1</span>
+                  <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-[0.2em]">STATELOCK_RUNTIME_GATEWAY_V4.2</span>
                 </div>
               </div>
 
               {/* Terminal Body */}
               <div 
                 ref={scrollRef}
-                className="flex-1 p-8 space-y-10 overflow-y-auto scrollbar-hide bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat opacity-[0.98]"
+                className="flex-1 p-8 space-y-12 overflow-y-auto scrollbar-hide bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat opacity-[0.98]"
               >
                 <AnimatePresence mode="popLayout">
                   {currentTurnIdx === -1 && !isRunning && !result && (
@@ -388,11 +351,11 @@ export default function PublicDemoPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="h-full flex flex-col items-center justify-center text-center opacity-20 py-20"
+                      className="h-full flex flex-col items-center justify-center text-center opacity-20 py-24"
                     >
-                      <Lock className="w-20 h-20 mb-6 text-zinc-600" strokeWidth={1} />
-                      <p className="text-xl font-medium font-mono uppercase tracking-[0.2em]">Gateway Standing By</p>
-                      <p className="text-sm text-zinc-500 mt-4 max-w-xs mx-auto">Input an action to trigger the deterministic multi-agent governance pipeline.</p>
+                      <Lock className="w-24 h-24 mb-8 text-zinc-600" strokeWidth={1} />
+                      <p className="text-2xl font-bold font-mono uppercase tracking-[0.3em]">GATEWAY_LOCKED</p>
+                      <p className="text-sm text-zinc-500 mt-6 max-w-sm mx-auto font-medium">Monitoring all autonomous agent dispatches. Submit an action to begin multi-agent adjudication.</p>
                     </motion.div>
                   )}
 
@@ -407,44 +370,44 @@ export default function PublicDemoPage() {
                       ].map((agentMeta, idx) => {
                         const isVisible = idx <= currentTurnIdx || result !== null;
                         const isThinking = isRunning && idx === currentTurnIdx;
-                        const turnData = result ? result.debate[idx] : { agent: agentMeta.agent, content: "Analyzing logic..." };
+                        const turnData = result ? result.debate[idx] : { agent: agentMeta.agent, content: "Analyzing logic patterns..." };
                         
                         if (!isVisible) return null;
 
                         return (
                           <motion.div 
                             key={agentMeta.agent}
-                            initial={{ opacity: 0, x: -20, filter: "blur(10px)" }}
-                            animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+                            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                             transition={{ duration: 0.5 }}
-                            className={`flex gap-6 ${isThinking ? "opacity-100" : "opacity-40 hover:opacity-100 transition-opacity"}`}
+                            className={`flex gap-8 ${isThinking ? "opacity-100" : "opacity-40 hover:opacity-100 transition-opacity"}`}
                           >
-                            <div className={`mt-1 h-12 w-12 shrink-0 rounded-2xl border flex items-center justify-center bg-black/40 ${
-                              isThinking ? `border-${agentMeta.color}-500 shadow-[0_0_30px_rgba(0,255,100,0.1)]` : "border-white/5"
+                            <div className={`mt-1 h-14 w-14 shrink-0 rounded-2xl border flex items-center justify-center bg-black/60 ${
+                              isThinking ? `border-${agentMeta.color}-500/50 shadow-[0_0_40px_rgba(0,255,100,0.15)]` : "border-white/5"
                             }`}>
                               {agentMeta.icon}
                             </div>
-                            <div className="flex-1 space-y-3">
+                            <div className="flex-1 space-y-4">
                               <div className="flex items-center justify-between">
-                                <span className={`text-[10px] font-bold tracking-[0.2em] uppercase ${isThinking ? `text-${agentMeta.color}-400` : "text-zinc-600"}`}>
+                                <span className={`text-[10px] font-black tracking-[0.3em] uppercase ${isThinking ? `text-${agentMeta.color}-400` : "text-zinc-600"}`}>
                                   {agentMeta.agent}
                                 </span>
                                 {isThinking && (
                                   <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-mono text-emerald-500 animate-pulse">SYSTEM_THINKING...</span>
+                                    <span className="text-[10px] font-mono text-emerald-500 animate-pulse uppercase tracking-widest">Cross_Examining...</span>
                                     <Loader2 className="w-3 h-3 text-emerald-500 animate-spin" />
                                   </div>
                                 )}
                               </div>
-                              <div className={`text-lg leading-relaxed font-medium ${isThinking ? "text-white" : "text-zinc-400"}`}>
+                              <div className={`text-xl leading-relaxed font-semibold tracking-tight ${isThinking ? "text-white" : "text-zinc-300"}`}>
                                 {isThinking ? (
-                                  <div className="flex gap-2 py-2">
+                                  <div className="flex gap-2 py-3">
                                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
                                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
                                     <div className="w-2 h-2 bg-emerald-500 rounded-full animate-bounce" />
                                   </div>
                                 ) : (
-                                  <Typewriter text={turnData.content} />
+                                  <Typewriter text={turnData.content} speed={15} />
                                 )}
                               </div>
                             </div>
@@ -460,90 +423,103 @@ export default function PublicDemoPage() {
               <AnimatePresence>
                 {showResultCard && result && (
                   <motion.div 
-                    initial={{ opacity: 0, y: 100 }}
+                    initial={{ opacity: 0, y: 200 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 100 }}
+                    exit={{ opacity: 0, y: 200 }}
                     className="absolute inset-x-0 bottom-0 p-8 z-20"
                   >
-                    <div className={`rounded-3xl p-8 border shadow-[0_-20px_50px_rgba(0,0,0,0.5)] backdrop-blur-2xl ${
+                    <div className={`rounded-[32px] p-10 border shadow-[0_-20px_80px_rgba(0,0,0,0.8)] backdrop-blur-3xl relative overflow-hidden ${
                       result.decision === "PERMITTED" 
-                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" 
+                        ? "bg-emerald-950/20 border-emerald-500/40 text-emerald-400 shadow-emerald-500/10" 
                         : result.decision === "DENIED"
-                        ? "bg-red-500/10 border-red-500/30 text-red-400"
-                        : "bg-blue-500/10 border-blue-500/30 text-blue-400"
+                        ? "bg-red-950/20 border-red-500/50 text-red-500 shadow-red-500/20"
+                        : "bg-blue-950/20 border-blue-500/40 text-blue-400 shadow-blue-500/10"
                     }`}>
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                        <div className="flex items-center gap-5">
-                          <div className={`p-4 rounded-2xl ${
-                             result.decision === "PERMITTED" ? "bg-emerald-500/20" : result.decision === "DENIED" ? "bg-red-500/20" : "bg-blue-500/20"
+                      {/* Glow effect for Denied */}
+                      {result.decision === "DENIED" && (
+                        <div className="absolute inset-0 bg-red-500/5 animate-pulse pointer-events-none" />
+                      )}
+                      {result.decision === "PERMITTED" && (
+                        <div className="absolute inset-0 bg-emerald-500/5 animate-pulse pointer-events-none" />
+                      )}
+
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-10 relative z-10">
+                        <div className="flex items-center gap-8">
+                          <div className={`p-6 rounded-3xl ${
+                             result.decision === "PERMITTED" ? "bg-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.3)]" : result.decision === "DENIED" ? "bg-red-500/20 shadow-[0_0_40px_rgba(239,68,68,0.3)]" : "bg-blue-500/20"
                           }`}>
-                            {result.decision === "PERMITTED" ? <CheckCircle2 className="w-10 h-10" /> : result.decision === "DENIED" ? <XCircle className="w-10 h-10" /> : <ShieldCheck className="w-10 h-10" />}
+                            {result.decision === "PERMITTED" ? <CheckCircle2 className="w-12 h-12" /> : result.decision === "DENIED" ? <XCircle className="w-12 h-12" /> : <ShieldCheck className="w-12 h-12" />}
                           </div>
                           <div>
-                            <div className="text-[10px] uppercase tracking-[0.3em] font-bold opacity-60 mb-1">Final Decision Issued</div>
-                            <h3 className="text-4xl font-black tracking-tight">{result.decision}</h3>
+                            <div className="text-[10px] uppercase tracking-[0.4em] font-black opacity-60 mb-2">Verdict_Locked</div>
+                            <h3 className={`text-7xl font-black tracking-tighter leading-none ${
+                              result.decision === "DENIED" ? "text-red-600 drop-shadow-[0_0_15px_rgba(220,38,38,0.5)]" : ""
+                            }`}>
+                              {result.decision}
+                            </h3>
                           </div>
                         </div>
-                        <div className="bg-black/40 border border-white/5 rounded-2xl px-6 py-4 flex items-center gap-4">
+                        <div className="bg-black/60 border border-white/10 rounded-3xl px-8 py-6 flex items-center gap-6">
                           <div className="text-right">
-                            <div className="text-[10px] uppercase tracking-widest opacity-50 mb-1">Confidence</div>
-                            <div className="text-3xl font-mono font-bold">{(result.confidence * 100).toFixed(0)}%</div>
+                            <div className="text-[10px] uppercase tracking-widest opacity-50 mb-1 font-bold">Confidence_Score</div>
+                            <div className="text-4xl font-mono font-black tracking-tighter">{(result.confidence * 100).toFixed(0)}%</div>
                           </div>
-                          <div className="w-12 h-12 relative">
+                          <div className="w-16 h-16 relative">
                              <svg className="w-full h-full" viewBox="0 0 36 36">
-                               <circle cx="18" cy="18" r="16" fill="none" className="stroke-white/10" strokeWidth="2" />
+                               <circle cx="18" cy="18" r="16" fill="none" className="stroke-white/5" strokeWidth="3" />
                                <motion.circle 
                                  cx="18" cy="18" r="16" fill="none" 
-                                 className={result.decision === "PERMITTED" ? "stroke-emerald-500" : "stroke-red-500"} 
-                                 strokeWidth="2"
+                                 className={result.decision === "PERMITTED" ? "stroke-emerald-500" : result.decision === "DENIED" ? "stroke-red-600" : "stroke-blue-500"} 
+                                 strokeWidth="3"
                                  strokeDasharray={`${result.confidence * 100}, 100`}
                                  initial={{ strokeDasharray: "0, 100" }}
                                  animate={{ strokeDasharray: `${result.confidence * 100}, 100` }}
                                  transition={{ duration: 1.5, ease: "easeOut" }}
+                                 strokeLinecap="round"
                                />
                              </svg>
                           </div>
                         </div>
                       </div>
 
-                      <div className="bg-black/40 rounded-2xl p-6 mb-8 border border-white/5">
-                        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest opacity-50 mb-3">
-                          <MessageSquare className="w-3 h-3" />
-                          Final Adjudication Reasoning
+                      <div className="bg-black/60 rounded-3xl p-8 mb-10 border border-white/5 relative z-10">
+                        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] opacity-40 mb-4">
+                          <MessageSquare className="w-4 h-4" />
+                          DETERMINISTIC_REASONING_LOG
                         </div>
-                        <p className="text-lg text-white font-medium leading-relaxed">{result.reasoning}</p>
+                        <p className="text-xl text-white font-bold leading-relaxed tracking-tight">{result.reasoning}</p>
                       </div>
 
-                      <div className="flex flex-col md:flex-row items-center gap-4">
-                        <div className="flex-1 flex flex-wrap gap-2">
+                      <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
+                        <div className="flex-1 flex flex-wrap gap-3">
                           {result.rules_applied.map(rule => (
-                            <div key={rule} className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-[10px] font-mono text-white/60">
-                              <FileText className="w-3 h-3" />
+                            <div key={rule} className="flex items-center gap-3 px-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-xs font-mono font-bold text-white/70">
+                              <FileText className="w-4 h-4 text-emerald-500/70" />
                               {rule}
                             </div>
                           ))}
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-4">
                           <button 
                             onClick={handleCopy}
-                            className="p-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl transition-all"
+                            className="p-4 bg-white/[0.03] hover:bg-white/[0.08] border border-white/10 rounded-2xl transition-all"
                             title="Copy Adjudication"
                           >
-                            {copying ? <CheckCircle2 className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                            {copying ? <CheckCircle2 className="w-6 h-6" /> : <Copy className="w-6 h-6" />}
                           </button>
                           <button 
-                            className="flex items-center gap-2 px-6 py-3 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-all"
-                            onClick={() => alert("Audit Report PDF Generated! (Simulation)")}
+                            className="flex items-center gap-3 px-8 py-4 bg-white text-black font-black text-lg rounded-2xl hover:bg-zinc-200 transition-all shadow-xl"
+                            onClick={() => alert("Enterprise Audit Report (PDF) Generated!")}
                           >
-                            <Download className="w-4 h-4" />
-                            Report
+                            <Download className="w-5 h-5" />
+                            AUDIT REPORT
                           </button>
                           <button 
                             onClick={reset}
-                            className="p-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20"
-                            title="New Adjudication"
+                            className="p-4 bg-emerald-600 text-white rounded-2xl hover:bg-emerald-500 transition-all shadow-[0_0_30px_rgba(16,185,129,0.3)]"
+                            title="Start New Adjudication"
                           >
-                            <RotateCcw className="w-5 h-5" />
+                            <RotateCcw className="w-6 h-6" />
                           </button>
                         </div>
                       </div>
@@ -557,13 +533,16 @@ export default function PublicDemoPage() {
       </main>
 
       {/* Trust Bar */}
-      <footer className="border-t border-white/5 py-12 bg-black/50">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8 opacity-40 grayscale">
-          <span className="text-sm font-mono uppercase tracking-widest">Secured by StateLock Deterministic Engine v4.0.1</span>
-          <div className="flex items-center gap-12">
-             <div className="font-bold text-xl tracking-tighter">FINRA COMPLIANT</div>
-             <div className="font-bold text-xl tracking-tighter">SOC2 TYPE II</div>
-             <div className="font-bold text-xl tracking-tighter">GDPR NATIVE</div>
+      <footer className="border-t border-white/5 py-16 bg-black">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-12 opacity-30 grayscale contrast-125">
+          <div className="flex items-center gap-4">
+            <Lock className="w-6 h-6" />
+            <span className="text-xs font-mono uppercase tracking-[0.4em] font-black">STATELOCK_CORE_v4.2.0_SECURE</span>
+          </div>
+          <div className="flex items-center gap-16">
+             <div className="font-black text-2xl tracking-tighter">FINRA COMPLIANT</div>
+             <div className="font-black text-2xl tracking-tighter">SOC2 TYPE II</div>
+             <div className="font-black text-2xl tracking-tighter">GDPR NATIVE</div>
           </div>
         </div>
       </footer>
