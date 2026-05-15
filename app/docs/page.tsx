@@ -85,6 +85,13 @@ export default function DocsPage() {
             <p className="text-zinc-400 leading-relaxed">
               StateLock listens to your organization&apos;s decision-making channels to extract governance patterns. 
             </p>
+            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-6 flex items-start gap-4">
+               <ShieldCheck className="w-6 h-6 text-emerald-500 shrink-0 mt-1" />
+               <div className="space-y-1">
+                  <p className="text-sm font-bold text-emerald-500 uppercase tracking-widest">Enterprise Privacy Notice</p>
+                  <p className="text-sm text-zinc-300 leading-relaxed">For our Design Partners, we manually provision and scope the Slack integration together. We only ingest data from specifically whitelisted channels (e.g., #agent-ops) to guarantee maximum data privacy and accuracy. Your data is never used to train generalized models.</p>
+               </div>
+            </div>
             <div className="bg-zinc-900 border border-white/5 rounded-3xl p-8 space-y-6">
                <div className="flex items-start gap-4">
                   <div className="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-[10px] font-bold text-emerald-500 mt-1">1</div>
