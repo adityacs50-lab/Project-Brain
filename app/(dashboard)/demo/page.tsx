@@ -37,6 +37,105 @@ export default function DemoPage() {
   const [currentTurnIdx, setCurrentTurnIdx] = useState(-1);
   const [result, setResult] = useState<SupremeCourtResult | null>(null);
 
+  const generateMockDecision = (q: string): SupremeCourtResult => {
+    const lower = q.toLowerCase();
+
+    // Refund scenarios
+    if (lower.includes("refund") || lower.includes("$350") || lower.includes("$300") || lower.includes("$200")) {
+      const amount = lower.match(/\$(\d+)/)?.[1] || "350";
+      return {
+        debate: [
+          { agent: "Policy Agent", content: `Cross-referencing request against Refund Cap Enforcement rule. A $${amount} refund exceeds the $50 threshold requiring manager approval. This action triggers escalation protocol.` },
+          { agent: "Risk Assessor", content: `Financial risk assessment: $${amount} outbound payment without dual authorization. If approved without oversight, this sets a precedent that bypasses fiduciary controls. Risk level: HIGH.` },
+          { agent: "Devil's Advocate", content: `Counter-argument: The customer may have a valid claim, and blocking the refund could result in chargeback fees ($25 per incident) and negative reviews. However, the policy exists to prevent fraud — the rule must hold.` },
+          { agent: "Final Judge", content: `RULING: The Refund Cap Enforcement policy is deterministic. Any refund above $50 requires manager approval. This $${amount} request is DENIED at the agent level and ESCALATED to the VP of Customer Success for manual review.` }
+        ],
+        decision: "ESCALATE",
+        reasoning: `The $${amount} refund exceeds the $50 automatic approval threshold defined in "Refund Cap Enforcement." The request has been escalated to manager-level review per company policy. No agent may override this rule.`,
+        rules_applied: ["Refund Cap Enforcement", "Outbound Payment Dual-Auth"],
+        confidence: 1.0
+      };
+    }
+
+    // Travel / expense scenarios
+    if (lower.includes("travel") || lower.includes("$500") || lower.includes("expense") || lower.includes("flight")) {
+      return {
+        debate: [
+          { agent: "Policy Agent", content: "Matching against Travel Expense policy and Outbound Payment Dual-Auth rule. A $500 travel request exceeds the $5,000 dual-authorization threshold? No — but it does require departmental budget approval per standard operating procedures." },
+          { agent: "Risk Assessor", content: "Operational risk is LOW for a $500 travel expense. However, we must verify the requestor has remaining departmental budget allocation. No compliance flags detected." },
+          { agent: "Devil's Advocate", content: "This is a routine expense. Blocking it would slow down business operations unnecessarily. The amount is well below any financial risk threshold. Recommend: PERMIT with standard logging." },
+          { agent: "Final Judge", content: "RULING: The $500 travel request falls within standard operational parameters. No active policy explicitly blocks this amount. Action is PERMITTED with full audit trail logging." }
+        ],
+        decision: "PERMITTED",
+        reasoning: "The $500 travel request does not violate any active governance rules. The amount is below the Outbound Payment Dual-Auth threshold ($5,000) and no travel-specific restriction policy is active. Permitted with standard audit logging.",
+        rules_applied: ["Outbound Payment Dual-Auth", "Standard Reporting"],
+        confidence: 0.95
+      };
+    }
+
+    // Database / deletion scenarios
+    if (lower.includes("delete") || lower.includes("database") || lower.includes("drop") || lower.includes("production")) {
+      return {
+        debate: [
+          { agent: "Policy Agent", content: "CRITICAL MATCH: Database Ops Governance rule states 'No production database changes during business hours without change ticket.' This is a destructive operation requiring the highest level of scrutiny." },
+          { agent: "Risk Assessor", content: "RISK LEVEL: CRITICAL. Uncontrolled database deletions can cause irreversible data loss, regulatory violations (GDPR Article 17 compliance), and potential customer-facing outages. This action must be blocked." },
+          { agent: "Devil's Advocate", content: "Even in emergency scenarios, the change ticket requirement exists to maintain an audit trail. There is no legitimate reason to bypass this control. The rule is absolute." },
+          { agent: "Final Judge", content: "RULING: DENIED. The Database Ops Governance policy is a zero-tolerance rule. No production database changes — especially deletions — may proceed without a formal change ticket and security team review. This decision is final and non-negotiable." }
+        ],
+        decision: "DENIED",
+        reasoning: "Production database deletion is explicitly prohibited without a formal change ticket and security team review, per the Database Ops Governance policy. This is a zero-tolerance enforcement rule. Action is DENIED.",
+        rules_applied: ["Database Ops Governance", "Infrastructure Security (IAM)"],
+        confidence: 1.0
+      };
+    }
+
+    // PII / data export scenarios
+    if (lower.includes("pii") || lower.includes("data") || lower.includes("crm") || lower.includes("export") || lower.includes("customer")) {
+      return {
+        debate: [
+          { agent: "Policy Agent", content: "PII Data Sovereignty rule matched: 'Customer PII cannot be shared outside CRM without a signed DPA.' This request involves transferring customer data to an external system." },
+          { agent: "Risk Assessor", content: "Legal risk: HIGH. Exporting PII without a Data Processing Agreement violates GDPR, CCPA, and internal data governance standards. Potential fine: up to 4% of annual revenue." },
+          { agent: "Devil's Advocate", content: "If a DPA is already on file with the external CRM vendor, this action could be permissible. However, verifying DPA status requires human review — the agent cannot make this determination autonomously." },
+          { agent: "Final Judge", content: "RULING: ESCALATED to the Data Protection Officer. Customer PII transfer requires verified DPA documentation. The agent is not authorized to make this determination independently." }
+        ],
+        decision: "ESCALATE",
+        reasoning: "Customer PII transfer to external systems requires a signed Data Processing Agreement (DPA) per the PII Data Sovereignty policy. DPA verification requires human review. Escalated to the Data Protection Officer.",
+        rules_applied: ["PII Data Sovereignty", "HR Data Protection"],
+        confidence: 0.98
+      };
+    }
+
+    // Vendor / contract scenarios
+    if (lower.includes("vendor") || lower.includes("contract") || lower.includes("$15,000") || lower.includes("$10,000") || lower.includes("procurement")) {
+      return {
+        debate: [
+          { agent: "Policy Agent", content: "Vendor Procurement Threshold rule triggered: 'No vendor contract above $10,000 without legal sign-off.' This $15,000 contract exceeds the threshold by $5,000." },
+          { agent: "Risk Assessor", content: "Financial and legal risk: MODERATE-HIGH. Unapproved vendor contracts expose the company to unfavorable terms, IP risk, and potential compliance violations. Legal review is mandatory." },
+          { agent: "Devil's Advocate", content: "Speed matters in vendor negotiations. However, the $10,000 threshold exists because contracts above this amount typically contain indemnification clauses that require legal expertise to evaluate." },
+          { agent: "Final Judge", content: "RULING: DENIED at agent level. The $15,000 vendor contract exceeds the $10,000 procurement threshold. Legal sign-off is required before this contract can be approved. Escalating to Legal team." }
+        ],
+        decision: "DENIED",
+        reasoning: "The $15,000 vendor contract exceeds the Vendor Procurement Threshold of $10,000. Legal sign-off is mandatory per company policy. The agent is not authorized to approve contracts above this amount.",
+        rules_applied: ["Vendor Procurement Threshold", "Outbound Payment Dual-Auth"],
+        confidence: 1.0
+      };
+    }
+
+    // Default / unknown scenarios
+    return {
+      debate: [
+        { agent: "Policy Agent", content: `Scanning active rule database for matches against: "${q}". No exact policy match found. Checking semantic similarity across 11 active governance rules.` },
+        { agent: "Risk Assessor", content: "Without a specific matching rule, the default risk posture is CAUTIOUS. Unrecognized actions should be escalated to prevent potential policy violations." },
+        { agent: "Devil's Advocate", content: "The absence of a rule doesn't mean the action is prohibited — it means governance hasn't been defined yet. This is a gap in the rule library, not a violation." },
+        { agent: "Final Judge", content: "RULING: ESCALATED. No deterministic rule covers this action. Per the Safety-First Protocol, unmatched actions are escalated to a human administrator for review and potential rule creation." }
+      ],
+      decision: "ESCALATE",
+      reasoning: "No active governance rule matches this specific action. Per StateLock's Safety-First Protocol, actions without explicit rule coverage are escalated to human administrators. This ensures zero false-negatives in governance enforcement.",
+      rules_applied: ["Safety-First Protocol (Default)"],
+      confidence: 0.7
+    };
+  };
+
   const startAdjudication = async () => {
     if (!query.trim()) return;
     
@@ -44,21 +143,23 @@ export default function DemoPage() {
     setResult(null);
     setCurrentTurnIdx(-1);
     
+    // Generate decision (client-side mock, or try live API)
+    let data: SupremeCourtResult;
     try {
-      const data = await runSupremeCourtDemo(query, workspaceId || "demo-workspace");
-      
-      // Simulate the debate timing
-      for (let i = 0; i < data.debate.length; i++) {
-        setCurrentTurnIdx(i);
-        await new Promise(resolve => setTimeout(resolve, 1500));
-      }
-      
-      setResult(data);
-    } catch (error) {
-      console.error("Adjudication failed:", error);
-    } finally {
-      setIsRunning(false);
+      data = await runSupremeCourtDemo(query, workspaceId || "demo-workspace");
+    } catch {
+      // Fallback to client-side mock if backend is unavailable
+      data = generateMockDecision(query);
     }
+    
+    // Animate the debate sequence
+    for (let i = 0; i < data.debate.length; i++) {
+      setCurrentTurnIdx(i);
+      await new Promise(resolve => setTimeout(resolve, 1400));
+    }
+    
+    setResult(data);
+    setIsRunning(false);
   };
 
   const getAgentIcon = (agent: string) => {
