@@ -61,3 +61,13 @@ export const submitFeedback = async (auditId: string, outcome: string, notes?: s
     if (!res.ok) throw new Error("Failed to submit feedback");
     return res.json();
 };
+
+export const runSupremeCourtDemo = async (query: string, workspaceId: string = "demo-workspace") => {
+    const res = await fetch(`${getBaseUrl()}/agent/demo/supreme-court`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query, workspace_id: workspaceId })
+    });
+    if (!res.ok) throw new Error("Supreme Court Adjudication Failed");
+    return res.json();
+};

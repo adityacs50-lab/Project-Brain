@@ -630,3 +630,103 @@ async def run_agent_demo():
         "decisions": decisions,
         "summary": f"{matched}/4 rules matched. {escalations} escalations, {permitted} permitted, {no_rule_found} no_rule_found."
     }
+
+# ========================================
+# POST /agent/demo/supreme-court
+# ========================================
+class SupremeCourtRequest(BaseModel):
+    workspace_id: str = "demo-workspace"
+    query: str
+
+@router.post("/demo/supreme-court")
+async def run_supreme_court_demo(request: SupremeCourtRequest):
+    """
+    Simulates a Multi-Agent Supreme Court debate for the demo.
+    Returns a structured debate sequence and a final decision.
+    """
+    from backend.ai import ai_client
+    from backend.models import Rule
+    from backend.versioning import get_model
+    
+    workspace_id = request.workspace_id
+    user_query = request.query
+    
+    async with AsyncSessionLocal() as db:
+        # 1. Fetch relevant rules (semantic search)
+        model_instance = get_model()
+        embedding = model_instance.encode(user_query).tolist()
+        
+        stmt = select(Rule).where(
+            Rule.workspace_id == workspace_id,
+            Rule.status == "active"
+        ).order_by(Rule.embedding.cosine_distance(embedding)).limit(3)
+        
+        result = await db.execute(stmt)
+        rules = result.scalars().all()
+        
+        rules_context = "\n".join([f"- {r.title}: {r.rule_text} (Action: {r.action_type})" for r in rules])
+        if not rules_context:
+            rules_context = "No specific rules found. Defaulting to general safety and escalation protocol."
+
+        # 2. Call LLM for the debate
+        prompt = f"""SYSTEM: You are the StateLock Supreme Court, a deterministic governance engine.
+Your task is to adjudicate the following user request based on the provided company rules.
+
+USER REQUEST: {user_query}
+
+COMPANY RULES:
+{rules_context}
+
+You MUST simulate a structured debate between 4 distinct agents:
+1. Policy Agent: Cross-references the request against explicit enterprise rules and thresholds.
+2. Risk Assessor: Evaluates financial, legal, and operational risks if this action proceeds.
+3. Devil's Advocate: Argues for the opposite of the initial inclination to ensure no loopholes.
+4. Final Judge: Provides the final, binding, deterministic decision.
+
+OUTPUT FORMAT:
+Respond ONLY with a valid JSON object. No markdown backticks.
+Schema:
+{{
+  "debate": [
+    {{ "agent": "Policy Agent", "content": "..." }},
+    {{ "agent": "Risk Assessor", "content": "..." }},
+    {{ "agent": "Devil's Advocate", "content": "..." }},
+    {{ "agent": "Final Judge", "content": "..." }}
+  ],
+  "decision": "PERMITTED" | "DENIED" | "ESCALATE",
+  "reasoning": "Summary of the final ruling",
+  "rules_applied": ["Rule Title 1", "Rule Title 2"],
+  "confidence": 1.0
+}}
+"""
+
+        try:
+            response_text = await ai_client.chat_completion(
+                model="llama-3.3-70b-versatile",
+                messages=[{"role": "user", "content": prompt}]
+            )
+            
+            # Clean up potential markdown backticks
+            if response_text.startswith("```json"):
+                response_text = response_text.replace("```json", "").replace("```", "").strip()
+            elif response_text.startswith("```"):
+                response_text = response_text.replace("```", "").strip()
+                
+            decision_data = json.loads(response_text)
+            return decision_data
+            
+        except Exception as e:
+            print(f"Supreme Court Demo Error: {e}")
+            # Mock response if AI fails
+            return {
+                "debate": [
+                    { "agent": "Policy Agent", "content": f"Analyzing '{user_query}' against active policies. Detecting potential threshold violations." },
+                    { "agent": "Risk Assessor", "content": "Action carries moderate operational risk. Checking escalation hierarchy." },
+                    { "agent": "Devil's Advocate", "content": "What if this is an edge case? The policy might be too restrictive here." },
+                    { "agent": "Final Judge", "content": "The rules are deterministic. Safety-first protocol triggered." }
+                ],
+                "decision": "ESCALATE",
+                "reasoning": "Automated reasoning failed. Escalating to human admin for final adjudication.",
+                "rules_applied": [r.title for r in rules] if rules else ["General Safety Protocol"],
+                "confidence": 0.5
+            }

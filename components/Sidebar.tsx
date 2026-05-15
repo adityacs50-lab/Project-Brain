@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShieldCheck, LayoutDashboard, ClipboardCheck, Workflow } from "lucide-react";
+import { ShieldCheck, LayoutDashboard, ClipboardCheck, Workflow, Play } from "lucide-react";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -12,6 +12,7 @@ export function Sidebar() {
     { href: "/review", label: "Review Queue", icon: ClipboardCheck },
     { href: "/active-rules", label: "Active Rules", icon: Workflow },
     { href: "/decisions", label: "Agent Decisions", icon: ShieldCheck },
+    { href: "/demo", label: "Live Demo", icon: Play },
   ];
 
   return (
