@@ -5,8 +5,7 @@ import {
   Zap, 
   CheckCircle2, 
   MessageSquare, 
-  Lock,
-  BookOpen
+  Lock
 } from "lucide-react";
 import Link from "next/link";
 
