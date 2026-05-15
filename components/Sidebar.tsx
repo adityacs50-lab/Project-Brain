@@ -11,6 +11,7 @@ export function Sidebar() {
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
     { href: "/review", label: "Review Queue", icon: ClipboardCheck },
     { href: "/active-rules", label: "Active Rules", icon: Workflow },
+    { href: "/developer", label: "Developer", icon: Code2 },
     { href: "/decisions", label: "Agent Decisions", icon: ShieldCheck },
     { href: "/demo", label: "Live Demo", icon: Play },
   ];

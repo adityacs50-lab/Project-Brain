@@ -33,10 +33,10 @@ def get_model():
 
 # Request models
 class AgentQueryRequest(BaseModel):
-    workspace_id: str
-    agent_id: str
+    workspace_id: str | None = None
+    agent_id: str | None = "default-agent"
     action: str
-    context: dict
+    context: dict = {}
 
 class AgentFeedbackRequest(BaseModel):
     audit_id: str
@@ -89,17 +89,23 @@ async def query_agent(request: AgentQueryRequest, http_request: Request):
     query_embedding = model_instance.encode(query_text).tolist()
     
     async with AsyncSessionLocal() as db:
-        # Validate API key
-        stmt_workspace = select(SlackWorkspace).where(SlackWorkspace.api_key == api_key, SlackWorkspace.workspace_id == request.workspace_id)
+        # Validate API key and get workspace
+        stmt_workspace = select(SlackWorkspace).where(SlackWorkspace.api_key == api_key)
+        if request.workspace_id:
+            stmt_workspace = stmt_workspace.where(SlackWorkspace.workspace_id == request.workspace_id)
+            
         result_workspace = await db.execute(stmt_workspace)
-        if not result_workspace.scalar_one_or_none():
-            raise HTTPException(status_code=403, detail="Invalid API Key for this workspace")
+        workspace = result_workspace.scalar_one_or_none()
+        if not workspace:
+            raise HTTPException(status_code=403, detail="Invalid API Key or Workspace mapping")
+
+        active_workspace_id = workspace.workspace_id
 
         # First try exact matching on thresholds
         exact_match_rule = None
         if req_val is not None:
             stmt_active = select(Rule).where(
-                Rule.workspace_id == request.workspace_id,
+                Rule.workspace_id == active_workspace_id,
                 Rule.status == "active",
                 Rule.threshold_value.isnot(None),
                 Rule.operator.isnot(None)
@@ -121,7 +127,7 @@ async def query_agent(request: AgentQueryRequest, http_request: Request):
             # Query active rules for this workspace using pgvector cosine distance
             # Similarity >= 0.75 means cosine_distance <= 0.25
             stmt = select(Rule).where(
-                Rule.workspace_id == request.workspace_id,
+                Rule.workspace_id == active_workspace_id,
                 Rule.status == "active"
             ).order_by(Rule.embedding.cosine_distance(query_embedding)).limit(3)
             
@@ -171,7 +177,7 @@ async def query_agent(request: AgentQueryRequest, http_request: Request):
         # Log to AgentDecisionLog
         decision_log = AgentDecisionLog(
             id=uuid.uuid4(),
-            workspace_id=request.workspace_id,
+            workspace_id=active_workspace_id,
             agent_id=request.agent_id,
             action=request.action,
             context=json.dumps(request.context),
