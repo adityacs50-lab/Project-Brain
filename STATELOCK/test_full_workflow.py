@@ -3,7 +3,7 @@ import json
 import sys
 
 # Configuration
-BASE_URL = "https://project-brain-production-fa75.up.railway.app"
+BASE_URL = "https://distinguished-adventure-production-4d26.up.railway.app"
 HEADERS = {
     "Content-Type": "application/json",
     "x-api-key": "sk-demo-12345678"

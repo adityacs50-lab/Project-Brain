@@ -17,8 +17,12 @@ from statelock import StateLock
 
 # 1. Initialize the client
 # Replace with your actual key from the developer portal
-API_KEY = "sk_live_demo_abc123" 
-sl = StateLock(api_key=API_KEY)
+API_KEY = "sk-demo-12345678" 
+sl = StateLock(
+    api_key=API_KEY,
+    workspace_id="demo-workspace",
+    base_url="https://distinguished-adventure-production-4d26.up.railway.app"
+)
 
 def run_agent_workflow(action_text, user_context):
     print(f"\n[Agent] Attempting action: '{action_text}'")

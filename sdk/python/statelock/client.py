@@ -13,8 +13,9 @@ class StateLock:
             # Proceed with action
             pass
     """
-    def __init__(self, api_key, base_url="https://statelock-backend.railway.app"):
+    def __init__(self, api_key, workspace_id=None, base_url="https://statelock-backend.railway.app"):
         self.api_key = api_key
+        self.workspace_id = workspace_id
         # Default to production URL unless overridden
         self.base_url = base_url.rstrip("/")
 
@@ -35,8 +36,12 @@ class StateLock:
         
         payload = {
             "action": action,
-            "context": ctx
+            "context": ctx,
+            "agent_id": "default-agent"
         }
+        
+        if self.workspace_id:
+            payload["workspace_id"] = self.workspace_id
 
         headers = {
             "Authorization": f"Bearer {self.api_key}",
