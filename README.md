@@ -2,87 +2,92 @@
 
 **The end of LLM hallucinations in production.**
 
-StateLock is a high-performance security layer that sits between your Autonomous AI Agents and the real world. It intercepts every action an agent tries to take—whether it's processing a refund, accessing PII, or making a wire transfer—and runs it against a deterministic engine to ensure compliance, safety, and security.
+StateLock is a high-performance security layer that intercepts agent actions in real-time and evaluates them against deterministic cloud-hosted policies. It ensures that your AI agents—no matter how "creative" they get—never violate your company's security, financial, or compliance boundaries.
 
 [![Status](https://img.shields.io/badge/Status-Live_MVP-emerald)](https://statelock.app)
 [![API](https://img.shields.io/badge/API-Connected-blue)](https://distinguished-adventure-production-4d26.up.railway.app)
+[![License](https://img.shields.io/badge/License-Proprietary-red)](#)
 
 ---
 
-## 🚀 Why StateLock?
+## ⚡ Developer Quickstart (The "Fail-Proof" Path)
 
-LLMs are probabilistic; your company’s security must be deterministic. 
-Autonomous agents are powerful, but they are prone to:
-*   **Hallucinations:** Attempting to call non-existent APIs or use invalid parameters.
-*   **Prompt Injection:** Being manipulated into leaking internal data.
-*   **Compliance Breaches:** Violating SOC2, GDPR, or internal financial caps.
+If you've just cloned this repo, follow these 3 steps to see StateLock in action.
 
-**StateLock fixes this.** It provides a single point of enforcement that guarantees your agents stay within the guardrails you define.
+### 1. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Run the Production SDK Validation
+This script tests the `StateLockGuard` against a live Railway-hosted engine. It covers safe refunds, unauthorized high-value transfers, and PII leaks.
+```bash
+# Navigate to the SDK folder
+cd sdk/python
+
+# Run the validation suite
+python test_local_mvp.py
+```
+
+### 3. Run the "Live-Fire" Stress Test
+This demo simulates a rogue agent attempting a $200 refund and shows how the **Supreme Court** engine intercepts and blocks it in real-time.
+```bash
+# Run from the project root
+python STATELOCK/scratch/live_fire_demo.py
+```
 
 ---
 
 ## 📦 Integration in 10 Lines
 
-Integrate StateLock into any Python-based agent (LangChain, OpenAI, AutoGPT) in seconds.
+StateLock is designed to be injected into any agentic loop (LangChain, OpenAI, etc.).
 
 ```python
 from statelock_mvp import StateLockGuard
 
-# 1. Initialize the Guard with your Cloud API Key
+# 🛡️ Initialize the Guard with your Cloud API Key
 guard = StateLockGuard(api_key="sk-demo-12345678")
 
-# 2. Intercept an agent's intended action
-action = "Issue a $350 refund to user 'bob_99'"
-context = "User is complaining about a 3-day delivery delay."
-
-# 3. Evaluate against the cloud engine
-verdict = guard.evaluate(action, context)
+# 🔍 Evaluate an agent's intended action
+action = "Issue a $350 refund"
+verdict = guard.evaluate(action, context={"user": "bob_99"})
 
 if verdict["allowed"]:
-    # 🛡️ Execute the action with confidence
-    print(f"✅ Approved: {verdict['reason']}")
-    execute_refund(action)
+    execute_action(action)
 else:
-    # ❌ Block the action and alert human operator
-    print(f"🛑 BLOCKED: {verdict['reason']}")
+    print(f"🛑 BLOCKED: {verdict['reason']}") # Reason: "Refund Approval Policy"
 ```
 
 ---
 
-## 🛠️ How it Works
+## 🛠️ Core Technology
 
-1.  **Intercept:** The SDK captures the natural language or JSON action string from the LLM.
-2.  **Evaluate:** The action is sent to the **StateLock Cloud Engine** (hosted on Railway).
-3.  **Adjudicate:** The engine runs a hybrid match:
-    *   **Deterministic Thresholds:** Hard caps (e.g., "No refunds > $200").
-    *   **Semantic Guardrails:** LLM-powered policy matching (e.g., "No PII sharing").
-4.  **Enforce:** Returns an `ALLOWED` or `BLOCKED` verdict with a human-readable reason and confidence score.
-5.  **Audit:** Every decision is logged in real-time for SOC2 compliance.
+### 🧠 The Supreme Court Engine
+StateLock doesn't just "guess." It uses a hybrid adjudication model:
+*   **Deterministic Thresholds:** Hard-coded financial and operational limits.
+*   **Semantic Guardrails:** High-confidence vector matching for policy intent.
+*   **Fail-Closed Security:** If the connection is lost, StateLock defaults to `BLOCKED`.
+
+### 📊 Real-Time Governance
+Every decision—whether allowed or blocked—is streamed to your **Real-Time ROI Dashboard**, providing an instant audit trail for SOC2 and compliance reviews.
 
 ---
 
-## 🏛️ The "Founders Mode" Vision
+## 🏛️ Project Structure
 
-StateLock is built for high-agency teams who need to ship autonomous agents without the "hallucination anxiety." 
-
-*   **Zero-Latency Enforcement:** Optimized for minimal overhead.
-*   **Human-in-the-Loop:** Automatically escalates complex or "no rule found" scenarios to a human dashboard.
-*   **Policy as Code:** Define your company's safety manual in plain English; StateLock turns it into enforced logic.
+*   `sdk/python/`: The production-ready Python client.
+*   `STATELOCK/backend/`: The core logic of the Cloud Engine.
+*   `app/`: The Next.js dashboard for policy management.
+*   `example_agent.py`: A full implementation of an agent protected by StateLock.
 
 ---
 
 ## 🔒 Security & Privacy
 
-StateLock is designed for the enterprise:
-*   **Fail-Closed Architecture:** If the cloud engine is unreachable, the SDK defaults to `BLOCKED`.
-*   **PII Stripping:** Our engine analyzes the *intent* of the action without needing your full database access.
-
----
-
-## 📄 License
-
-Proprietary. All rights reserved. Built for the Fintech Pilot Program.
+StateLock is built for the enterprise. We analyze **intent strings**, not raw database contents. Your data stays in your VPC; only the agent's *decisions* touch our guardrails.
 
 ---
 
 **Ready to secure your agents?** [Talk to a Founder](mailto:aditya@statelock.app) | [View Dashboard](https://statelock.app/dashboard)
+
+Built by the StateLock Team. 🔒🚀
