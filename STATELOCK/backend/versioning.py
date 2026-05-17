@@ -22,7 +22,6 @@ class ManagedEmbeddingModel:
     def __init__(self):
         self.gemini_key = os.getenv("GEMINI_API_KEY")
         self.openai_key = os.getenv("OPENAI_API_KEY")
-        self.local_model = None
         self.openai_client = None
 
         if self.openai_key:
@@ -34,7 +33,7 @@ class ManagedEmbeddingModel:
             genai.configure(api_key=self.gemini_key)
             print("Embeddings: Configured Gemini Managed Embeddings (models/gemini-embedding-001, 384 dims)")
         else:
-            print("Embeddings: No API keys found. Falling back to local SentenceTransformer (all-MiniLM-L6-v2)")
+            print("WARNING: No embedding API keys found (OPENAI_API_KEY or GEMINI_API_KEY). Semantic search will fail.")
 
     @property
     def is_managed(self) -> bool:
@@ -58,7 +57,6 @@ class ManagedEmbeddingModel:
         if self.gemini_key:
             try:
                 import google.generativeai as genai
-                # Configure if not already configured
                 genai.configure(api_key=self.gemini_key)
                 res = genai.embed_content(
                     model="models/gemini-embedding-001",
@@ -70,12 +68,7 @@ class ManagedEmbeddingModel:
             except Exception as e:
                 print(f"Gemini embedding error: {e}, falling back...")
 
-        # 3. Fallback to local sentence-transformer
-        if self.local_model is None:
-            print("Loading local SentenceTransformer model in-process (fallback)...")
-            from sentence_transformers import SentenceTransformer
-            self.local_model = SentenceTransformer('all-MiniLM-L6-v2')
-        return self.local_model.encode(text).tolist()
+        raise RuntimeError("No embedding provider configured. Set GEMINI_API_KEY or OPENAI_API_KEY.")
 
     def encode(self, texts: str | list[str]):
         if isinstance(texts, str):
