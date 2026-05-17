@@ -79,13 +79,13 @@ async def answer_query(user_query: str, workspace_id: str) -> Dict[str, Any]:
             else:
                 rules_context = "\n---\n".join([f"Rule ID: {r.id}\nTitle: {r.title}\nAction: {r.action_type}\nLogic: {r.rule_text}" for r in active_rules])
                 
-                # ⚖️ NEW: Multi-Agent Supreme Court (Conflict Resolution)
+                # ⚖️ Conflict Resolution Engine
                 # Check if we have multiple active rules with different action_types
                 action_types = {r.action_type for r in active_rules}
                 is_conflict = len(action_types) > 1
                 
                 if is_conflict:
-                    prompt = f"""SYSTEM: You are the 'Supreme Court' of Company Operations. 
+                    prompt = f"""SYSTEM: You are the 'Adjudication Engine' of Company Operations. 
 We have detected a CONFLICT between multiple company rules for this request.
 Your job is to resolve the conflict by following these precedence rules:
 1. 'denied' always overrides 'permitted'.
@@ -123,13 +123,13 @@ QUESTION: {user_query}"""
                         messages=[{"role": "user", "content": prompt}]
                     )
                 except Exception as e:
-                    print(f"Supreme Court reasoning failed: {e}. Falling back to deterministic hierarchy.")
+                    print(f"Adjudication Engine reasoning failed: {e}. Falling back to deterministic hierarchy.")
                     if is_conflict:
                         # Deterministic Hierarchy: Denied > Escalate > Permitted
                         if "denied" in action_types:
-                            final_answer = "[SUPREME COURT ADJUDICATION - DETERMINISTIC FALLBACK]\n\nConflict detected between permissive and restrictive policies. In accordance with the Safety-First Hierarchy, the RESTRICTIVE policy ('denied') has been upheld. Request is DENIED to prevent potential budget or compliance violations."
+                            final_answer = "[ADJUDICATION ENGINE - DETERMINISTIC FALLBACK]\n\nConflict detected between permissive and restrictive policies. In accordance with the Safety-First Hierarchy, the RESTRICTIVE policy ('denied') has been upheld. Request is DENIED to prevent potential budget or compliance violations."
                         elif "escalate" in action_types:
-                            final_answer = "[SUPREME COURT ADJUDICATION - DETERMINISTIC FALLBACK]\n\nConflict detected between automated and manual oversight policies. The request has been ESCALATED to a human administrator for final review."
+                            final_answer = "[ADJUDICATION ENGINE - DETERMINISTIC FALLBACK]\n\nConflict detected between automated and manual oversight policies. The request has been ESCALATED to a human administrator for final review."
                         else:
                             final_answer = "Procedural conflict detected. Escalating to human admin for logic reconciliation."
                     else:
@@ -137,8 +137,8 @@ QUESTION: {user_query}"""
 
                 final_answer = final_answer.strip()
                 
-                if is_conflict and "SUPREME COURT" not in final_answer:
-                    final_answer = "[SUPREME COURT ADJUDICATION]\n\n" + final_answer
+                if is_conflict and "ADJUDICATION ENGINE" not in final_answer:
+                    final_answer = "[ADJUDICATION ENGINE]\n\n" + final_answer
                 
                 final_sources = [r.title for r in active_rules]
                 final_confidence = 0.95

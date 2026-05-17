@@ -656,17 +656,17 @@ async def run_agent_demo():
     }
 
 # ========================================
-# POST /agent/demo/supreme-court
+# POST /agent/demo/adjudication
 # ========================================
-class SupremeCourtRequest(BaseModel):
+class AdjudicationRequest(BaseModel):
     workspace_id: str = "demo-workspace"
     query: str
 
-@router.post("/demo/supreme-court")
-async def run_supreme_court_demo(request: SupremeCourtRequest):
+@router.post("/demo/adjudication")
+async def run_adjudication_demo(request: AdjudicationRequest):
     """
-    Simulates a Multi-Agent Supreme Court debate for the demo.
-    Returns a structured debate sequence and a final decision.
+    Simulates a multi-perspective Adjudication Engine sequence for the demo.
+    Returns a structured analysis and a final decision.
     """
     from backend.ai import ai_client
     from backend.models import Rule
@@ -692,30 +692,30 @@ async def run_supreme_court_demo(request: SupremeCourtRequest):
         if not rules_context:
             rules_context = "No specific rules found. Defaulting to general safety and escalation protocol."
 
-        # 2. Call LLM for the debate
-        prompt = f"""SYSTEM: You are the StateLock Supreme Court, a deterministic governance engine.
-Your task is to adjudicate the following user request based on the provided company rules.
+        # 2. Call LLM for the analysis
+        prompt = f"""SYSTEM: You are the StateLock Adjudication Engine, a deterministic policy enforcement gateway.
+Your task is to analyze the following user request based on the provided company rules.
 
 USER REQUEST: {user_query}
 
 COMPANY RULES:
 {rules_context}
 
-You MUST simulate a structured debate between 4 distinct agents:
-1. Policy Agent: Cross-references the request against explicit enterprise rules and thresholds.
-2. Risk Assessor: Evaluates financial, legal, and operational risks if this action proceeds.
-3. Devil's Advocate: Argues for the opposite of the initial inclination to ensure no loopholes.
-4. Final Judge: Provides the final, binding, deterministic decision.
+You MUST simulate a structured analysis from 4 distinct perspectives:
+1. Policy Evaluator: Cross-references the request against explicit enterprise rules and thresholds.
+2. Compliance Assessor: Evaluates financial, legal, and operational risks if this action proceeds.
+3. Exception Handler: Checks for valid exceptions, edge cases, or potential loopholes.
+4. Adjudication Verdict: Provides the final, binding, deterministic decision.
 
 OUTPUT FORMAT:
 Respond ONLY with a valid JSON object. No markdown backticks.
 Schema:
 {{
   "debate": [
-    {{ "agent": "Policy Agent", "content": "..." }},
-    {{ "agent": "Risk Assessor", "content": "..." }},
-    {{ "agent": "Devil's Advocate", "content": "..." }},
-    {{ "agent": "Final Judge", "content": "..." }}
+    {{ "agent": "Policy Evaluator", "content": "..." }},
+    {{ "agent": "Compliance Assessor", "content": "..." }},
+    {{ "agent": "Exception Handler", "content": "..." }},
+    {{ "agent": "Adjudication Verdict", "content": "..." }}
   ],
   "decision": "PERMITTED" | "DENIED" | "ESCALATE",
   "reasoning": "Summary of the final ruling",
@@ -740,14 +740,14 @@ Schema:
             return decision_data
             
         except Exception as e:
-            print(f"Supreme Court Demo Error: {e}")
+            print(f"Adjudication Engine Demo Error: {e}")
             # Mock response if AI fails
             return {
                 "debate": [
-                    { "agent": "Policy Agent", "content": f"Analyzing '{user_query}' against active policies. Detecting potential threshold violations." },
-                    { "agent": "Risk Assessor", "content": "Action carries moderate operational risk. Checking escalation hierarchy." },
-                    { "agent": "Devil's Advocate", "content": "What if this is an edge case? The policy might be too restrictive here." },
-                    { "agent": "Final Judge", "content": "The rules are deterministic. Safety-first protocol triggered." }
+                    { "agent": "Policy Evaluator", "content": f"Analyzing '{user_query}' against active policies. Detecting potential threshold violations." },
+                    { "agent": "Compliance Assessor", "content": "Action carries moderate operational risk. Checking escalation hierarchy." },
+                    { "agent": "Exception Handler", "content": "Checking for documented exceptions or edge cases." },
+                    { "agent": "Adjudication Verdict", "content": "The rules are deterministic. Safety-first protocol triggered." }
                 ],
                 "decision": "ESCALATE",
                 "reasoning": "Automated reasoning failed. Escalating to human admin for final adjudication.",

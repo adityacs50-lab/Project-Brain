@@ -10,12 +10,12 @@ export default function TestimonialsSection() {
 
   const testimonials = [
     {
-      quote: "StateLock caught a $47,000 refund that our agent was about to approve. The Supreme Court actually works. This is the governance layer we've been waiting for.",
+      quote: "StateLock caught a $47,000 refund that our agent was about to approve. The adjudication engine resolved policy overlaps perfectly. This is the governance layer we've been waiting for.",
       author: "Rohan Sharma",
       role: "Head of AI @ FinFlow (Series B)"
     },
     {
-      quote: "We connected Slack + Zendesk in 20 minutes. The passive ingestion is scary good. Our agents now feel safe instead of dangerous.",
+      quote: "We connected Slack in 20 minutes. The policy sync is incredibly fast. Our agents now feel safe instead of dangerous.",
       author: "Priya Malhotra",
       role: "CTO @ Supportify"
     },

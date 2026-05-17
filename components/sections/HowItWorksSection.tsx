@@ -7,21 +7,21 @@ export default function HowItWorksSection() {
     {
       number: "01",
       icon: <Database className="w-5 h-5 text-[#10b981]" />,
-      title: "Passive Ingestion",
-      description: "We quietly connect to Slack, tickets, and docs to distill your tribal knowledge into executable policy."
+      title: "Policy Sync",
+      description: "We connect to Slack to sync your team's operational guidelines and tribal knowledge into executable rules."
     },
     {
       number: "02",
       icon: <Users className="w-5 h-5 text-[#10b981]" />,
-      title: "Multi-Agent Supreme Court",
-      iconAlt: "Intelligent debate",
-      description: "Specialized agents debate ambiguous requests against your history to ensure 100% policy compliance."
+      title: "Adjudication Engine",
+      iconAlt: "Intelligent policy resolving",
+      description: "Our engine resolves rule contradictions and ambiguities using a safety-first deterministic precedence hierarchy."
     },
     {
       number: "03",
       icon: <Zap className="w-5 h-5 text-[#10b981]" />,
-      title: "Runtime Enforcement",
-      description: "Every agent action is checked via our gateway in <50ms. Deterministic decisions, no guesses."
+      title: "SDK Gateway",
+      description: "Every agent action is intercepted and verified via our 5-line SDK in <50ms. Fail-closed by default."
     }
   ];
 

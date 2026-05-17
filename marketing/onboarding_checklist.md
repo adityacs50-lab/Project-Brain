@@ -29,7 +29,7 @@ This checklist outlines the steps we will take together to get your agents secur
 
 ## Phase 5: Production Shadowing (Day 7-14)
 - [ ] **Deploy to Staging/Production:** Run your agent with StateLock enforcement active.
-- [ ] **Monitor the Supreme Court:** Use the `/decisions` dashboard to watch the Supreme Court adjudicate actions in real-time.
+- [ ] **Monitor the Adjudication Engine:** Use the `/decisions` dashboard to watch the Adjudication Engine evaluate actions in real-time.
 - [ ] **Refine Rules:** Adjust thresholds and rules based on actual agent behavior.
 - [ ] **Pilot Review:** Final meeting to review the Audit Logs, quantify risk mitigated, and discuss long-term partnership.
 

@@ -21,7 +21,7 @@ I've been following what you're building at Fazeshift—bringing autonomous agen
 
 As you scale, how are you mathematically guaranteeing that an agent doesn't accidentally push a breaking change or leak a sensitive secret during an autonomous review?
 
-I'm building StateLock, a deterministic governance SDK for AI agents. It acts as a strict "Supreme Court" that blocks unauthorized actions before execution, bypassing LLM hallucination risk entirely.
+I'm building StateLock, a deterministic governance SDK for AI agents. It acts as a strict Policy Gateway that blocks unauthorized actions before execution, bypassing LLM hallucination risk entirely.
 
 Are you building these guardrails in-house, or is it worth a 10-minute chat to see how we handle it?
 
@@ -57,7 +57,7 @@ OpenLayer's focus on AI reliability and evaluation is spot on.
 
 Once a team identifies a failure pattern in evaluation, how do you help them *enforce* that fix at runtime to physically stop a destructive agent action?
 
-I'm building StateLock, the deterministic enforcement layer for AI agents. We act as the "Supreme Court" for agent actions, blocking anything that violates company policy before it hits production.
+I'm building StateLock, the deterministic enforcement layer for AI agents. We act as the deterministic Policy Gateway for agent actions, blocking anything that violates company policy before it hits production.
 
 I'd love to hear how you're thinking about the gap between evaluation and enforcement. Worth a 10-minute chat?
 

@@ -53,7 +53,7 @@ LEADS = [
 def generate_personalized_body(name, company, context):
     prompt = f"""
     You are Aditya, the founder of StateLock, a deterministic governance SDK for AI agents.
-    StateLock acts as a strict "Supreme Court" for agents, mathematically evaluating actions against company policy and blocking unauthorized actions before execution, bypassing LLM hallucination risk.
+    StateLock acts as a strict deterministic Policy Gateway for agents, mathematically evaluating actions against company policy and blocking unauthorized actions before execution, bypassing LLM hallucination risk.
 
     Write a highly personalized 100-word cold email to {name}, the CTO of {company}.
     {company} does this: {context}

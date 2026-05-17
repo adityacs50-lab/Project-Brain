@@ -32,7 +32,7 @@ def run_agent_workflow(action_text, user_context):
     # This call is synchronous and deterministic.
     result = sl.enforce(action_text, **user_context)
     
-    # 3. Handle the Supreme Court Verdict
+    # 3. Handle the Adjudication Verdict
     print(f"[StateLock] Verdict: {result.decision}")
     print(f"[StateLock] Reasoning: {result.reason}")
     

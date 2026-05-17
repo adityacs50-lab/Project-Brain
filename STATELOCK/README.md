@@ -12,8 +12,8 @@
 
 **STATELOCK** is the missing layer between raw enterprise data and reliable AI automation. While probabilistic models "hallucinate" or "drift," Statelock enforces company-wide governance logic through a deterministic execution layer.
 
-### ⚖️ The Multi-Agent Supreme Court
-Our core adjudication engine intercepts every AI agent action. If a task violates a compiled rule (e.g., a $200 refund against a $50 policy), the Supreme Court physically blocks the execution and triggers an escalation.
+### ⚖️ The Adjudication Engine
+Our core adjudication engine intercepts every AI agent action. If a task violates a compiled rule (e.g., a $200 refund against a $50 policy), the Adjudication Engine physically blocks the execution and triggers an escalation.
 
 ---
 

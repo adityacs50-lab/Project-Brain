@@ -30,7 +30,7 @@ python test_local_mvp.py
 ```
 
 ### 3. Run the "Live-Fire" Stress Test
-This demo simulates a rogue agent attempting a $200 refund and shows how the **Supreme Court** engine intercepts and blocks it in real-time.
+This demo simulates a rogue agent attempting a $200 refund and shows how the **Adjudication Engine** intercepts and blocks it in real-time.
 ```bash
 # Run from the project root
 python STATELOCK/scratch/live_fire_demo.py
@@ -62,7 +62,7 @@ else:
 
 ## 🛠️ Core Technology
 
-### 🧠 The Supreme Court Engine
+### 🧠 The Adjudication Engine
 StateLock doesn't just "guess." It uses a hybrid adjudication model:
 *   **Deterministic Thresholds:** Hard-coded financial and operational limits.
 *   **Semantic Guardrails:** High-confidence vector matching for policy intent.

@@ -14,7 +14,7 @@ export default function FooterSection() {
         </div>
 
         <nav className="flex flex-wrap justify-center gap-10 mb-12">
-          {['Problem', 'Supreme Court', 'How it Works', 'Pricing', 'FAQ'].map((link) => (
+          {['Problem', 'Adjudication', 'How it Works', 'Pricing', 'FAQ'].map((link) => (
             <a 
               key={link} 
               href={`#${link.toLowerCase().replace(/\s+/g, '-')}`} 

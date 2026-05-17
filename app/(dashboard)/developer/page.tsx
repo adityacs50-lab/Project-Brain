@@ -37,7 +37,7 @@ result = sl.enforce(
 )
 
 if result.is_permitted():
-    print("Action approved by Supreme Court")
+    print("Action approved by Adjudication Engine")
 else:
     print(f"Action blocked: {result.reason}")`;
 
@@ -56,7 +56,7 @@ else:
           <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em]">Developer Access</span>
         </div>
         <h1 className="text-4xl font-black text-zinc-900 tracking-tighter">Integration Layer.</h1>
-        <p className="text-zinc-500 max-w-md">Connect your autonomous agents to the StateLock Supreme Court via our lightweight SDKs.</p>
+        <p className="text-zinc-500 max-w-md">Connect your autonomous agents to the StateLock Adjudication Engine via our lightweight SDKs.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

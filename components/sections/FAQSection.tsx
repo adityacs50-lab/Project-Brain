@@ -9,12 +9,12 @@ const faqs = [
     answer: "Prompt engineering is suggestive. StateLock is a hard runtime enforcement layer. We don’t ask the model to behave — we mathematically guarantee it through our deterministic engine."
   },
   {
-    question: "Is the Supreme Court actually multiple agents?",
-    answer: "Yes. It uses a specialized multi-agent system that debates high-stakes decisions using your company’s real policies and historical data to reach a binding verdict."
+    question: "How does the Adjudication Engine resolve policy conflicts?",
+    answer: "It uses our safety-first deterministic precedence hierarchy (where restrictions strictly override permissions) to resolve overlapping rules instantly without manual intervention."
   },
   {
     question: "What is the performance overhead?",
-    answer: "Our gateway is built for high-scale production. Standard decisions are returned in under 50ms. Full Supreme Court reviews (only triggered for high-risk actions) take 200–400ms."
+    answer: "Our gateway is built for high-scale production. Decision verification is returned in under 50ms, ensuring zero impact on your core user experience."
   },
   {
     question: "Do I need to rewrite my existing agents?",

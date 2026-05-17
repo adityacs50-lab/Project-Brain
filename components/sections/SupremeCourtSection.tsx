@@ -6,24 +6,24 @@ import { ShieldCheck, Scale, AlertTriangle, Gavel } from 'lucide-react';
 export default function SupremeCourtSection() {
   const agents = [
     {
-      role: "Policy Agent",
+      role: "Policy Analyzer",
       icon: <ShieldCheck className="w-4 h-4 text-[#10b981]" />,
-      action: "Cross-references enterprise rules"
+      action: "Cross-references actions against explicit rules"
     },
     {
-      role: "Risk Assessor",
+      role: "Threshold Guard",
       icon: <AlertTriangle className="w-4 h-4 text-[#10b981]" />,
-      action: "Flags potential compliance gaps"
+      action: "Enforces exact mathematical limits"
     },
     {
-      role: "Devil's Advocate",
+      role: "Semantic Matcher",
       icon: <Scale className="w-4 h-4 text-[#10b981]" />,
-      action: "Argues counter-factuals"
+      action: "Verifies natural-language policies"
     },
     {
-      role: "Final Judge",
+      role: "Enforcement Gateway",
       icon: <Gavel className="w-4 h-4 text-[#10b981]" />,
-      action: "Issues deterministic ruling"
+      action: "Issues binding allow/deny decisions"
     }
   ];
 
@@ -37,10 +37,10 @@ export default function SupremeCourtSection() {
             The Arbiter
           </p>
           <h2 className="text-4xl md:text-6xl text-white font-semibold tracking-[-0.02em] leading-tight mb-6">
-            The Multi-Agent <br className="hidden md:block" /> Supreme Court.
+            The Determinative <br className="hidden md:block" /> Adjudication Engine.
           </h2>
           <p className="text-[#e5e5e5]/60 text-lg md:text-xl font-normal leading-relaxed">
-            Where intelligent debate becomes unbreakable policy.
+            Where complex operational decisions meet real-time, unbreakable policy enforcement.
           </p>
         </div>
 
@@ -56,7 +56,7 @@ export default function SupremeCourtSection() {
             </div>
             <Image 
               src="/supreme-court.png" 
-              alt="StateLock Supreme Court Dashboard" 
+              alt="StateLock Adjudication Dashboard" 
               width={2400} 
               height={1600}
               className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-500"
@@ -68,7 +68,7 @@ export default function SupremeCourtSection() {
         {/* Benefit Explanation */}
         <div className="text-center max-w-2xl mx-auto mb-20">
           <p className="text-[#e5e5e5]/50 text-sm md:text-base leading-relaxed italic">
-            &ldquo;Every action is subject to multi-agent consensus. Rulings are binding, cryptographically signed, and stored in a tamper-proof audit log for total regulatory compliance.&rdquo;
+            &ldquo;Every action is verified against active policies at the runtime gateway. Decisions are returned in under 50ms, cryptographically logged, and fail-closed by default for absolute enterprise compliance.&rdquo;
           </p>
         </div>
 

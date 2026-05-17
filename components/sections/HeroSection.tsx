@@ -62,7 +62,7 @@ export default function HeroSection() {
             
             <div className="hidden md:flex items-center gap-8">
               <a href="#problem" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">The Problem</a>
-              <a href="#supreme-court" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Supreme Court</a>
+              <a href="#supreme-court" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Adjudication</a>
               <a href="#how-it-works" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">How It Works</a>
               <a href="#pricing" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Pricing</a>
             </div>
@@ -86,12 +86,12 @@ export default function HeroSection() {
             </span>
           </div>
 
-          <h1 className="text-6xl md:text-8xl lg:text-[92px] text-white font-semibold tracking-[-0.05em] leading-[1.0] mb-8">
-            AI Agents that <br className="hidden md:block" /> Never Break the Rules.
+          <h1 className="text-6xl md:text-8xl lg:text-[88px] text-white font-semibold tracking-[-0.05em] leading-[1.0] mb-8">
+            Deterministic Guardrails <br className="hidden md:block" /> For Autonomous AI Agents.
           </h1>
 
           <p className="text-[#e5e5e5]/60 text-lg md:text-xl font-normal leading-relaxed max-w-2xl mb-14">
-            A deterministic governance layer for your enterprise. No hallucinations. No expensive mistakes. Just mathematically enforced intelligence.
+            An unbreakable policy enforcement gateway for your enterprise. No hallucinations. No runaway API actions. Just mathematically guaranteed safety.
           </p>
 
           {/* CTA Buttons */}

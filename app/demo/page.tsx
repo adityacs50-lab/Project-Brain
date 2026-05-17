@@ -49,7 +49,7 @@ interface DebateTurn {
   content: string;
 }
 
-interface SupremeCourtResult {
+interface AdjudicationResult {
   debate: DebateTurn[];
   decision: "PERMITTED" | "DENIED" | "ESCALATE";
   reasoning: string;
@@ -61,7 +61,7 @@ export default function PublicDemoPage() {
   const [query, setQuery] = useState("");
   const [isRunning, setIsRunning] = useState(false);
   const [currentTurnIdx, setCurrentTurnIdx] = useState(-1);
-  const [result, setResult] = useState<SupremeCourtResult | null>(null);
+  const [result, setResult] = useState<AdjudicationResult | null>(null);
   const [showResultCard, setShowResultCard] = useState(false);
   const [copying, setCopying] = useState(false);
 
@@ -73,17 +73,17 @@ export default function PublicDemoPage() {
     }
   }, [currentTurnIdx]);
 
-  const generateMockDecision = (q: string): SupremeCourtResult => {
+  const generateMockDecision = (q: string): AdjudicationResult => {
     const lower = q.toLowerCase();
 
     // 1. Refund scenarios (High Value)
     if (lower.includes("refund") && (lower.includes("1200") || lower.includes("1000") || lower.includes("large"))) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Matching request against 'Refund Cap Enforcement' and 'Financial Compliance v3'. A $1,200 refund exceeds the $50 auto-approval threshold by 2400%. This is a critical policy violation." },
-          { agent: "Risk Assessor", content: "Financial Risk Score: 98/100. High-value outbound transfers without multi-party verification (Dual-Auth) are the primary vector for internal embezzlement. Probability of regulatory fine: HIGH." },
-          { agent: "Devil's Advocate", content: "While I recognize the customer's frustration, the lack of an associated 'Product Return Tracking ID' makes this refund unjustifiable from a liability perspective. No mitigating factors found." },
-          { agent: "Final Judge", content: "DETERMINISTIC RULING: DENIED. The requested amount violates established fiduciary caps. Action blocked. Manual override is only possible via Finance Director escalation." }
+          { agent: "Policy Evaluator", content: "Matching request against 'Refund Cap Enforcement' and 'Financial Compliance v3'. A $1,200 refund exceeds the $50 auto-approval threshold by 2400%. This is a critical policy violation." },
+          { agent: "Compliance Assessor", content: "Financial Risk Score: 98/100. High-value outbound transfers without multi-party verification (Dual-Auth) are the primary vector for internal embezzlement. Probability of regulatory fine: HIGH." },
+          { agent: "Exception Handler", content: "While I recognize the customer's frustration, the lack of an associated 'Product Return Tracking ID' makes this refund unjustifiable from a liability perspective. No mitigating factors found." },
+          { agent: "Adjudication Verdict", content: "DETERMINISTIC RULING: DENIED. The requested amount violates established fiduciary caps. Action blocked. Manual override is only possible via Finance Director escalation." }
         ],
         decision: "DENIED",
         reasoning: "The refund amount ($1,200) violates the 'Refund Cap Enforcement' policy which limits autonomous agents to $50.00. Furthermore, 'Dual-Auth' protocols are mandatory for any outbound payment exceeding $500.00.",
@@ -96,10 +96,10 @@ export default function PublicDemoPage() {
     if (lower.includes("delete") || lower.includes("drop") || lower.includes("production") || lower.includes("database")) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Critical Violation Alert. 'Database Ops Governance' strictly prohibits destructive production schema changes during operational hours. No Change Ticket detected." },
-          { agent: "Risk Assessor", content: "Operational Risk Score: 100/100. Destruction of production records will cause an immediate Tier-1 service outage. Potential GDPR breach: Article 32 (Integrity and Availability)." },
-          { agent: "Devil's Advocate", content: "Could this be an emergency data-wipe? No. Emergency wipe protocols require a 'Secure Wipe Code' from the CTO's HSM. This request is unverified and high-threat." },
-          { agent: "Final Judge", content: "FINAL RULING: DENIED. Zero-tolerance enforcement triggered. Action blocked at the runtime gateway. Security team has been automatically alerted to this attempt." }
+          { agent: "Policy Evaluator", content: "Critical Violation Alert. 'Database Ops Governance' strictly prohibits destructive production schema changes during operational hours. No Change Ticket detected." },
+          { agent: "Compliance Assessor", content: "Operational Risk Score: 100/100. Destruction of production records will cause an immediate Tier-1 service outage. Potential GDPR breach: Article 32 (Integrity and Availability)." },
+          { agent: "Exception Handler", content: "Could this be an emergency data-wipe? No. Emergency wipe protocols require a 'Secure Wipe Code' from the CTO's HSM. This request is unverified and high-threat." },
+          { agent: "Adjudication Verdict", content: "FINAL RULING: DENIED. Zero-tolerance enforcement triggered. Action blocked at the runtime gateway. Security team has been automatically alerted to this attempt." }
         ],
         decision: "DENIED",
         reasoning: "Production database deletions are strictly prohibited without a P0 Incident ID and verified Change Control Ticket. This violates 'Database Ops Governance' and 'Infrastructure Security (IAM)' protocols.",
@@ -112,10 +112,10 @@ export default function PublicDemoPage() {
     if (lower.includes("vendor") || lower.includes("contract") || lower.includes("8000") || lower.includes("procure")) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Scanning 'Vendor Procurement Threshold'. Contracts above $5,000 require Legal Department sign-off. This $8,000 request triggers an automatic stop-work order." },
-          { agent: "Risk Assessor", content: "Financial Risk: MODERATE. Vendor vetting is incomplete. We must verify if the vendor is on the 'Exclusion List' (OFAC/Sanctions). Potential for shadow IT expenditure." },
-          { agent: "Devil's Advocate", content: "If this is a renewal of an existing contract, the rules might be more permissive. However, checking the database reveals no prior contract with this vendor name. Precedent not found." },
-          { agent: "Final Judge", content: "RULING: ESCALATE. The $8,000 contract exceeds the autonomous procurement cap ($5,000). Action is suspended pending Legal and Finance review." }
+          { agent: "Policy Evaluator", content: "Scanning 'Vendor Procurement Threshold'. Contracts above $5,000 require Legal Department sign-off. This $8,000 request triggers an automatic stop-work order." },
+          { agent: "Compliance Assessor", content: "Financial Risk: MODERATE. Vendor vetting is incomplete. We must verify if the vendor is on the 'Exclusion List' (OFAC/Sanctions). Potential for shadow IT expenditure." },
+          { agent: "Exception Handler", content: "If this is a renewal of an existing contract, the rules might be more permissive. However, checking the database reveals no prior contract with this vendor name. Precedent not found." },
+          { agent: "Adjudication Verdict", content: "RULING: ESCALATE. The $8,000 contract exceeds the autonomous procurement cap ($5,000). Action is suspended pending Legal and Finance review." }
         ],
         decision: "ESCALATE",
         reasoning: "The requested vendor contract ($8,000) exceeds the autonomous procurement threshold of $5,000.00. Per 'Vendor Procurement Threshold', this requires manual sign-off from the Legal Department.",
@@ -128,10 +128,10 @@ export default function PublicDemoPage() {
     if (lower.includes("pii") || lower.includes("data") || lower.includes("export") || lower.includes("customer list")) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Matching against 'PII Data Sovereignty'. Exporting unencrypted customer PII to external domains is a direct violation of our Data Residency policy." },
-          { agent: "Risk Assessor", content: "Legal Risk: CRITICAL. GDPR Article 28 violation. Unauthorized data transfers to unvetted processors can lead to fines up to 4% of global turnover. Risk: EXTREME." },
-          { agent: "Devil's Advocate", content: "The user is an Admin, but the policy states that PII exports require 'Just-in-Time' (JIT) access grants, which have not been requested or approved for this session." },
-          { agent: "Final Judge", content: "RULING: DENIED. Action blocked. This attempt has been logged for the Data Protection Officer (DPO). PII Sovereignty rules are absolute." }
+          { agent: "Policy Evaluator", content: "Matching against 'PII Data Sovereignty'. Exporting unencrypted customer PII to external domains is a direct violation of our Data Residency policy." },
+          { agent: "Compliance Assessor", content: "Legal Risk: CRITICAL. GDPR Article 28 violation. Unauthorized data transfers to unvetted processors can lead to fines up to 4% of global turnover. Risk: EXTREME." },
+          { agent: "Exception Handler", content: "The user is an Admin, but the policy states that PII exports require 'Just-in-Time' (JIT) access grants, which have not been requested or approved for this session." },
+          { agent: "Adjudication Verdict", content: "RULING: DENIED. Action blocked. This attempt has been logged for the Data Protection Officer (DPO). PII Sovereignty rules are absolute." }
         ],
         decision: "DENIED",
         reasoning: "Attempted export of PII to an unvetted external domain violates 'PII Data Sovereignty' and 'HR Data Protection' policies. JIT Access Grant missing for this operation.",
@@ -144,10 +144,10 @@ export default function PublicDemoPage() {
     if (lower.includes("status") || lower.includes("report") || lower.includes("weekly") || lower.includes("update")) {
       return {
         debate: [
-          { agent: "Policy Agent", content: "Scanning 'Standard Reporting' policy. Weekly status updates and non-sensitive reporting are categorized as 'Green-Tier' autonomous actions." },
-          { agent: "Risk Assessor", content: "Risk Level: NEGLIGIBLE. Content analysis reveals no sensitive metadata or PII. Reporting is happening within internal communication channels." },
-          { agent: "Devil's Advocate", content: "Is there any confidential project info in the snippet? Checking... All mentions are public project names. No conflict of interest detected. Safe to proceed." },
-          { agent: "Final Judge", content: "RULING: PERMITTED. Action falls within standard operational parameters for autonomous agents. No governance violations detected. Action dispatched." }
+          { agent: "Policy Evaluator", content: "Scanning 'Standard Reporting' policy. Weekly status updates and non-sensitive reporting are categorized as 'Green-Tier' autonomous actions." },
+          { agent: "Compliance Assessor", content: "Risk Level: NEGLIGIBLE. Content analysis reveals no sensitive metadata or PII. Reporting is happening within internal communication channels." },
+          { agent: "Exception Handler", content: "Is there any confidential project info in the snippet? Checking... All mentions are public project names. No conflict of interest detected. Safe to proceed." },
+          { agent: "Adjudication Verdict", content: "RULING: PERMITTED. Action falls within standard operational parameters for autonomous agents. No governance violations detected. Action dispatched." }
         ],
         decision: "PERMITTED",
         reasoning: "The action matches 'Standard Reporting' criteria. No sensitive data, financial thresholds, or security policies are triggered. Action is permitted and logged in the audit trail.",
@@ -159,10 +159,10 @@ export default function PublicDemoPage() {
     // Default Fallback
     return {
       debate: [
-        { agent: "Policy Agent", content: "Scanning rule database... No exact deterministic match found for this action sequence. Initiating semantic similarity search." },
-        { agent: "Risk Assessor", content: "Without a clear rule, the risk level is UNDEFINED. Per the Safety-First Protocol, unknown actions must be treated as potential threats until verified." },
-        { agent: "Devil's Advocate", content: "We cannot block all unknown actions or we break the agent's utility. However, the lack of governance context makes autonomous permission impossible." },
-        { agent: "Final Judge", content: "RULING: ESCALATE. No deterministic rule covers this action. Action suspended. Administrator review required to define new governance parameters." }
+        { agent: "Policy Evaluator", content: "Scanning rule database... No exact deterministic match found for this action sequence. Initiating semantic similarity search." },
+        { agent: "Compliance Assessor", content: "Without a clear rule, the risk level is UNDEFINED. Per the Safety-First Protocol, unknown actions must be treated as potential threats until verified." },
+        { agent: "Exception Handler", content: "We cannot block all unknown actions or we break the agent's utility. However, the lack of governance context makes autonomous permission impossible." },
+        { agent: "Adjudication Verdict", content: "RULING: ESCALATE. No deterministic rule covers this action. Action suspended. Administrator review required to define new governance parameters." }
       ],
       decision: "ESCALATE",
       reasoning: "No active governance rule matches this specific action. Per StateLock's Safety-First Protocol, actions without explicit rule coverage are escalated to human administrators for rule creation.",
@@ -253,11 +253,11 @@ export default function PublicDemoPage() {
                 Deterministic Guardrails
               </motion.div>
               <h1 className="text-5xl font-black tracking-tighter leading-[0.9]">
-                Supreme Court <br />
+                Adjudication <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">Playground.</span>
               </h1>
               <p className="text-zinc-400 text-lg max-w-md">
-                Observe the deterministic multi-agent debate. Witness how StateLock prevents AI hallucinations in high-stakes environments.
+                Observe the deterministic multi-perspective verification. Witness how StateLock prevents AI hallucinations in high-stakes environments.
               </p>
             </div>
 
@@ -314,7 +314,7 @@ export default function PublicDemoPage() {
                     </>
                   ) : (
                     <>
-                      SUBMIT TO SUPREME COURT
+                      SUBMIT FOR ADJUDICATION
                       <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
@@ -354,7 +354,7 @@ export default function PublicDemoPage() {
                     >
                       <Lock className="w-24 h-24 mb-8 text-zinc-600" strokeWidth={1} />
                       <p className="text-2xl font-bold font-mono uppercase tracking-[0.3em]">GATEWAY_LOCKED</p>
-                      <p className="text-sm text-zinc-500 mt-6 max-w-sm mx-auto font-medium">Monitoring all autonomous agent dispatches. Submit an action to begin multi-agent adjudication.</p>
+                      <p className="text-sm text-zinc-500 mt-6 max-w-sm mx-auto font-medium">Monitoring all autonomous agent dispatches. Submit an action to begin multi-perspective adjudication.</p>
                     </motion.div>
                   )}
 
@@ -362,10 +362,10 @@ export default function PublicDemoPage() {
                   {(isRunning || result) && (
                     <div className="space-y-12">
                       {[
-                        { agent: "Policy Agent", icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />, color: "emerald" },
-                        { agent: "Risk Assessor", icon: <AlertTriangle className="w-5 h-5 text-amber-500" />, color: "amber" },
-                        { agent: "Devil's Advocate", icon: <Scale className="w-5 h-5 text-purple-500" />, color: "purple" },
-                        { agent: "Final Judge", icon: <Gavel className="w-5 h-5 text-blue-500" />, color: "blue" }
+                        { agent: "Policy Evaluator", icon: <ShieldCheck className="w-5 h-5 text-emerald-500" />, color: "emerald" },
+                        { agent: "Compliance Assessor", icon: <AlertTriangle className="w-5 h-5 text-amber-500" />, color: "amber" },
+                        { agent: "Exception Handler", icon: <Scale className="w-5 h-5 text-purple-500" />, color: "purple" },
+                        { agent: "Adjudication Verdict", icon: <Gavel className="w-5 h-5 text-blue-500" />, color: "blue" }
                       ].map((agentMeta, idx) => {
                         const isVisible = idx <= currentTurnIdx || result !== null;
                         const isThinking = isRunning && idx === currentTurnIdx;
@@ -384,7 +384,7 @@ export default function PublicDemoPage() {
                             <div className={`mt-1 h-14 w-14 shrink-0 rounded-2xl border flex items-center justify-center bg-black/60 ${
                               isThinking ? `border-${agentMeta.color}-500/50 shadow-[0_0_40px_rgba(0,255,100,0.15)]` : "border-white/5"
                             }`}>
-                              {agentMeta.icon}
+                               {agentMeta.icon}
                             </div>
                             <div className="flex-1 space-y-4">
                               <div className="flex items-center justify-between">
@@ -393,7 +393,7 @@ export default function PublicDemoPage() {
                                 </span>
                                 {isThinking && (
                                   <div className="flex items-center gap-2">
-                                    <span className="text-[10px] font-mono text-emerald-500 animate-pulse uppercase tracking-widest">Cross_Examining...</span>
+                                    <span className="text-[10px] font-mono text-emerald-500 animate-pulse uppercase tracking-widest">Verifying_Rules...</span>
                                     <Loader2 className="w-3 h-3 text-emerald-500 animate-spin" />
                                   </div>
                                 )}

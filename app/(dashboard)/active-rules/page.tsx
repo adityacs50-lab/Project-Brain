@@ -115,7 +115,7 @@ export default function ActiveRules() {
             <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em]">Governance Control</span>
           </div>
           <h1 className="text-4xl font-black text-zinc-900 tracking-tighter">Rule Management.</h1>
-          <p className="text-zinc-500 max-w-md">Approved rules are enforced deterministically by the StateLock Supreme Court.</p>
+          <p className="text-zinc-500 max-w-md">Approved rules are enforced deterministically by the StateLock Adjudication Engine.</p>
         </div>
 
         <div className="flex items-center gap-3">

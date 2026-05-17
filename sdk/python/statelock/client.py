@@ -29,7 +29,7 @@ class StateLock:
             **kwargs: Extra context key-value pairs (e.g. amount=500).
             
         Returns:
-            AdjudicationResult: The verdict from the StateLock Supreme Court.
+            AdjudicationResult: The verdict from the StateLock Adjudication Engine.
         """
         ctx = context or {}
         ctx.update(kwargs)
@@ -104,7 +104,7 @@ class AsyncStateLock:
             **kwargs: Extra context key-value pairs (e.g. amount=500).
             
         Returns:
-            AdjudicationResult: The verdict from the StateLock Supreme Court.
+            AdjudicationResult: The verdict from the StateLock Adjudication Engine.
         """
         import httpx
         ctx = context or {}
@@ -156,7 +156,7 @@ class AdjudicationResult:
         self.decision = data.get("decision", "ESCALATE").upper()
         
         # Extract reasoning
-        self.reason = data.get("rule_text") or data.get("message") or "No explicit reasoning provided by Supreme Court."
+        self.reason = data.get("rule_text") or data.get("message") or "No explicit reasoning provided by Adjudication Engine."
         self.rule_title = data.get("rule_title")
         self.confidence = data.get("confidence", 0.0)
         self.audit_id = data.get("audit_id")

@@ -41,7 +41,7 @@ export default function DocsPage() {
           <div className="space-y-4">
             <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em]">Platform</p>
             <nav className="flex flex-col gap-3">
-               <a href="#supreme-court" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">The Supreme Court</a>
+               <a href="#adjudication" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">Adjudication Engine</a>
                <a href="#pricing" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">Pricing & Plans</a>
                <a href="#compliance" className="text-sm font-bold text-zinc-400 hover:text-white transition-colors">Compliance & Security</a>
             </nav>
@@ -60,8 +60,8 @@ export default function DocsPage() {
             <div className="grid grid-cols-3 gap-6 pt-10">
                <div className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl space-y-3">
                   <Zap className="w-6 h-6 text-emerald-500" />
-                  <p className="text-sm font-bold">Passive Ingestion</p>
-                  <p className="text-xs text-zinc-500">Rules are extracted automatically from your existing team communication.</p>
+                  <p className="text-sm font-bold">Policy Sync</p>
+                  <p className="text-xs text-zinc-500">Rules are synced automatically from your existing team communication.</p>
                </div>
                <div className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl space-y-3">
                   <CheckCircle2 className="w-6 h-6 text-emerald-500" />
@@ -71,7 +71,7 @@ export default function DocsPage() {
                <div className="p-6 bg-white/[0.03] border border-white/5 rounded-3xl space-y-3">
                   <ShieldCheck className="w-6 h-6 text-emerald-500" />
                   <p className="text-sm font-bold">Deterministic Enforcement</p>
-                  <p className="text-xs text-zinc-500">The Supreme Court enforces active rules with zero hallucination risk.</p>
+                  <p className="text-xs text-zinc-500">The Adjudication Engine enforces active rules with zero hallucination risk.</p>
                </div>
             </div>
           </section>

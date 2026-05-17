@@ -11,8 +11,8 @@ export default function ServicesSection() {
   const mechanisms = [
     {
       icon: <Database className="w-6 h-6 text-emerald-400" />,
-      title: "01 — Passive Ingestion",
-      description: "Connect your tools once. We quietly extract rules, tribal knowledge, and constraints from Slack, email, Zendesk, databases, and more.",
+      title: "01 — Policy Sync",
+      description: "Connect your tools once. We extract rules, tribal knowledge, and constraints from Slack and sync them into executable rules.",
       example: {
         label: "Example:",
         input: "Ticket: \"Client needs manual credit for downtime\"",
@@ -21,13 +21,13 @@ export default function ServicesSection() {
     },
     {
       icon: <Users className="w-6 h-6 text-purple-400" />,
-      title: "02 — Multi-Agent Supreme Court",
-      description: "High-stakes decisions are reviewed by a specialized cluster of agents. They debate, cross-check, and output binding, auditable rulings."
+      title: "02 — Adjudication Engine",
+      description: "High-stakes or overlapping decisions are verified using a safety-first deterministic precedence hierarchy to resolve contradictions instantly."
     },
     {
       icon: <Zap className="w-6 h-6 text-amber-400" />,
-      title: "03 — Runtime Enforcement",
-      description: "Every agent action hits our lightning-fast gateway (/agent/query). Decision returned in <50ms — Permit or Deny. No exceptions."
+      title: "03 — Gateway Enforcement",
+      description: "Every agent action hits our lightning-fast gateway (/agent/query). Decisions are returned in <50ms — Permit or Deny. Fail-closed by default."
     }
   ];
 

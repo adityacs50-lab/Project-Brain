@@ -2,7 +2,7 @@ from statelock_mvp import StateLockGuard
 import time
 
 print("=============================================")
-print("🛡️  STATELOCK MVP DEMO SUITE 🛡️")
+print("  STATELOCK MVP DEMO SUITE  ")
 print("=============================================\n")
 
 # 1. Initialize the guard with our rule
@@ -46,12 +46,12 @@ for i, scenario in enumerate(scenarios, 1):
     result = guard.evaluate(action=scenario['action'], context=scenario['context'])
     
     if result["allowed"]:
-        print("✅ VERDICT: Action ALLOWED. Sent to execution.")
+        print("[ALLOWED] VERDICT: Action ALLOWED. Sent to execution.")
     else:
-        print(f"❌ VERDICT: Action BLOCKED by StateLock.")
+        print(f"[BLOCKED] VERDICT: Action BLOCKED by StateLock.")
         print(f"   Reason: {result['reason']}")
     time.sleep(1)
 
 print("\n=============================================")
-print("🏁 All tests completed successfully. Engine is rock solid.")
+print("DONE: All tests completed successfully. Engine is rock solid.")
 print("=============================================")

@@ -47,8 +47,8 @@ export default function FeaturedVideoSection() {
               <p className="text-white text-sm md:text-base leading-relaxed">
                 Slack messages and institutional knowledge flow into StateLock. 
                 Our engine synthesizes them into version-controlled rules, while the 
-                Multi-Agent Supreme Court resolves conflicts to enforce company truth 
-                with 100% accountability.
+                deterministic Adjudication Engine evaluates actions to enforce company policies 
+                with 100% consistency.
               </p>
             </div>
             <motion.a
