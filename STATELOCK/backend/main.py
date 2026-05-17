@@ -13,7 +13,6 @@ from backend.versioning import get_model
 from backend.bot import handler as slack_bot_handler
 from backend.db import engine, Base
 from sqlalchemy import text
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -135,15 +134,7 @@ async def startup_event():
         await conn.run_sync(Base.metadata.create_all)
         print("Database tables created/verified.")
     
-    # Setup background scheduler for syncing slack
-    scheduler = AsyncIOScheduler()
-    # Sync messages every 6 hours
-    scheduler.add_job(run_scheduled_sync, 'interval', hours=6)
-    # 🛡️ THIEL PROTOCOL RULE 2: AUTOMATED EXTRACTION
-    # Run the extraction pipeline every hour to turn raw data into logic automatically.
-    scheduler.add_job(run_extraction_pipeline, 'interval', hours=1)
-    scheduler.start()
-    print("APScheduler started: Slack sync (6h) and Extraction pipeline (1h) scheduled.")
+    print("Statelock backend running (Background tasks run via standalone ARQ worker)")
 
 if __name__ == "__main__":
     import uvicorn

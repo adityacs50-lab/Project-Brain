@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ShieldCheck, LayoutDashboard, ClipboardCheck, Workflow, Play, Code2, BookOpen } from "lucide-react";
+import { useWorkspace } from "./WorkspaceContext";
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { workspaceId } = useWorkspace();
 
   const links = [
     { href: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -24,7 +26,10 @@ export function Sidebar() {
           <div className="p-2 bg-blue-600/20 rounded-lg">
             <ShieldCheck className="w-5 h-5 text-blue-500" />
           </div>
-          <span className="font-bold text-lg text-white tracking-tight">Statelock</span>
+          <div className="flex flex-col">
+            <span className="font-bold text-lg text-white tracking-tight leading-none">Statelock</span>
+            <span className="text-[9px] text-blue-400 font-mono tracking-wider font-semibold uppercase mt-1 max-w-[140px] truncate">{workspaceId}</span>
+          </div>
         </div>
       </div>
 

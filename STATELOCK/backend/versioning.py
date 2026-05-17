@@ -16,14 +16,82 @@ router = APIRouter(prefix="/rules", tags=["Rule Versioning"])
 
 # AI client is now handled by backend.ai
 
-# Lazy load the model to avoid blocking on import
+import numpy as np
+
+class ManagedEmbeddingModel:
+    def __init__(self):
+        self.gemini_key = os.getenv("GEMINI_API_KEY")
+        self.openai_key = os.getenv("OPENAI_API_KEY")
+        self.local_model = None
+        self.openai_client = None
+
+        if self.openai_key:
+            from openai import OpenAI
+            self.openai_client = OpenAI(api_key=self.openai_key)
+            print("Embeddings: Configured OpenAI Managed Embeddings (text-embedding-3-small, 384 dims)")
+        elif self.gemini_key:
+            import google.generativeai as genai
+            genai.configure(api_key=self.gemini_key)
+            print("Embeddings: Configured Gemini Managed Embeddings (models/gemini-embedding-001, 384 dims)")
+        else:
+            print("Embeddings: No API keys found. Falling back to local SentenceTransformer (all-MiniLM-L6-v2)")
+
+    @property
+    def is_managed(self) -> bool:
+        """Indicates if we are using OpenAI or Gemini managed cloud embedding models."""
+        return bool(self.openai_key or self.gemini_key)
+
+    def _encode_single(self, text: str) -> list[float]:
+        # 1. Try OpenAI text-embedding-3-small (with 384 dims)
+        if self.openai_key and self.openai_client:
+            try:
+                response = self.openai_client.embeddings.create(
+                    input=text,
+                    model="text-embedding-3-small",
+                    dimensions=384
+                )
+                return response.data[0].embedding
+            except Exception as e:
+                print(f"OpenAI embedding error: {e}, falling back...")
+
+        # 2. Try Gemini text-embedding-004 (with 384 dims)
+        if self.gemini_key:
+            try:
+                import google.generativeai as genai
+                # Configure if not already configured
+                genai.configure(api_key=self.gemini_key)
+                res = genai.embed_content(
+                    model="models/gemini-embedding-001",
+                    content=text,
+                    task_type="retrieval_document",
+                    output_dimensionality=384
+                )
+                return res["embedding"]
+            except Exception as e:
+                print(f"Gemini embedding error: {e}, falling back...")
+
+        # 3. Fallback to local sentence-transformer
+        if self.local_model is None:
+            print("Loading local SentenceTransformer model in-process (fallback)...")
+            from sentence_transformers import SentenceTransformer
+            self.local_model = SentenceTransformer('all-MiniLM-L6-v2')
+        return self.local_model.encode(text).tolist()
+
+    def encode(self, texts: str | list[str]):
+        if isinstance(texts, str):
+            embedding = self._encode_single(texts)
+            return np.array(embedding)
+        else:
+            embeddings = [self._encode_single(t) for t in texts]
+            return np.array(embeddings)
+
+# Lazy load the model wrapper to avoid blocking on import
 model = None
 
 def get_model():
     global model
     if model is None:
-        from sentence_transformers import SentenceTransformer
-        model = SentenceTransformer('all-MiniLM-L6-v2')
+        model = ManagedEmbeddingModel()
     return model
 
 from typing import Optional

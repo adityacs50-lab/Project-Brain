@@ -14,3 +14,5 @@ sentence-transformers==2.7.0
 slack-bolt==1.19.0
 aiohttp
 openai
+arq
+numpy

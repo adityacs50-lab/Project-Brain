@@ -156,7 +156,10 @@ async def query_agent(request: AgentQueryRequest, http_request: Request):
         if matching_rules:
             top_rule = matching_rules[0]
             
-            if similarity_score >= 0.65:
+            # 🛡️ DYNAMIC THRESHOLD: Managed cloud embeddings have higher similarity distributions than local CPU models.
+            # We use 0.78 for Gemini/OpenAI cloud models, and 0.65 for local SentenceTransformer fallback.
+            match_threshold = 0.78 if getattr(model_instance, "is_managed", False) else 0.65
+            if similarity_score >= match_threshold:
                 # We have a match - apply decision logic
                 rule_id = top_rule.id
                 rule_title = top_rule.title
