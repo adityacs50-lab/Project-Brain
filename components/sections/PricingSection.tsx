@@ -8,7 +8,7 @@ export default function PricingSection() {
       name: "Starter",
       price: "$2,500",
       description: "Small teams, <5 agents",
-      features: ["Core gateway", "3 Court reviews/day", "Basic integrations"]
+      features: ["Core gateway", "3 Adjudication runs/day", "Basic integrations"]
     },
     {
       name: "Growth",
