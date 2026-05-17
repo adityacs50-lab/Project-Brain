@@ -3,7 +3,7 @@ builder = "NIXPACKS"
 buildCommand = "pip install -r STATELOCK/requirements.txt"
 
 [deploy]
-startCommand = "cd STATELOCK && uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+startCommand = "cd STATELOCK && /opt/venv/bin/uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
 healthcheckPath = "/health"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
