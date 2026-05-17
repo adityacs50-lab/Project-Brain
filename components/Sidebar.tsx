@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShieldCheck, LayoutDashboard, ClipboardCheck, Workflow, Play, Code2, BookOpen } from "lucide-react";
+import { ShieldCheck, LayoutDashboard, ClipboardCheck, Workflow, Play, Code2, BookOpen, Sliders } from "lucide-react";
 import { useWorkspace } from "./WorkspaceContext";
 
 export function Sidebar() {
@@ -17,6 +17,7 @@ export function Sidebar() {
     { href: "/docs", label: "Documentation", icon: BookOpen },
     { href: "/decisions", label: "Agent Decisions", icon: ShieldCheck },
     { href: "/demo", label: "Live Demo", icon: Play },
+    { href: "/sandbox", label: "Policy Sandbox", icon: Sliders },
   ];
 
   return (
