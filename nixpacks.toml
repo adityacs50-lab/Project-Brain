@@ -1,0 +1,3 @@
+# nixpacks.toml
+# Explicitly force Nixpacks to build with Python and ignore Node/NPM
+providers = ["python"]
