@@ -68,6 +68,14 @@ def _extract_escalation_target(rule_text: str | None) -> str | None:
 # ========================================
 # POST /agent/query
 # ========================================
+from collections import defaultdict
+import time
+
+# Simple in-memory rate limiting: 100 requests per minute per API key
+RATE_LIMIT_WINDOW = 60  # seconds
+RATE_LIMIT_MAX_REQUESTS = 100
+request_history = defaultdict(list)
+
 @router.post("/query")
 async def query_agent(request: AgentQueryRequest, http_request: Request):
     """
@@ -79,6 +87,13 @@ async def query_agent(request: AgentQueryRequest, http_request: Request):
         raise HTTPException(status_code=401, detail="Missing API Key")
     if api_key.startswith("Bearer "):
         api_key = api_key[7:]
+
+    # Rate Limiting Guard: Prevent runaway loops from exhausting Gemini API quota
+    current_time = time.time()
+    request_history[api_key] = [t for t in request_history[api_key] if current_time - t < RATE_LIMIT_WINDOW]
+    if len(request_history[api_key]) >= RATE_LIMIT_MAX_REQUESTS:
+        raise HTTPException(status_code=429, detail="Rate limit exceeded (Max 100 requests/minute). Protects your agent from runaway loops.")
+    request_history[api_key].append(current_time)
     
     # Extract query value
     req_val, req_curr = parse_action_for_threshold(request.action)
