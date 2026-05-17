@@ -41,3 +41,4 @@ next-env.d.ts
 *.epub
 *.log
 ARCHIVE_LANDING_PAGE/
+scratch/
