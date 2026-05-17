@@ -62,7 +62,7 @@ export default function HeroSection() {
             
             <div className="hidden md:flex items-center gap-8">
               <a href="#problem" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">The Problem</a>
-              <a href="#supreme-court" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Adjudication</a>
+              <a href="#adjudication" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Adjudication</a>
               <a href="#how-it-works" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">How It Works</a>
               <a href="#pricing" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Pricing</a>
             </div>

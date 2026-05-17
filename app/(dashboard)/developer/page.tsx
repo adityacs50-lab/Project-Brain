@@ -170,7 +170,7 @@ else:
                <BookOpen className="w-24 h-24" />
             </div>
             <h3 className="text-2xl font-black tracking-tight mb-2">Read the <br />Documentation.</h3>
-            <p className="text-emerald-100 text-sm mb-6 max-w-[180px]">Learn how to implement complex logic graphs and multi-agent adjudication.</p>
+            <p className="text-emerald-100 text-sm mb-6 max-w-[180px]">Learn how to implement complex logic graphs and multi-perspective adjudication.</p>
             <div className="flex items-center gap-2 font-bold text-sm">
               View Docs
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { ShieldCheck, Scale, AlertTriangle, Gavel } from 'lucide-react';
 
-export default function SupremeCourtSection() {
+export default function AdjudicationSection() {
   const agents = [
     {
       role: "Policy Analyzer",
@@ -28,7 +28,7 @@ export default function SupremeCourtSection() {
   ];
 
   return (
-    <section id="supreme-court" className="bg-[#050505] py-32 px-6 border-t border-white/5">
+    <section id="adjudication" className="bg-[#050505] py-32 px-6 border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
@@ -55,7 +55,7 @@ export default function SupremeCourtSection() {
               <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
             </div>
             <Image 
-              src="/supreme-court.png" 
+              src="/adjudication-dashboard.png" 
               alt="StateLock Adjudication Dashboard" 
               width={2400} 
               height={1600}

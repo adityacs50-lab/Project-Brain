@@ -2,7 +2,7 @@
 
 import HeroSection from '@/components/sections/HeroSection';
 import PhilosophySection from '@/components/sections/PhilosophySection';
-import SupremeCourtSection from '@/components/sections/SupremeCourtSection';
+import AdjudicationSection from '@/components/sections/AdjudicationSection';
 import HowItWorksSection from '@/components/sections/HowItWorksSection';
 import FounderStorySection from '@/components/sections/FounderStorySection';
 import PricingSection from '@/components/sections/PricingSection';
@@ -15,7 +15,7 @@ export default function Home() {
     <main className="bg-[#050505]">
       <HeroSection />
       <PhilosophySection />
-      <SupremeCourtSection />
+      <AdjudicationSection />
       <HowItWorksSection />
       <FounderStorySection />
       <PricingSection />

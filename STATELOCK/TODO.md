@@ -14,7 +14,7 @@
 - [x] **Diagnostic Engine**: Built-in test suite for policy enforcement validation.
 
 ## 🔜 Phase 2: Scale & Robustness
-- [ ] **Multi-Agent Orchestration**: Support for coordinating across multiple specialized agents (Support, Legal, HR).
+- [ ] **Multi-Workflow Orchestration**: Support for coordinating across multiple specialized enterprise workflows (Support, Legal, HR).
 - [ ] **Amazon Bedrock Integration**: Leverage Claude 3.5 Sonnet for deeper reasoning in rule synthesis.
 - [ ] **Real-Time Streaming**: Move from batch processing to real-time Slack socket-mode ingestion.
 - [ ] **Policy Simulator**: Sandbox environment to test "What if?" scenarios without affecting live agents.
