@@ -26,13 +26,13 @@ export default function HowItWorksSection() {
   ];
 
   return (
-    <section id="how-it-works" className="bg-[#050505] py-32 px-6 border-t border-white/5">
+    <section id="how-it-works" className="bg-[#050505] py-20 md:py-32 px-4 sm:px-6 border-t border-white/5">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-24">
+        <div className="text-center mb-16 md:mb-24">
           <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-4">
             The Mechanism
           </p>
-          <h2 className="text-3xl md:text-5xl text-white font-semibold tracking-[-0.02em] leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl text-white font-semibold tracking-[-0.02em] leading-tight">
             How StateLock Works.
           </h2>
         </div>

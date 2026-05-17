@@ -26,16 +26,16 @@ export default function PricingSection() {
   ];
 
   return (
-    <section id="pricing" className="bg-[#050505] py-32 px-6 border-t border-white/5">
+    <section id="pricing" className="bg-[#050505] py-20 md:py-32 px-4 sm:px-6 border-t border-white/5">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-20">
+        <div className="text-center mb-12 md:mb-20">
           <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-4">
             Pricing
           </p>
-          <h2 className="text-3xl md:text-5xl text-white font-semibold tracking-[-0.02em] leading-tight mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl text-white font-semibold tracking-[-0.02em] leading-tight mb-6">
             Predictable and Transparent.
           </h2>
-          <p className="text-[#e5e5e5]/40 text-sm max-w-xl mx-auto">
+          <p className="text-[#e5e5e5]/40 text-sm max-w-xl mx-auto px-4 sm:px-0">
             Early beta participants receive a <span className="text-[#10b981]/80 font-medium">40% discount</span> for the first 6 months.
           </p>
         </div>
@@ -44,7 +44,7 @@ export default function PricingSection() {
           {tiers.map((tier, i) => (
             <div 
               key={i}
-              className={`bg-white/[0.02] border ${tier.popular ? 'border-[#10b981]/30 bg-white/[0.04]' : 'border-white/10'} rounded-2xl p-10 flex flex-col`}
+              className={`bg-white/[0.02] border ${tier.popular ? 'border-[#10b981]/30 bg-white/[0.04]' : 'border-white/10'} rounded-2xl p-6 sm:p-8 md:p-10 flex flex-col`}
             >
               <div className="mb-8">
                 <h3 className="text-white/60 text-[10px] tracking-[0.2em] uppercase font-bold mb-4">{tier.name}</h3>
@@ -64,7 +64,7 @@ export default function PricingSection() {
                 ))}
               </div>
 
-              <button className={`w-full rounded-full py-3 text-xs font-bold uppercase tracking-widest transition-all ${
+              <button className={`w-full rounded-full py-3.5 text-xs font-bold uppercase tracking-widest transition-all ${
                 tier.popular 
                   ? 'bg-[#10b981] text-black hover:bg-[#0e9f6e]' 
                   : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'

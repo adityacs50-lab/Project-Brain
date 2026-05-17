@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Brain, X, Loader2, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Brain, X, Loader2, CheckCircle2, Menu } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function HeroSection() {
   const [showModal, setShowModal] = useState(false);
   const [formState, setFormState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -47,13 +49,13 @@ export default function HeroSection() {
 
   return (
     <>
-      <section className="min-h-screen relative flex flex-col items-center justify-center bg-[#050505] selection:bg-[#10b981]/30 overflow-hidden">
+      <section className="min-h-screen relative flex flex-col items-center justify-center bg-[#050505] selection:bg-[#10b981]/30 py-24 md:py-0 overflow-hidden">
         
         {/* Subtle, premium background lighting (not flashy) */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#10b981] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
 
         {/* Navbar */}
-        <nav className="absolute top-0 w-full z-20 px-6 py-6">
+        <nav className="absolute top-0 w-full z-20 px-4 sm:px-6 py-6">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Brain className="w-5 h-5 text-white" />
@@ -68,58 +70,117 @@ export default function HeroSection() {
               <a href="/sandbox" className="text-[#10b981] hover:text-[#0e9f6e] text-sm font-bold transition-colors">Policy Sandbox</a>
             </div>
 
-            <button
-              onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
-              className="px-5 py-2 text-[#10b981] text-sm font-medium border border-[#10b981]/20 hover:border-[#10b981]/40 hover:bg-[#10b981]/5 rounded-full transition-all"
-            >
-              Sign In
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
+                className="px-4 py-1.5 md:px-5 md:py-2 text-[#10b981] text-xs md:text-sm font-medium border border-[#10b981]/20 hover:border-[#10b981]/40 hover:bg-[#10b981]/5 rounded-full transition-all"
+              >
+                Sign In
+              </button>
+
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 text-white/80 hover:text-white transition-colors"
+                aria-label="Toggle navigation menu"
+              >
+                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </nav>
 
+        {/* Mobile Navigation Dropdown */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="absolute top-20 left-4 right-4 z-30 p-6 rounded-2xl bg-[#0a0a0a]/95 border border-white/10 backdrop-blur-xl shadow-2xl md:hidden flex flex-col gap-4 text-center"
+            >
+              <a 
+                href="#problem" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[#e5e5e5]/80 hover:text-white text-sm font-semibold py-2 border-b border-white/5 transition-colors"
+              >
+                The Problem
+              </a>
+              <a 
+                href="#adjudication" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[#e5e5e5]/80 hover:text-white text-sm font-semibold py-2 border-b border-white/5 transition-colors"
+              >
+                Adjudication
+              </a>
+              <a 
+                href="#how-it-works" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[#e5e5e5]/80 hover:text-white text-sm font-semibold py-2 border-b border-white/5 transition-colors"
+              >
+                How It Works
+              </a>
+              <a 
+                href="#pricing" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[#e5e5e5]/80 hover:text-white text-sm font-semibold py-2 border-b border-white/5 transition-colors"
+              >
+                Pricing
+              </a>
+              <a 
+                href="/sandbox" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[#10b981] hover:text-[#0e9f6e] text-sm font-black py-2 transition-colors"
+              >
+                Policy Sandbox
+              </a>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center text-center px-6 mt-32 max-w-5xl mx-auto">
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-24 md:pt-32 max-w-5xl mx-auto">
           {/* Minimal Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] mb-8 md:mb-10">
             <div className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-            <span className="text-[#e5e5e5]/70 text-[11px] font-medium tracking-wide uppercase">
+            <span className="text-[#e5e5e5]/70 text-[10px] sm:text-[11px] font-medium tracking-wide uppercase">
               Private Beta — Limited Spots
             </span>
           </div>
 
-          <h1 className="text-6xl md:text-8xl lg:text-[88px] text-white font-semibold tracking-[-0.05em] leading-[1.0] mb-8">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-[88px] text-white font-semibold tracking-[-0.05em] leading-[1.1] md:leading-[1.0] mb-6 md:mb-8">
             Deterministic Guardrails <br className="hidden md:block" /> For Autonomous AI Agents.
           </h1>
 
-          <p className="text-[#e5e5e5]/60 text-lg md:text-xl font-normal leading-relaxed max-w-2xl mb-14">
+          <p className="text-[#e5e5e5]/60 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mb-10 md:mb-14">
             An unbreakable policy enforcement gateway for your enterprise. No hallucinations. No runaway API actions. Just mathematically guaranteed safety.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto mb-24">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-4 sm:px-0 mb-16 md:mb-24">
             <button
               onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
-              className="w-full sm:w-auto bg-[#10b981] hover:bg-[#0e9f6e] text-black font-bold rounded-full px-10 py-4.5 text-base transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.2)]"
+              className="w-full sm:w-auto bg-[#10b981] hover:bg-[#0e9f6e] text-black font-bold rounded-full px-8 py-4 text-base transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
             >
               Join Private Beta
               <ArrowRight className="w-5 h-5" />
             </button>
             <a
               href="/sandbox"
-              className="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 hover:bg-white/5 text-[#e5e5e5] font-semibold rounded-full px-10 py-4.5 text-base transition-all text-center flex items-center justify-center"
+              className="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 hover:bg-white/5 text-[#e5e5e5] font-semibold rounded-full px-8 py-4 text-base transition-all text-center flex items-center justify-center"
             >
               Test Sandbox
             </a>
           </div>
 
           {/* Minimal Social Proof */}
-          <div className="w-full px-6 mb-16">
-            <p className="text-center text-[#e5e5e5]/20 text-[10px] font-medium tracking-[0.2em] uppercase mb-10">
+          <div className="w-full px-4 sm:px-6 mb-8 md:mb-16">
+            <p className="text-center text-[#e5e5e5]/20 text-[9px] font-bold tracking-[0.25em] uppercase mb-8">
               Trusted by forward-thinking teams
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 opacity-40 grayscale-[40%]">
+            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-16 opacity-40 grayscale-[40%]">
               {['Slack', 'Gmail', 'Zendesk', 'Postgres', 'Salesforce', 'OpenAI', 'AWS'].map((brand) => (
-                <span key={brand} className="text-white font-semibold text-sm md:text-lg tracking-tight">{brand}</span>
+                <span key={brand} className="text-white font-semibold text-xs sm:text-sm md:text-lg tracking-tight">{brand}</span>
               ))}
             </div>
           </div>

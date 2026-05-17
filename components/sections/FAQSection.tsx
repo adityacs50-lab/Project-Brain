@@ -31,9 +31,9 @@ function FAQItem({ question, answer, isOpen, onClick }: { question: string, answ
     <div className="border-b border-white/5">
       <button
         onClick={onClick}
-        className="w-full py-8 flex items-center justify-between text-left group"
+        className="w-full py-6 md:py-8 flex items-center justify-between text-left group"
       >
-        <span className={`text-lg transition-colors duration-300 ${isOpen ? 'text-white' : 'text-white/50 group-hover:text-white'}`}>
+        <span className={`text-base md:text-lg transition-colors duration-300 ${isOpen ? 'text-white' : 'text-white/50 group-hover:text-white'}`}>
           {question}
         </span>
         <div className="text-white/20 group-hover:text-white transition-colors">
@@ -53,18 +53,18 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="bg-[#050505] py-32 px-6 border-t border-white/5">
+    <section id="faq" className="bg-[#050505] py-20 md:py-32 px-4 sm:px-6 border-t border-white/5">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-20">
+        <div className="text-center mb-12 md:mb-20">
           <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-4">
             Details
           </p>
-          <h2 className="text-3xl md:text-5xl text-white font-semibold tracking-[-0.02em] leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl text-white font-semibold tracking-[-0.02em] leading-tight">
             Common Questions.
           </h2>
         </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col animate-fadeIn">
           {faqs.map((faq, i) => (
             <FAQItem 
               key={i} 

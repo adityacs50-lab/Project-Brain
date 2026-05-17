@@ -52,7 +52,7 @@ export default function WaitlistSection() {
   };
 
   return (
-    <section id="apply" className="bg-[#050505] py-40 px-6 overflow-hidden relative border-t border-white/5">
+    <section id="apply" className="bg-[#050505] py-20 md:py-40 px-4 sm:px-6 overflow-hidden relative border-t border-white/5">
       
       {/* Very subtle center glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#10b981] opacity-[0.02] blur-[120px] rounded-full pointer-events-none" />
@@ -65,11 +65,11 @@ export default function WaitlistSection() {
           </span>
         </div>
 
-        <h2 className="text-5xl md:text-7xl text-white font-semibold tracking-[-0.05em] leading-[1.1] mb-8">
+        <h2 className="text-3xl sm:text-5xl md:text-7xl text-white font-semibold tracking-[-0.05em] leading-[1.1] mb-6 md:mb-8">
           Ready for Agents You <br className="hidden md:block" /> Can Actually Trust?
         </h2>
 
-        <p className="text-[#e5e5e5]/40 text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto mb-16">
+        <p className="text-[#e5e5e5]/40 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto mb-10 md:mb-16">
           Deploy AI with mathematical certainty instead of hope. Join the waitlist for our next onboarding batch.
         </p>
 
@@ -137,7 +137,7 @@ export default function WaitlistSection() {
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="md:col-span-2 w-full bg-[#10b981] text-black rounded-xl py-4.5 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#0e9f6e] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(16,185,129,0.15)]"
+                className="md:col-span-2 w-full bg-[#10b981] text-black rounded-xl py-4 text-sm font-bold uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-[#0e9f6e] hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 shadow-[0_0_20px_rgba(16,185,129,0.15)]"
               >
                 {status === 'loading' ? (
                   <Loader2 className="w-5 h-5 animate-spin" />

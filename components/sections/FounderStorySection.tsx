@@ -2,14 +2,14 @@
 
 export default function FounderStorySection() {
   return (
-    <section id="founder" className="bg-[#050505] py-32 px-6 border-t border-white/5">
+    <section id="founder" className="bg-[#050505] py-20 md:py-32 px-4 sm:px-6 border-t border-white/5">
       <div className="max-w-3xl mx-auto text-center">
         <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-8">
           The Origin
         </p>
         
         <div className="space-y-6">
-          <p className="text-[#e5e5e5] text-xl md:text-2xl font-light leading-relaxed italic">
+          <p className="text-[#e5e5e5] text-lg sm:text-xl md:text-2xl font-light leading-relaxed italic">
             &quot;I saw companies rushing to deploy AI agents with zero real control. 
             StateLock was built to turn company policy into law — ensuring agents 
             amplify intelligence without creating new risks.&quot;
