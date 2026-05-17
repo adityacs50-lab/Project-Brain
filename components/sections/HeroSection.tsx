@@ -65,6 +65,7 @@ export default function HeroSection() {
               <a href="#adjudication" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Adjudication</a>
               <a href="#how-it-works" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">How It Works</a>
               <a href="#pricing" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Pricing</a>
+              <a href="/sandbox" className="text-[#10b981] hover:text-[#0e9f6e] text-sm font-bold transition-colors">Policy Sandbox</a>
             </div>
 
             <button
@@ -103,12 +104,12 @@ export default function HeroSection() {
               Join Private Beta
               <ArrowRight className="w-5 h-5" />
             </button>
-            <button
-              onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
-              className="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 hover:bg-white/5 text-[#e5e5e5] font-semibold rounded-full px-10 py-4.5 text-base transition-all"
+            <a
+              href="/sandbox"
+              className="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 hover:bg-white/5 text-[#e5e5e5] font-semibold rounded-full px-10 py-4.5 text-base transition-all text-center flex items-center justify-center"
             >
-              View Live Demo
-            </button>
+              Test Sandbox
+            </a>
           </div>
 
           {/* Minimal Social Proof */}
