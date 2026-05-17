@@ -12,8 +12,15 @@ from backend.extractor import extract_rule_from_context
 SLACK_BOT_TOKEN = os.getenv("SLACK_BOT_TOKEN", "")
 SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET", "")
 
-app = AsyncApp(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
-handler = AsyncSlackRequestHandler(app)
+app = None
+handler = None
+
+if SLACK_BOT_TOKEN and SLACK_SIGNING_SECRET:
+    app = AsyncApp(token=SLACK_BOT_TOKEN, signing_secret=SLACK_SIGNING_SECRET)
+    handler = AsyncSlackRequestHandler(app)
+else:
+    print("WARNING: Slack bot token or signing secret is not configured. Slack integrations will be inactive.")
+
 
 async def handle_query(query_text: str, workspace_id: str, say, user_id: str):
     model = get_model()

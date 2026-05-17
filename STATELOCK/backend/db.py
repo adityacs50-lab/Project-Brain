@@ -14,10 +14,20 @@ if DATABASE_URL:
     elif DATABASE_URL.startswith("postgresql://"):
         DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 
-engine = create_async_engine(DATABASE_URL, echo=False)
-AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+engine = None
+AsyncSessionLocal = None
+
+if DATABASE_URL:
+    engine = create_async_engine(DATABASE_URL, echo=False)
+    AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+else:
+    print("WARNING: DATABASE_URL is not set!")
+
 Base = declarative_base()
 
 async def get_db():
+    if AsyncSessionLocal is None:
+        raise Exception("Database session local not configured. Set DATABASE_URL.")
     async with AsyncSessionLocal() as session:
         yield session
+

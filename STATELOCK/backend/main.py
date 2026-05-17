@@ -122,19 +122,29 @@ async def get_logic_graph(workspace_id: str):
 
 @app.post("/slack/events")
 async def slack_events(req: Request):
+    if slack_bot_handler is None:
+        return {"status": "error", "message": "Slack bot is not configured on this server."}
     return await slack_bot_handler.handle(req)
 
 @app.on_event("startup")
 async def startup_event():
     print("Statelock backend running")
     
-    # Initialize the database tables
-    async with engine.begin() as conn:
-        await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
-        await conn.run_sync(Base.metadata.create_all)
-        print("Database tables created/verified.")
+    if engine is None:
+        print("WARNING: Database engine not configured. Skipping migrations. Set DATABASE_URL.")
+        return
+        
+    try:
+        # Initialize the database tables
+        async with engine.begin() as conn:
+            await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+            await conn.run_sync(Base.metadata.create_all)
+            print("Database tables created/verified.")
+    except Exception as e:
+        print(f"ERROR: Database migration failed on startup: {e}")
     
     print("Statelock backend running (Background tasks run via standalone ARQ worker)")
+
 
 if __name__ == "__main__":
     import uvicorn
