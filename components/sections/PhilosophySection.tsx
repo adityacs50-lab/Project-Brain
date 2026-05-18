@@ -6,18 +6,18 @@ export default function PhilosophySection() {
   const problems = [
     {
       icon: <Clock className="w-5 h-5 text-[#10b981]" />,
-      title: "Stale Knowledge",
-      description: "Your policies change daily in Slack and tickets. Your LLM was trained months ago. This gap creates expensive operational mistakes."
+      title: "Bloated Compliance Costs",
+      description: "Manual auditing of runaway AI actions drains engineering hours and inflates compliance overhead. StateLock automates enforcement at the gateway, slashing operational auditing costs by up to 80%."
     },
     {
       icon: <ShieldAlert className="w-5 h-5 text-[#10b981]" />,
-      title: "No Real Guardrails",
-      description: "Prompt engineering is theater. Without a hard runtime enforcement layer, autonomous agents will eventually approve unauthorized actions."
+      title: "Catastrophic Regulatory Fines",
+      description: "Prompt engineering is theater. A single hallucination-induced policy breach can trigger multi-million dollar GDPR, HIPAA, or SEC compliance penalties. StateLock's deterministic gateway mathematically eliminates this risk."
     },
     {
       icon: <GitCommit className="w-5 h-5 text-[#10b981]" />,
-      title: "Zero Governance",
-      description: "When an agent makes a $10,000 error, you can't trace exactly why it happened or what specific policy it ignored. Total black box."
+      title: "Silent Data Leaks & Errors",
+      description: "Without hard runtime barriers, agents can silently leak customer PII, download unauthorized tables, or execute destructive actions, costing millions in remediation, liability, and reputational damage."
     }
   ];
 

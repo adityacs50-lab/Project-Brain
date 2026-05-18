@@ -70,7 +70,7 @@ export default function WaitlistSection() {
         </h2>
 
         <p className="text-[#e5e5e5]/40 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto mb-10 md:mb-16">
-          Deploy AI with mathematical certainty instead of hope. Join the waitlist for our next onboarding batch.
+          Deploy AI with absolute compliance certainty and protect your enterprise from regulatory risks. Join the private waitlist for our next onboarding batch.
         </p>
 
         <div className="max-w-xl mx-auto">
