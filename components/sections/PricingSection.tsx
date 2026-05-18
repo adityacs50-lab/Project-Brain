@@ -8,7 +8,7 @@ export default function PricingSection() {
       name: "Starter",
       price: "$2,500",
       description: "Small teams, <5 agents",
-      features: ["Core gateway", "3 Adjudication runs/day", "Basic integrations"]
+      features: ["Core gateway", "3 Million Adjudication runs/mo", "Basic integrations"]
     },
     {
       name: "Growth",
@@ -21,7 +21,7 @@ export default function PricingSection() {
       name: "Enterprise",
       price: "Custom",
       description: "Large scale deployments",
-      features: ["On-prem / VPC", "SSO & SAML", "Dedicated infra", "Custom rules engine"]
+      features: ["Private VPC / Air-Gapped Helm Charts", "SSO & SAML", "Zero-Retention Ledgers", "Localized micro-LLM pipelines"]
     }
   ];
 

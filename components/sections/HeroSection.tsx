@@ -153,7 +153,7 @@ export default function HeroSection() {
           </h1>
 
           <p className="text-[#e5e5e5]/60 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mb-10 md:mb-14">
-            An unbreakable policy enforcement gateway for your enterprise. Slashing compliance costs, preventing data leaks, and eliminating human reporting errors with mathematically guaranteed runtime safety.
+            An unbreakable policy enforcement gateway for your enterprise. Continuous Blast Radius Control for Autonomous Agents, preventing data leaks, and intercepting vulnerabilities before execution with mathematically guaranteed runtime safety.
           </p>
 
           {/* CTA Buttons */}

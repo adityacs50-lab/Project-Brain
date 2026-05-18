@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     question: "Where is my data stored?",
-    answer: "StateLock supports both cloud and on-premise deployments. Your policies and internal data never leave your control unless explicitly configured."
+    answer: "StateLock supports cloud, Private VPC, and fully air-gapped on-premise deployments. With Zero-Retention Mode enabled, we cryptographically log SHA-256 transaction signatures, ensuring zero readable corporate or customer data hits our persistent databases."
   }
 ];
 

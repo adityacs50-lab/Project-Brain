@@ -6,8 +6,8 @@ export default function PhilosophySection() {
   const problems = [
     {
       icon: <Clock className="w-5 h-5 text-[#10b981]" />,
-      title: "Bloated Compliance Costs",
-      description: "Manual auditing of runaway AI actions drains engineering hours and inflates compliance overhead. StateLock automates enforcement at the gateway, slashing operational auditing costs by up to 80%."
+      title: "Unbounded Agentic Blast Radius",
+      description: "Manual auditing of runaway AI actions drains engineering hours and inflates compliance overhead. StateLock provides real-time, zero-trust perimeter containment that intercepts vulnerabilities before execution."
     },
     {
       icon: <ShieldAlert className="w-5 h-5 text-[#10b981]" />,
@@ -16,8 +16,8 @@ export default function PhilosophySection() {
     },
     {
       icon: <GitCommit className="w-5 h-5 text-[#10b981]" />,
-      title: "Silent Data Leaks & Errors",
-      description: "Without hard runtime barriers, agents can silently leak customer PII, download unauthorized tables, or execute destructive actions, costing millions in remediation, liability, and reputational damage."
+      title: "Zero-Retention Cryptographic Ledger",
+      description: "For strict GDPR/HIPAA compliance, StateLock supports a zero-retention mode. We cryptographically log SHA-256 transaction signatures, ensuring zero readable corporate or customer data hits our database."
     }
   ];
 
