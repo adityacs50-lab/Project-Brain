@@ -65,7 +65,7 @@ export default function WaitlistSection() {
           </span>
         </div>
 
-        <h2 className="text-3xl sm:text-5xl md:text-7xl text-white font-semibold tracking-[-0.05em] leading-[1.1] mb-6 md:mb-8">
+        <h2 className="text-[28px] xs:text-3xl sm:text-5xl md:text-7xl text-white font-semibold tracking-[-0.02em] sm:tracking-[-0.05em] leading-[1.2] sm:leading-[1.1] mb-6 md:mb-8 px-2">
           Ready for Agents You <br className="hidden md:block" /> Can Actually Trust?
         </h2>
 

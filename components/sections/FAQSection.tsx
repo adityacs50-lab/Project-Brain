@@ -28,22 +28,32 @@ const faqs = [
 
 function FAQItem({ question, answer, isOpen, onClick }: { question: string, answer: string, isOpen: boolean, onClick: () => void }) {
   return (
-    <div className="border-b border-white/5">
+    <div className={`border transition-all duration-300 rounded-2xl mb-4 overflow-hidden ${
+      isOpen 
+        ? 'border-[#10b981]/30 bg-white/[0.03] shadow-[0_0_20px_rgba(16,185,129,0.05)]' 
+        : 'border-white/5 bg-white/[0.01] hover:bg-white/[0.02] hover:border-white/10'
+    }`}>
       <button
         onClick={onClick}
-        className="w-full py-6 md:py-8 flex items-center justify-between text-left group"
+        className="w-full px-5 py-5 sm:px-6 sm:py-6 flex items-center justify-between text-left group"
       >
-        <span className={`text-base md:text-lg transition-colors duration-300 ${isOpen ? 'text-white' : 'text-white/50 group-hover:text-white'}`}>
+        <span className={`text-sm sm:text-base md:text-lg font-semibold transition-colors duration-300 ${isOpen ? 'text-[#10b981]' : 'text-white/80 group-hover:text-white'}`}>
           {question}
         </span>
-        <div className="text-white/20 group-hover:text-white transition-colors">
-          {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+        <div className={`shrink-0 ml-4 p-1.5 rounded-lg border transition-all ${
+          isOpen 
+            ? 'border-[#10b981]/30 bg-[#10b981]/10 text-[#10b981]' 
+            : 'border-white/5 text-white/40 group-hover:text-white'
+        }`}>
+          {isOpen ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
         </div>
       </button>
-      <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-96 pb-8' : 'max-h-0'}`}>
-        <p className="text-[#e5e5e5]/40 leading-relaxed text-base max-w-3xl">
-          {answer}
-        </p>
+      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="px-5 pb-5 sm:px-6 sm:pb-6 pt-1">
+          <p className="text-[#e5e5e5]/60 leading-relaxed text-sm md:text-base font-normal">
+            {answer}
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -55,8 +65,8 @@ export default function FAQSection() {
   return (
     <section id="faq" className="bg-[#050505] py-20 md:py-32 px-4 sm:px-6 border-t border-white/5">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12 md:mb-20">
-          <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-4">
+        <div className="text-center mb-12 md:mb-16">
+          <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-3">
             Details
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl text-white font-semibold tracking-[-0.02em] leading-tight">
@@ -64,7 +74,7 @@ export default function FAQSection() {
           </h2>
         </div>
 
-        <div className="flex flex-col animate-fadeIn">
+        <div className="flex flex-col gap-1">
           {faqs.map((faq, i) => (
             <FAQItem 
               key={i} 

@@ -55,7 +55,7 @@ export default function HeroSection() {
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#10b981] opacity-[0.03] blur-[120px] rounded-full pointer-events-none" />
 
         {/* Navbar */}
-        <nav className="absolute top-0 w-full z-20 px-4 sm:px-6 py-6">
+        <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 py-4 bg-[#050505]/75 backdrop-blur-md border-b border-white/5">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Brain className="w-5 h-5 text-white" />
@@ -97,7 +97,7 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="absolute top-20 left-4 right-4 z-30 p-6 rounded-2xl bg-[#0a0a0a]/95 border border-white/10 backdrop-blur-xl shadow-2xl md:hidden flex flex-col gap-4 text-center"
+              className="fixed top-[73px] left-4 right-4 z-50 p-6 rounded-2xl bg-[#0a0a0a]/95 border border-white/10 backdrop-blur-xl shadow-2xl md:hidden flex flex-col gap-4 text-center"
             >
               <a 
                 href="#problem" 
@@ -139,7 +139,7 @@ export default function HeroSection() {
         </AnimatePresence>
 
         {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-24 md:pt-32 max-w-5xl mx-auto">
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-32 md:pt-40 max-w-5xl mx-auto">
           {/* Minimal Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] mb-8 md:mb-10">
             <div className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
@@ -148,7 +148,7 @@ export default function HeroSection() {
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-8xl lg:text-[88px] text-white font-semibold tracking-[-0.05em] leading-[1.1] md:leading-[1.0] mb-6 md:mb-8">
+          <h1 className="text-[34px] xs:text-4xl sm:text-6xl md:text-8xl lg:text-[88px] text-white font-semibold tracking-[-0.02em] sm:tracking-[-0.05em] leading-[1.15] sm:leading-[1.1] md:leading-[1.0] mb-6 md:mb-8 px-2 sm:px-0">
             Deterministic Guardrails <br className="hidden md:block" /> For Autonomous AI Agents.
           </h1>
 

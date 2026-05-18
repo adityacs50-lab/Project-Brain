@@ -219,7 +219,7 @@ export default function PolicySimulatorSandbox() {
                     <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Quick-Simulation Presets:</span>
                     <span className="text-[9px] font-mono text-zinc-600 uppercase">Click to Autofill</span>
                   </div>
-                  <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+                  <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5 sm:gap-2 pb-2 -mx-1 px-1">
                     {[
                       {
                         label: "💰 $150 Refund",
@@ -248,14 +248,15 @@ export default function PolicySimulatorSandbox() {
                           key={sim.label}
                           type="button"
                           onClick={() => loadPreset(sim.rule, sim.action)}
-                          className={`shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-bold border transition-all flex items-center gap-1.5 ${
+                          className={`px-2 py-2 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold border transition-all flex items-center justify-center sm:justify-start gap-1 sm:gap-1.5 whitespace-nowrap overflow-hidden text-ellipsis ${
                             isActive
                               ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.15)]"
                               : "bg-white/[0.02] hover:bg-white/[0.06] border-white/5 hover:border-emerald-500/20 text-zinc-400 hover:text-white"
                           }`}
                           disabled={isRunning}
+                          title={sim.label}
                         >
-                          {sim.label}
+                          <span className="truncate">{sim.label}</span>
                         </button>
                       );
                     })}
