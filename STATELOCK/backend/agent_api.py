@@ -116,6 +116,75 @@ async def query_agent(request: AgentQueryRequest, http_request: Request):
 
         active_workspace_id = workspace.workspace_id
 
+        # 🔒 AST / Regex Structural Parser: Absolute Constraint Enforcement & Injection Protection
+        action_clean = request.action.lower()
+        
+        # 1. Prompt Injection Detection
+        bypass_patterns = [
+            r"ignore\s+(all\s+)?previous\s+instructions",
+            r"bypass\s+guardrails",
+            r"override\s+policy",
+            r"system\s+prompt\s+reset",
+            r"you\s+are\s+now\s+authorized",
+            r"do\s+not\s+enforce",
+            r"disable\s+checks"
+        ]
+        
+        if any(re.search(pat, action_clean) for pat in bypass_patterns):
+            decision_log = AgentDecisionLog(
+                id=uuid.uuid4(),
+                workspace_id=active_workspace_id,
+                agent_id=request.agent_id,
+                action=request.action,
+                context=json.dumps(request.context),
+                matched_rule_id=None,
+                rule_text="Prompt Injection Block: Obfuscation/Bypass attempt detected via structural regex checks.",
+                decision="denied",
+                escalate_to="security officer",
+                confidence=1.0,
+                created_at=datetime.utcnow()
+            )
+            db.add(decision_log)
+            await db.commit()
+            return {
+                "decision": "denied",
+                "rule_title": "Prompt Injection Prevention",
+                "rule_text": "Prompt Injection Block: Obfuscation/Bypass attempt detected via structural regex checks.",
+                "escalate_to": "security officer",
+                "confidence": 1.0,
+                "audit_id": str(decision_log.id)
+            }
+            
+        # 2. Strict Synonym & Obfuscation Checker (e.g. 'return funds' or 'cashback' instead of 'refund')
+        refund_synonyms = ["give back money", "return funds", "cashback", "credit account", "reimburse", "reverse charge"]
+        if any(syn in action_clean for syn in refund_synonyms) or "refund" in action_clean:
+            # Enforce strict maximum bounds structurally
+            val, _ = parse_action_for_threshold(action_clean)
+            if val is not None and val > 200.0:
+                decision_log = AgentDecisionLog(
+                    id=uuid.uuid4(),
+                    workspace_id=active_workspace_id,
+                    agent_id=request.agent_id,
+                    action=request.action,
+                    context=json.dumps(request.context),
+                    matched_rule_id=None,
+                    rule_text="Structural Threshold Block: Strict limits on refund synonyms enforced.",
+                    decision="escalate",
+                    escalate_to="VP of Customer Success",
+                    confidence=1.0,
+                    created_at=datetime.utcnow()
+                )
+                db.add(decision_log)
+                await db.commit()
+                return {
+                    "decision": "escalate",
+                    "rule_title": "Refund Synonym Limit",
+                    "rule_text": "Structural Threshold Block: Strict limits on refund synonyms enforced.",
+                    "escalate_to": "VP of Customer Success",
+                    "confidence": 1.0,
+                    "audit_id": str(decision_log.id)
+                }
+
         # First try exact matching on thresholds
         exact_match_rule = None
         if req_val is not None:

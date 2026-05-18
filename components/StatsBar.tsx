@@ -13,7 +13,7 @@ export function StatsBar({ workspaceId }: { workspaceId: string }) {
 
   const stats = [
     {
-      title: "Total ROI",
+      title: "Risk Exposure Shielded",
       value: `$${totalROI.toFixed(2)}`,
       icon: Zap,
       color: "text-purple-600",
