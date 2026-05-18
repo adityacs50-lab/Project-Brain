@@ -1,6 +1,8 @@
 import json
 import re
 import uuid
+import hashlib
+import os
 from datetime import datetime
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
@@ -8,6 +10,8 @@ from sqlalchemy import select, desc, delete, cast, Float, text, func
 from backend.db import AsyncSessionLocal
 from backend.models import Rule, AgentDecisionLog, SlackWorkspace, WorkflowRun, BillingEvent, WorkflowStepLog
 import operator as op
+
+ZERO_RETENTION_MODE = os.getenv("ZERO_RETENTION_MODE", "false").lower() == "true"
 
 OPERATORS = {
     ">": op.gt,
@@ -262,12 +266,22 @@ async def query_agent(request: AgentQueryRequest, http_request: Request):
                         escalate_to = "human operator"
         
         # Log to AgentDecisionLog
+        if ZERO_RETENTION_MODE:
+            # Generate unique deterministic signature and completely purge raw text
+            payload_str = f"{active_workspace_id}:{datetime.utcnow().isoformat()}:{request.action}"
+            crypto_signature = hashlib.sha256(payload_str.encode('utf-8')).hexdigest()
+            log_action = f"[ZERO_RETENTION_HASH:{crypto_signature}]"
+            log_context = "{}"
+        else:
+            log_action = request.action
+            log_context = json.dumps(request.context)
+
         decision_log = AgentDecisionLog(
             id=uuid.uuid4(),
             workspace_id=active_workspace_id,
             agent_id=request.agent_id,
-            action=request.action,
-            context=json.dumps(request.context),
+            action=log_action,
+            context=log_context,
             matched_rule_id=rule_id,
             rule_text=rule_text,
             decision=decision,

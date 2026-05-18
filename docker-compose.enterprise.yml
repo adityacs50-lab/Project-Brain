@@ -1,0 +1,74 @@
+version: '3.8'
+services:
+  # 1. Isolated Datastore with Vector Capabilities
+  statelock-db:
+    image: ankane/pgvector:latest
+    container_name: statelock-enterprise-db
+    environment:
+      POSTGRES_USER: ${STATELOCK_DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${STATELOCK_DB_PASSWORD:-SecretEnterprisePass123!}
+      POSTGRES_DB: statelock_governance
+    volumes:
+      - statelock_db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - statelock-isolated-net
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+
+  # 2. Fast Path Cache and WebSockets Pub/Sub Layer
+  statelock-cache:
+    image: redis:7.2-alpine
+    container_name: statelock-enterprise-cache
+    command: redis-server --appendonly yes --requirepass ${STATELOCK_REDIS_PASS:-RedisSecurePass2026!}
+    ports:
+      - "6379:6379"
+    volumes:
+      - statelock_cache_data:/data
+    networks:
+      - statelock-isolated-net
+
+  # 3. Upgraded Adjudication Cloud Core (Running Locally inside VPC)
+  statelock-core-engine:
+    image: statelock/backend-core:latest
+    container_name: statelock-enterprise-engine
+    environment:
+      - DATABASE_URL=postgresql://${STATELOCK_DB_USER:-postgres}:${STATELOCK_DB_PASSWORD:-SecretEnterprisePass123!}@statelock-db:5432/statelock_governance
+      - REDIS_URL=redis://:${STATELOCK_REDIS_PASS:-RedisSecurePass2026!}@statelock-cache:6379/0
+      - ENVIRONMENT=production_vpc
+      - ZERO_RETENTION_MODE=true
+      - ENCLAVE_MODE=false
+    ports:
+      - "8000:8000"
+    depends_on:
+      - statelock-db
+      - statelock-cache
+    networks:
+      - statelock-isolated-net
+    restart: always
+
+  # 4. Next.js Enterprise Console & Local Audit View
+  statelock-console:
+    image: statelock/nextjs-console:latest
+    container_name: statelock-enterprise-console
+    environment:
+      - NEXT_PUBLIC_API_URL=http://statelock-core-engine:8000
+      - DATABASE_URL=postgresql://${STATELOCK_DB_USER:-postgres}:${STATELOCK_DB_PASSWORD:-SecretEnterprisePass123!}@statelock-db:5432/statelock_governance
+    ports:
+      - "3000:3000"
+    depends_on:
+      - statelock-core-engine
+    networks:
+      - statelock-isolated-net
+volumes:
+  statelock_db_data:
+    driver: local
+  statelock_cache_data:
+    driver: local
+networks:
+  statelock-isolated-net:
+    driver: bridge
