@@ -28,7 +28,7 @@ export default function AdjudicationSection() {
   ];
 
   return (
-    <section id="adjudication" className="bg-[#050505] py-20 md:py-32 px-4 sm:px-6 border-t border-white/5">
+    <section id="adjudication" className="bg-[#050505] py-24 sm:py-28 md:py-36 px-6 sm:px-8 border-t border-white/5">
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
@@ -78,7 +78,7 @@ export default function AdjudicationSection() {
             {agents.map((agent, idx) => (
               <div 
                 key={idx}
-                className="flex items-start gap-4 p-5 sm:p-6 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-[#10b981]/20 hover:-translate-y-1 transition-all duration-300 group"
+                className="flex items-start gap-4 p-6 sm:p-7 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-[#10b981]/20 hover:-translate-y-1 transition-all duration-300 group"
               >
                 <div className="mt-1 bg-[#10b981]/10 p-2 rounded-lg border border-[#10b981]/20 group-hover:scale-110 transition-transform">
                   {agent.icon}

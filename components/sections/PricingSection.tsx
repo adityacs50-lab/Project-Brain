@@ -26,7 +26,7 @@ export default function PricingSection() {
   ];
 
   return (
-    <section id="pricing" className="bg-[#050505] py-20 md:py-32 px-4 sm:px-6 border-t border-white/5">
+    <section id="pricing" className="bg-[#050505] py-24 sm:py-28 md:py-36 px-6 sm:px-8 border-t border-white/5">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12 md:mb-20">
           <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-4">
@@ -44,7 +44,7 @@ export default function PricingSection() {
           {tiers.map((tier, i) => (
             <div 
               key={i}
-              className={`bg-white/[0.02] border ${tier.popular ? 'border-[#10b981]/30 bg-white/[0.04]' : 'border-white/10'} rounded-2xl p-6 sm:p-8 md:p-10 flex flex-col`}
+              className={`bg-white/[0.02] border ${tier.popular ? 'border-[#10b981]/30 bg-white/[0.04]' : 'border-white/10'} rounded-2xl p-7 sm:p-8 md:p-10 flex flex-col`}
             >
               <div className="mb-8">
                 <h3 className="text-white/60 text-[10px] tracking-[0.2em] uppercase font-bold mb-4">{tier.name}</h3>

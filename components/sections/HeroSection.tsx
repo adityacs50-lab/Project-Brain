@@ -97,40 +97,40 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              className="fixed top-[73px] left-4 right-4 z-50 p-6 rounded-2xl bg-[#0a0a0a]/95 border border-white/10 backdrop-blur-xl shadow-2xl md:hidden flex flex-col gap-4 text-center"
+              className="fixed top-[76px] left-4 right-4 z-50 p-6 rounded-3xl bg-[#050505]/95 border border-white/15 backdrop-blur-2xl shadow-3xl md:hidden flex flex-col gap-4 text-center"
             >
               <a 
                 href="#problem" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-[#e5e5e5]/80 hover:text-white text-sm font-semibold py-2 border-b border-white/5 transition-colors"
+                className="text-[#e5e5e5]/80 hover:text-white text-base font-semibold py-3 border-b border-white/5 transition-colors"
               >
                 The Problem
               </a>
               <a 
                 href="#adjudication" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-[#e5e5e5]/80 hover:text-white text-sm font-semibold py-2 border-b border-white/5 transition-colors"
+                className="text-[#e5e5e5]/80 hover:text-white text-base font-semibold py-3 border-b border-white/5 transition-colors"
               >
                 Adjudication
               </a>
               <a 
                 href="#how-it-works" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-[#e5e5e5]/80 hover:text-white text-sm font-semibold py-2 border-b border-white/5 transition-colors"
+                className="text-[#e5e5e5]/80 hover:text-white text-base font-semibold py-3 border-b border-white/5 transition-colors"
               >
                 How It Works
               </a>
               <a 
                 href="#pricing" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-[#e5e5e5]/80 hover:text-white text-sm font-semibold py-2 border-b border-white/5 transition-colors"
+                className="text-[#e5e5e5]/80 hover:text-white text-base font-semibold py-3 border-b border-white/5 transition-colors"
               >
                 Pricing
               </a>
               <a 
                 href="/sandbox" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-[#10b981] hover:text-[#0e9f6e] text-sm font-black py-2 transition-colors"
+                className="text-[#10b981] hover:text-[#0e9f6e] text-base font-bold py-3 transition-colors"
               >
                 Policy Sandbox
               </a>
@@ -148,26 +148,26 @@ export default function HeroSection() {
             </span>
           </div>
 
-          <h1 className="text-[34px] xs:text-4xl sm:text-6xl md:text-8xl lg:text-[88px] text-white font-semibold tracking-[-0.02em] sm:tracking-[-0.05em] leading-[1.15] sm:leading-[1.1] md:leading-[1.0] mb-6 md:mb-8 px-2 sm:px-0">
+          <h1 className="text-[28px] xs:text-3xl sm:text-5xl md:text-7xl lg:text-[88px] text-white font-semibold tracking-[-0.02em] sm:tracking-[-0.05em] leading-[1.25] sm:leading-[1.1] md:leading-[1.0] mb-6 md:mb-8 px-2 sm:px-0">
             Deterministic Guardrails <br className="hidden md:block" /> For Autonomous AI Agents.
           </h1>
 
-          <p className="text-[#e5e5e5]/60 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mb-10 md:mb-14">
+          <p className="text-[#e5e5e5]/60 text-sm sm:text-base md:text-xl font-normal leading-relaxed max-w-2xl mb-10 md:mb-14 px-4 sm:px-0">
             An unbreakable policy enforcement gateway for your enterprise. Continuous Blast Radius Control for Autonomous Agents, preventing data leaks, and intercepting vulnerabilities before execution with mathematically guaranteed runtime safety.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-4 sm:px-0 mb-16 md:mb-24">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-6 sm:px-0 mb-16 md:mb-24">
             <button
               onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
-              className="w-full sm:w-auto bg-[#10b981] hover:bg-[#0e9f6e] text-black font-bold rounded-full px-8 py-4 text-base transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
+              className="w-full sm:w-auto bg-[#10b981] hover:bg-[#0e9f6e] text-black font-bold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
             >
               Join Private Beta
-              <ArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-4 h-4" />
             </button>
             <a
               href="/sandbox"
-              className="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 hover:bg-white/5 text-[#e5e5e5] font-semibold rounded-full px-8 py-4 text-base transition-all text-center flex items-center justify-center"
+              className="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 hover:bg-white/5 text-[#e5e5e5] font-semibold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all text-center flex items-center justify-center"
             >
               Test Sandbox
             </a>

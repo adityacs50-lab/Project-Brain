@@ -22,7 +22,7 @@ export default function PhilosophySection() {
   ];
 
   return (
-    <section id="problem" className="bg-[#050505] py-20 md:py-32 px-4 sm:px-6">
+    <section id="problem" className="bg-[#050505] py-24 sm:py-28 md:py-36 px-6 sm:px-8">
       <div className="max-w-6xl mx-auto">
         
         <div className="text-center mb-12 md:mb-20">
@@ -38,7 +38,7 @@ export default function PhilosophySection() {
           {problems.map((problem, idx) => (
             <div 
               key={idx}
-              className="bg-white/[0.02] border border-white/10 rounded-2xl p-6 sm:p-8 md:p-10 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300"
+              className="bg-white/[0.02] border border-white/10 rounded-2xl p-7 sm:p-8 md:p-10 hover:bg-white/[0.04] hover:border-white/20 transition-all duration-300"
             >
               <div className="bg-[#10b981]/10 w-12 h-12 rounded-xl flex items-center justify-center mb-8 border border-[#10b981]/20">
                 {problem.icon}

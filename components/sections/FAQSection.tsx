@@ -63,7 +63,7 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="bg-[#050505] py-20 md:py-32 px-4 sm:px-6 border-t border-white/5">
+    <section id="faq" className="bg-[#050505] py-24 sm:py-28 md:py-36 px-6 sm:px-8 border-t border-white/5">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12 md:mb-16">
           <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-3">

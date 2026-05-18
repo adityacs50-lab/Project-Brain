@@ -52,7 +52,7 @@ export default function WaitlistSection() {
   };
 
   return (
-    <section id="apply" className="bg-[#050505] py-20 md:py-40 px-4 sm:px-6 overflow-hidden relative border-t border-white/5">
+    <section id="apply" className="bg-[#050505] py-24 sm:py-28 md:py-36 px-6 sm:px-8 overflow-hidden relative border-t border-white/5">
       
       {/* Very subtle center glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#10b981] opacity-[0.02] blur-[120px] rounded-full pointer-events-none" />
