@@ -109,7 +109,7 @@ export default function LandingPage() {
                 className={`text-2xl font-semibold text-[#1f2a1d] py-4 border-b border-[#1f2a1d]/10 transition-all duration-500 ${
                   menuOpen ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'
                 }`}
-                style={{ transitionDelay: menuOpen ? \`\${150 + i * 70}ms\` : '0ms' }}
+                style={{ transitionDelay: menuOpen ? `${150 + i * 70}ms` : '0ms' }}
               >
                 {link.label}
               </a>
