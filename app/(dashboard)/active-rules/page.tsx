@@ -87,7 +87,7 @@ export default function ActiveRules() {
     
     setProcessingId(ruleId);
     try {
-      await updateRuleStatus(ruleId, newStatus, undefined, "Umesh Shinde");
+      await updateRuleStatus(ruleId, newStatus, undefined, "Aditya Shinde");
       mutate(getRules(workspaceId));
     } catch (err) {
       console.error(err);
