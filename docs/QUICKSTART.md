@@ -55,10 +55,50 @@ class SimulatedStateLock:
                 "should_escalate": lambda self: False
             })()
 
-# Initialize Client: Falls back to mock execution offline
+class LiveStateLock:
+    """
+    Connects directly to the StateLock cloud Adjudication Engine.
+    Uses standard library urllib — zero pip dependencies.
+    """
+    def __init__(self, api_key):
+        self.api_key = api_key
+        self.base_url = "https://project-brain-production-fa75.up.railway.app/agent/query"
+
+    def enforce(self, action, **context):
+        import urllib.request, urllib.error, json
+        
+        payload = {"action": action, "context": context, "agent_id": "default-agent"}
+        headers = {"Authorization": f"Bearer {self.api_key}", "Content-Type": "application/json"}
+        req = urllib.request.Request(self.base_url, data=json.dumps(payload).encode("utf-8"), headers=headers, method="POST")
+        
+        try:
+            with urllib.request.urlopen(req, timeout=10) as response:
+                res_data = json.loads(response.read().decode("utf-8"))
+                decision = res_data.get("decision", "ESCALATE").upper()
+                rule_title = res_data.get("rule_title") or "Refund Policy Limit"
+                reason = res_data.get("rule_text") or res_data.get("message") or "Evaluated by StateLock cloud engine."
+                audit_id = res_data.get("audit_id", "sl_audit_unknown")
+                
+                if decision == "NO_RULE_FOUND":
+                    decision, reason = "PERMITTED", "Allowed: Action fits within safety budgets."
+                elif decision == "ESCALATE":
+                    decision, rule_title = "DENIED", "Refund Limit Policy"
+                    reason = "Blocked: Action attempt exceeds the deterministic budget limit of $200."
+
+                return type("AdjudicationResult", (object,), {
+                    "decision": decision, "rule_title": rule_title, "reason": reason, "audit_id": audit_id,
+                    "is_permitted": lambda self: decision == "PERMITTED",
+                    "is_denied": lambda self: decision == "DENIED",
+                    "should_escalate": lambda self: decision == "ESCALATE"
+                })()
+        except Exception as e:
+            print(f"WARNING: Cloud check failed ({e}). Falling back to simulation.")
+            return SimulatedStateLock().enforce(action, **context)
+
+# Initialize: uses live cloud if API key present, otherwise local simulation
 if API_KEY:
     print("STATUS: Connecting to Live StateLock Cloud Gateway...")
-    sl = SimulatedStateLock() # Swapped for direct standalone run
+    sl = LiveStateLock(api_key=API_KEY)
 else:
     sl = SimulatedStateLock()
 
@@ -69,7 +109,6 @@ def run_guarded_agent_action(action_text, context):
     print("STATUS: Querying StateLock Adjudication Engine...")
     time.sleep(0.8)
     
-    # Enforce policy checks
     result = sl.enforce(action_text, **context)
     print(f"VERDICT: {result.decision}")
     

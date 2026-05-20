@@ -84,7 +84,7 @@ async def onboard_workspace(name: str, workspace_id: str | None = None, api_key:
 sl = StateLock(
     api_key="{api_key}",
     workspace_id="{workspace_id}",
-    base_url="https://statelock-backend.railway.app" # Or local dev: http://localhost:8000
+    base_url="https://project-brain-production-fa75.up.railway.app" # Or local dev: http://localhost:8000
 )
 
 # Enforce governance

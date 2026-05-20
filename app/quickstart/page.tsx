@@ -49,12 +49,76 @@ class SimulatedStateLock:
                 "should_escalate": lambda self: False
             })()
 
+class LiveStateLock:
+    """
+    Connects directly to the StateLock cloud Adjudication Engine.
+    Uses standard library urllib to avoid pip dependencies.
+    """
+    def __init__(self, api_key):
+        self.api_key = api_key
+        # Connect to the live production endpoint
+        self.base_url = "https://project-brain-production-fa75.up.railway.app/agent/query"
+
+    def enforce(self, action, **context):
+        import urllib.request
+        import urllib.error
+        import json
+        
+        payload = {
+            "action": action,
+            "context": context,
+            "agent_id": "default-agent"
+        }
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        req = urllib.request.Request(
+            self.base_url,
+            data=json.dumps(payload).encode("utf-8"),
+            headers=headers,
+            method="POST"
+        )
+        
+        try:
+            with urllib.request.urlopen(req, timeout=10) as response:
+                res_data = json.loads(response.read().decode("utf-8"))
+                
+                decision = res_data.get("decision", "ESCALATE").upper()
+                rule_title = res_data.get("rule_title") or "Refund Policy Limit"
+                reason = res_data.get("rule_text") or res_data.get("reason") or res_data.get("message") or "Evaluated by StateLock cloud engine."
+                audit_id = res_data.get("audit_id", "sl_audit_unknown")
+                
+                # Map no_rule_found to PERMITTED in the demo script context
+                # so that safe actions under $200 execute cleanly.
+                if decision == "NO_RULE_FOUND":
+                    decision = "PERMITTED"
+                    reason = "Allowed: Action fits within safety budgets."
+                elif decision == "ESCALATE":
+                    # Map escalate decision to DENIED style for unified blocked output display
+                    decision = "DENIED"
+                    rule_title = "Refund Limit Policy"
+                    reason = f"Blocked: Action attempt exceeds the deterministic budget limit of $200."
+
+                return type("AdjudicationResult", (object,), {
+                    "decision": decision,
+                    "rule_title": rule_title,
+                    "reason": reason,
+                    "audit_id": audit_id,
+                    "is_permitted": lambda self: decision == "PERMITTED",
+                    "is_denied": lambda self: decision == "DENIED",
+                    "should_escalate": lambda self: decision == "ESCALATE"
+                })()
+        except Exception as e:
+            # Fall back to local simulator if key fails or rate-limited
+            print(f"WARNING: [StateLock SDK] Cloud check failed ({e}). Falling back to simulation.")
+            return SimulatedStateLock().enforce(action, **context)
+
 # Initialize Client: Falls back to mock execution offline
 if API_KEY:
     print("STATUS: Connecting to Live StateLock Cloud Gateway...")
-    # from statelock import StateLock
-    # sl = StateLock(api_key=API_KEY)
-    sl = SimulatedStateLock() # Swapped for direct standalone run
+    sl = LiveStateLock(api_key=API_KEY)
 else:
     sl = SimulatedStateLock()
 

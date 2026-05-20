@@ -13,7 +13,7 @@ class StateLock:
             # Proceed with action
             pass
     """
-    def __init__(self, api_key, workspace_id=None, base_url="https://statelock-backend.railway.app"):
+    def __init__(self, api_key, workspace_id=None, base_url="https://project-brain-production-fa75.up.railway.app"):
         self.api_key = api_key
         self.workspace_id = workspace_id
         # Default to production URL unless overridden
@@ -89,7 +89,7 @@ class AsyncStateLock:
             # Proceed with action
             pass
     """
-    def __init__(self, api_key, workspace_id=None, base_url="https://statelock-backend.railway.app"):
+    def __init__(self, api_key, workspace_id=None, base_url="https://project-brain-production-fa75.up.railway.app"):
         self.api_key = api_key
         self.workspace_id = workspace_id
         self.base_url = base_url.rstrip("/")
