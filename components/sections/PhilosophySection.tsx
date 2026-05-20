@@ -6,18 +6,18 @@ export default function PhilosophySection() {
   const problems = [
     {
       icon: <Clock className="w-5 h-5 text-[#10b981]" />,
-      title: "Unbounded Agentic Blast Radius",
-      description: "Manual auditing of runaway AI actions drains engineering hours and inflates compliance overhead. StateLock provides real-time, zero-trust perimeter containment that intercepts vulnerabilities before execution."
+      title: "Your AI agent just issued a $50K refund",
+      description: "AI agents make decisions in milliseconds. Without guardrails, a single hallucination can approve refunds, delete data, or send emails your team never authorized. By the time a human notices, the damage is done."
     },
     {
       icon: <ShieldAlert className="w-5 h-5 text-[#10b981]" />,
-      title: "Catastrophic Regulatory Fines",
-      description: "Prompt engineering is theater. A single hallucination-induced policy breach can trigger multi-million dollar GDPR, HIPAA, or SEC compliance penalties. StateLock's deterministic gateway mathematically eliminates this risk."
+      title: "\"We added a prompt to say don't do that\"",
+      description: "Prompt engineering isn't a safety system — it's a suggestion. One jailbreak, one edge case, and your agent blows past every policy you wrote in natural language. Compliance teams won't accept 'we told the AI to be careful' as a defense."
     },
     {
       icon: <GitCommit className="w-5 h-5 text-[#10b981]" />,
-      title: "Zero-Retention Cryptographic Ledger",
-      description: "For strict GDPR/HIPAA compliance, StateLock supports a zero-retention mode. We cryptographically log SHA-256 transaction signatures, ensuring zero readable corporate or customer data hits our database."
+      title: "The audit log says: ¯\\_(ツ)_/¯",
+      description: "When regulators ask why your AI approved that transaction, you need a deterministic paper trail — not a chat log. Most agent frameworks have zero audit infrastructure. StateLock logs every decision with a cryptographic receipt."
     }
   ];
 
@@ -27,10 +27,10 @@ export default function PhilosophySection() {
         
         <div className="text-center mb-12 md:mb-20">
           <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-4">
-            The Governance Gap
+            The Problem
           </p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl text-white font-semibold tracking-[-0.02em] leading-tight">
-            Why current agents fail <br className="hidden md:block" /> in the enterprise.
+            AI agents are making decisions <br className="hidden md:block" /> no one approved.
           </h2>
         </div>
 

@@ -212,9 +212,12 @@ export default function QuickstartPage() {
               <div>
                 <h2 className="text-xl font-bold text-white">Save and Run the Verification Script</h2>
                 <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl mt-1">
-                  Copy the code below, save it as <code className="text-emerald-400 font-mono">statelock_demo.py</code>, and execute it using <code className="text-emerald-400 font-mono">python statelock_demo.py</code>.
-                  The SDK runs completely standalone in mock simulation mode for instant, offline verification.
-                </p>
+  Copy the code below, save it as <code className="text-emerald-400 font-mono">statelock_demo.py</code>, and run it with <code className="text-emerald-400 font-mono">python statelock_demo.py</code>.
+  <br/>
+  <strong>▶️ Local simulation (no API key)</strong> – the script runs instantly in offline mode.
+  <br/>
+  <strong>▶️ Live backend (set <code className="text-emerald-400 font-mono">STATELOCK_API_KEY</code>)</strong> – the script contacts the production StateLock service, returns real audit IDs and enforces your rules.
+</p>
               </div>
 
               {/* Code Editor Mockup */}
