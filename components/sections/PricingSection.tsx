@@ -1,8 +1,13 @@
 'use client';
 
 import { Check } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useScrollReveal, EASE } from '@/components/ui/animations';
 
 export default function PricingSection() {
+  const { ref: headerRef, isInView: headerInView } = useScrollReveal();
+  const { ref: gridRef, isInView: gridInView } = useScrollReveal(0.1);
+
   const tiers = [
     {
       name: "Self-Serve",
@@ -28,7 +33,13 @@ export default function PricingSection() {
   return (
     <section id="pricing" className="bg-[#050505] py-24 sm:py-28 md:py-36 px-6 sm:px-8 border-t border-white/5">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12 md:mb-20">
+        <motion.div
+          ref={headerRef}
+          initial={{ opacity: 0, y: 28 }}
+          animate={headerInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.65, ease: EASE }}
+          className="text-center mb-12 md:mb-20"
+        >
           <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-4">
             Pricing
           </p>
@@ -38,12 +49,15 @@ export default function PricingSection() {
           <p className="text-[#e5e5e5]/40 text-sm max-w-xl mx-auto px-4 sm:px-0">
             Early beta participants receive a <span className="text-[#10b981]/80 font-medium">40% discount</span> for the first 6 months.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {tiers.map((tier, i) => (
-            <div 
+            <motion.div
               key={i}
+              initial={{ opacity: 0, y: 40 }}
+              animate={gridInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.65, delay: i * 0.15, ease: EASE }}
               className={`bg-white/[0.02] border ${tier.popular ? 'border-[#10b981]/30 bg-white/[0.04]' : 'border-white/10'} rounded-2xl p-7 sm:p-8 md:p-10 flex flex-col`}
             >
               <div className="mb-8">
@@ -57,10 +71,16 @@ export default function PricingSection() {
 
               <div className="space-y-4 mb-10 flex-grow">
                 {tier.features.map((f, j) => (
-                  <div key={j} className="flex items-start gap-3">
+                  <motion.div
+                    key={j}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={gridInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ duration: 0.4, delay: i * 0.15 + j * 0.07 + 0.3, ease: 'easeOut' }}
+                    className="flex items-start gap-3"
+                  >
                     <Check className="w-3.5 h-3.5 text-[#10b981] mt-0.5" />
                     <span className="text-white/60 text-xs">{f}</span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
 
@@ -71,7 +91,7 @@ export default function PricingSection() {
               }`}>
                 Join Private Beta
               </button>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

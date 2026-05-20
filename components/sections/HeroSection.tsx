@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowRight, Brain, X, Loader2, CheckCircle2, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { EASE } from '@/components/ui/animations';
 
 export default function HeroSection() {
   const [showModal, setShowModal] = useState(false);
@@ -147,25 +148,45 @@ export default function HeroSection() {
         </AnimatePresence>
 
         {/* Hero Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-32 md:pt-40 max-w-5xl mx-auto">
+        <motion.div
+          className="relative z-10 flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-32 md:pt-40 max-w-5xl mx-auto"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: {},
+            visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
+          }}
+        >
           {/* Minimal Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] mb-8 md:mb-10">
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } } }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.02] mb-8 md:mb-10"
+          >
             <div className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
             <span className="text-[#e5e5e5]/70 text-[10px] sm:text-[11px] font-medium tracking-wide uppercase">
               Private Beta — Limited Spots
             </span>
-          </div>
+          </motion.div>
 
-          <h1 className="text-[28px] xs:text-3xl sm:text-5xl md:text-7xl lg:text-[88px] text-white font-semibold tracking-[-0.02em] sm:tracking-[-0.05em] leading-[1.25] sm:leading-[1.1] md:leading-[1.0] mb-6 md:mb-8 px-2 sm:px-0">
+          <motion.h1
+            variants={{ hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } } }}
+            className="text-[28px] xs:text-3xl sm:text-5xl md:text-7xl lg:text-[88px] text-white font-semibold tracking-[-0.02em] sm:tracking-[-0.05em] leading-[1.25] sm:leading-[1.1] md:leading-[1.0] mb-6 md:mb-8 px-2 sm:px-0"
+          >
             Deterministic Guardrails <br className="hidden md:block" /> For Autonomous AI Agents.
-          </h1>
+          </motion.h1>
 
-          <p className="text-[#e5e5e5]/60 text-sm sm:text-base md:text-xl font-normal leading-relaxed max-w-2xl mb-10 md:mb-14 px-4 sm:px-0">
+          <motion.p
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } } }}
+            className="text-[#e5e5e5]/60 text-sm sm:text-base md:text-xl font-normal leading-relaxed max-w-2xl mb-10 md:mb-14 px-4 sm:px-0"
+          >
             An unbreakable policy enforcement gateway for your enterprise. Continuous Blast Radius Control for Autonomous Agents, preventing data leaks, and intercepting vulnerabilities before execution with mathematically guaranteed runtime safety.
-          </p>
+          </motion.p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-6 sm:px-0 mb-16 md:mb-24">
+          <motion.div
+            variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } } }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-6 sm:px-0 mb-16 md:mb-24"
+          >
             <button
               onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
               className="w-full sm:w-auto min-h-[44px] bg-[#10b981] hover:bg-[#0e9f6e] text-black font-bold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
@@ -186,10 +207,13 @@ export default function HeroSection() {
             >
               Test Sandbox
             </a>
-          </div>
+          </motion.div>
 
           {/* Minimal Social Proof */}
-          <div className="w-full px-4 sm:px-6 mb-8 md:mb-16">
+          <motion.div
+            variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.8, ease: 'easeOut' } } }}
+            className="w-full px-4 sm:px-6 mb-8 md:mb-16"
+          >
             <p className="text-center text-[#e5e5e5]/20 text-[9px] font-bold tracking-[0.25em] uppercase mb-8">
               Trusted by forward-thinking teams
             </p>
@@ -198,8 +222,8 @@ export default function HeroSection() {
                 <span key={brand} className="text-white font-semibold text-xs sm:text-sm md:text-lg tracking-tight">{brand}</span>
               ))}
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Request Access Modal - Premium Styling */}

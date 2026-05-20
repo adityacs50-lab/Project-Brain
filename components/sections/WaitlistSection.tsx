@@ -2,6 +2,30 @@
 
 import { useState } from 'react';
 import { ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import type { Variants } from 'framer-motion';
+import { useScrollReveal, EASE } from '@/components/ui/animations';
+
+const containerVariants: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.05 } },
+};
+const badgeVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.4, ease: EASE } },
+};
+const headlineVariants: Variants = {
+  hidden: { opacity: 0, y: 32 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: EASE } },
+};
+const subtextVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } },
+};
+const footerVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.5, ease: EASE } },
+};
 
 export default function WaitlistSection() {
   const [name, setName] = useState('');
@@ -12,6 +36,8 @@ export default function WaitlistSection() {
   const [notes, setNotes] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+
+  const { ref, isInView } = useScrollReveal(0.1);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,21 +83,33 @@ export default function WaitlistSection() {
       {/* Very subtle center glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#10b981] opacity-[0.02] blur-[120px] rounded-full pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mx-auto text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#10b981]/20 bg-[#10b981]/5 mb-10">
+      <motion.div
+        ref={ref}
+        initial="hidden"
+        animate={isInView ? 'visible' : 'hidden'}
+        variants={containerVariants}
+        className="relative z-10 max-w-4xl mx-auto text-center"
+      >
+        <motion.div variants={badgeVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#10b981]/20 bg-[#10b981]/5 mb-10">
           <div className="w-1 h-1 rounded-full bg-[#10b981] animate-pulse" />
           <span className="text-[#10b981] text-[10px] font-bold tracking-[0.2em] uppercase">
             Only 23 Spots Remaining
           </span>
-        </div>
+        </motion.div>
 
-        <h2 className="text-[28px] xs:text-3xl sm:text-5xl md:text-7xl text-white font-semibold tracking-[-0.02em] sm:tracking-[-0.05em] leading-[1.2] sm:leading-[1.1] mb-6 md:mb-8 px-2">
+        <motion.h2
+          variants={headlineVariants}
+          className="text-[28px] xs:text-3xl sm:text-5xl md:text-7xl text-white font-semibold tracking-[-0.02em] sm:tracking-[-0.05em] leading-[1.2] sm:leading-[1.1] mb-6 md:mb-8 px-2"
+        >
           Ready for Agents You <br className="hidden md:block" /> Can Actually Trust?
-        </h2>
+        </motion.h2>
 
-        <p className="text-[#e5e5e5]/40 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto mb-10 md:mb-16">
+        <motion.p
+          variants={subtextVariants}
+          className="text-[#e5e5e5]/40 text-base sm:text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto mb-10 md:mb-16"
+        >
           Deploy AI with absolute compliance certainty and protect your enterprise from regulatory risks. Join the private waitlist for our next onboarding batch.
-        </p>
+        </motion.p>
 
         <div className="max-w-xl mx-auto">
           {status === 'success' ? (
@@ -155,7 +193,10 @@ export default function WaitlistSection() {
           )}
         </div>
 
-        <div className="mt-24 pt-12 border-t border-white/5 flex flex-col items-center gap-6">
+        <motion.div
+          variants={footerVariants}
+          className="mt-24 pt-12 border-t border-white/5 flex flex-col items-center gap-6"
+        >
           <p className="text-white/20 text-[11px] max-w-sm leading-relaxed text-center italic">
             &quot;Built from a hostel room in India by 19-year-old Aditya. Obsessed with making AI agents safe for real companies.&quot;
           </p>
@@ -164,8 +205,8 @@ export default function WaitlistSection() {
               <span key={tag} className="text-white text-[9px] font-bold uppercase tracking-[0.2em]">{tag}</span>
             ))}
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

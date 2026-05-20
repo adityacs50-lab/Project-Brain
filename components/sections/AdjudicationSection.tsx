@@ -2,8 +2,24 @@
 
 import Image from 'next/image';
 import { ShieldCheck, Scale, AlertTriangle, Gavel } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useScrollReveal, EASE } from '@/components/ui/animations';
+
+const agentVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, delay: i * 0.1, ease: EASE },
+  }),
+};
 
 export default function AdjudicationSection() {
+  const { ref: headerRef, isInView: headerInView } = useScrollReveal();
+  const { ref: imageRef, isInView: imageInView } = useScrollReveal(0.1);
+  const { ref: quoteRef, isInView: quoteInView } = useScrollReveal(0.2);
+  const { ref: gridRef, isInView: gridInView } = useScrollReveal(0.1);
+
   const agents = [
     {
       role: "Policy Analyzer",
@@ -32,7 +48,13 @@ export default function AdjudicationSection() {
       <div className="max-w-7xl mx-auto">
         
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 md:mb-20">
+        <motion.div
+          ref={headerRef}
+          initial={{ opacity: 0, y: 32 }}
+          animate={headerInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="text-center max-w-3xl mx-auto mb-12 md:mb-20"
+        >
           <p className="text-[#10b981] text-xs font-semibold tracking-widest uppercase mb-4">
             The Arbiter
           </p>
@@ -42,10 +64,16 @@ export default function AdjudicationSection() {
           <p className="text-[#e5e5e5]/60 text-base sm:text-lg md:text-xl font-normal leading-relaxed">
             Where complex operational decisions meet real-time, unbreakable policy enforcement.
           </p>
-        </div>
+        </motion.div>
 
         {/* Massive Centerpiece Image */}
-        <div className="relative w-full max-w-6xl mx-auto mb-10 md:mb-12">
+        <motion.div
+          ref={imageRef}
+          initial={{ opacity: 0, y: 48, scale: 0.98 }}
+          animate={imageInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+          transition={{ duration: 0.8, ease: EASE }}
+          className="relative w-full max-w-6xl mx-auto mb-10 md:mb-12"
+        >
           <div className="absolute -inset-1 bg-gradient-to-tr from-[#10b981]/10 via-transparent to-transparent rounded-3xl blur-3xl opacity-30 pointer-events-none" />
           <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#0a0a0a] shadow-2xl">
             {/* Minimal macOS style window controls */}
@@ -63,21 +91,31 @@ export default function AdjudicationSection() {
               priority
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Benefit Explanation */}
-        <div className="text-center max-w-2xl mx-auto mb-12 md:mb-20 px-2 sm:px-0">
+        <motion.div
+          ref={quoteRef}
+          initial={{ opacity: 0 }}
+          animate={quoteInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
+          className="text-center max-w-2xl mx-auto mb-12 md:mb-20 px-2 sm:px-0"
+        >
           <p className="text-[#e5e5e5]/50 text-xs sm:text-sm md:text-base leading-relaxed italic">
             &ldquo;Every action is verified against active policies locally at the edge in &lt;3ms, with live &lt;150ms WebSocket active sync. Cryptographically logged and fail-closed by default for absolute enterprise compliance.&rdquo;
           </p>
-        </div>
+        </motion.div>
 
         {/* Agent Grid */}
-        <div className="max-w-5xl mx-auto">
+        <div ref={gridRef} className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {agents.map((agent, idx) => (
-              <div 
+              <motion.div
                 key={idx}
+                custom={idx}
+                initial="hidden"
+                animate={gridInView ? 'visible' : 'hidden'}
+                variants={agentVariants}
                 className="flex items-start gap-4 p-6 sm:p-7 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-[#10b981]/20 hover:-translate-y-1 transition-all duration-300 group"
               >
                 <div className="mt-1 bg-[#10b981]/10 p-2 rounded-lg border border-[#10b981]/20 group-hover:scale-110 transition-transform">
@@ -91,7 +129,7 @@ export default function AdjudicationSection() {
                     {agent.action}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
