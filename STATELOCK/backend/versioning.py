@@ -30,7 +30,7 @@ class ManagedEmbeddingModel:
             print("Embeddings: Configured OpenAI Managed Embeddings (text-embedding-3-small, 384 dims)")
         elif self.gemini_key:
             import google.generativeai as genai
-            genai.configure(api_key=self.gemini_key)
+            genai.configure(api_key=self.gemini_key, transport='rest')
             print("Embeddings: Configured Gemini Managed Embeddings (models/gemini-embedding-001, 384 dims)")
         else:
             print("WARNING: No embedding API keys found (OPENAI_API_KEY or GEMINI_API_KEY). Semantic search will fail.")
@@ -57,7 +57,7 @@ class ManagedEmbeddingModel:
         if self.gemini_key:
             try:
                 import google.generativeai as genai
-                genai.configure(api_key=self.gemini_key)
+                genai.configure(api_key=self.gemini_key, transport='rest')
                 res = genai.embed_content(
                     model="models/gemini-embedding-001",
                     content=text,

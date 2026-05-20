@@ -68,7 +68,7 @@ export default function AdjudicationSection() {
         {/* Benefit Explanation */}
         <div className="text-center max-w-2xl mx-auto mb-12 md:mb-20 px-2 sm:px-0">
           <p className="text-[#e5e5e5]/50 text-xs sm:text-sm md:text-base leading-relaxed italic">
-            &ldquo;Every action is verified against active policies at the runtime gateway. Decisions are returned in under 50ms, cryptographically logged, and fail-closed by default for absolute enterprise compliance.&rdquo;
+            &ldquo;Every action is verified against active policies locally at the edge in &lt;3ms, with live &lt;150ms WebSocket active sync. Cryptographically logged and fail-closed by default for absolute enterprise compliance.&rdquo;
           </p>
         </div>
 

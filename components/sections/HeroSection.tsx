@@ -67,7 +67,8 @@ export default function HeroSection() {
               <a href="#adjudication" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Adjudication</a>
               <a href="#how-it-works" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">How It Works</a>
               <a href="#pricing" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Pricing</a>
-              <a href="/sandbox" className="text-[#10b981] hover:text-[#0e9f6e] text-sm font-bold transition-colors">Policy Sandbox</a>
+              <a href="/quickstart" className="text-[#10b981] hover:text-[#0e9f6e] text-sm font-bold transition-colors">Quickstart</a>
+              <a href="/sandbox" className="text-[#e5e5e5]/60 hover:text-[#e5e5e5] text-sm font-medium transition-colors">Sandbox</a>
             </div>
 
             <div className="flex items-center gap-2">
@@ -128,9 +129,16 @@ export default function HeroSection() {
                 Pricing
               </a>
               <a 
+                href="/quickstart" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[#10b981] hover:text-[#0e9f6e] text-base font-bold py-3 border-b border-white/5 transition-colors"
+              >
+                Quickstart Guide
+              </a>
+              <a 
                 href="/sandbox" 
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="text-[#10b981] hover:text-[#0e9f6e] text-base font-bold py-3 transition-colors"
+                className="text-[#e5e5e5]/80 hover:text-white text-base font-semibold py-3 transition-colors"
               >
                 Policy Sandbox
               </a>
@@ -166,8 +174,15 @@ export default function HeroSection() {
               <ArrowRight className="w-4 h-4" />
             </button>
             <a
+              href="/quickstart"
+              className="w-full sm:w-auto bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 text-white font-semibold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all text-center flex items-center justify-center gap-2"
+            >
+              Developer Quickstart
+              <ArrowRight className="w-4 h-4 text-white/50" />
+            </a>
+            <a
               href="/sandbox"
-              className="w-full sm:w-auto bg-transparent border border-white/10 hover:border-white/30 hover:bg-white/5 text-[#e5e5e5] font-semibold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all text-center flex items-center justify-center"
+              className="w-full sm:w-auto bg-transparent border border-white/5 hover:border-white/10 hover:bg-white/5 text-[#e5e5e5]/60 hover:text-[#e5e5e5] font-semibold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all text-center flex items-center justify-center"
             >
               Test Sandbox
             </a>

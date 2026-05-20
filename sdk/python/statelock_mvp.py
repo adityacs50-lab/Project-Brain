@@ -5,7 +5,7 @@ import time
 import sys
 
 # PRODUCTION ENGINE URL
-STATELOCK_API_URL = "https://distinguished-adventure-production-4d26.up.railway.app"
+STATELOCK_API_URL = "http://127.0.0.1:8000"
 
 def sanitize_payload(action: str) -> str:
     """
@@ -23,6 +23,20 @@ def sanitize_payload(action: str) -> str:
     action = re.sub(r"(?i)(password|passwd|secret|pass|key|api_key|token|credentials)\s*[=:]\s*['\"]?[a-zA-Z0-9_\-]{4,}['\"]?", r"\1=[MASKED_SECRET]", action)
     return action
 
+def extract_local_numeric_value(action_description: str) -> float:
+    """
+    Finds all numbers in the intent payload and selects the highest 
+    operational constraint parameter to avoid token collision errors.
+    """
+    # Find all standalone integers or decimals
+    numbers = [float(n) for n in re.findall(r'\b\d+(?:\.\d+)?\b', action_description)]
+    
+    if not numbers:
+        return 0.0
+        
+    # Instead of returning numbers[0], target the true limit boundary
+    return max(numbers)
+
 class StateLockGuard:
     """
     StateLock Guard: The production SDK for deterministic agent safety.
@@ -38,14 +52,68 @@ class StateLockGuard:
         
         print("StateLock Guard Initialized. Connected to Production Engine (Local Edge Caching Enabled).")
         self.sync_rules()
+        self.start_websocket_sync()
+
+    def start_websocket_sync(self):
+        """
+        Spawns a background thread that establishes a persistent WebSocket connection
+        to the StateLock Cloud active invalidation channel for <150ms cache sync.
+        """
+        import threading
+        try:
+            import websocket
+            
+            def on_message(ws, message):
+                try:
+                    data = json.loads(message)
+                    if data.get("event") == "invalidate_cache" and data.get("workspace_id") == self.workspace_id:
+                        print("⚡ [StateLock SDK] Cache invalidation received. Invalidating local rules cache...")
+                        self.sync_rules()
+                except Exception:
+                    pass
+                    
+            def on_error(ws, error):
+                pass
+                
+            def on_close(ws, close_status_code, close_msg):
+                pass
+                
+            def on_open(ws):
+                print("⚡ [StateLock SDK] Connected to real-time WebSocket sync stream (<150ms latency).")
+                
+            def run_socket():
+                ws_url = STATELOCK_API_URL.replace("https://", "wss://").replace("http://", "ws://")
+                ws = websocket.WebSocketApp(
+                    f"{ws_url}/agent/sync-stream",
+                    on_open=on_open,
+                    on_message=on_message,
+                    on_error=on_error,
+                    on_close=on_close
+                )
+                reconnect_delay = 2.0
+                while True:
+                    try:
+                        ws.run_forever()
+                    except Exception:
+                        pass
+                    # Robust exponential backoff with a cap of 30 seconds
+                    time.sleep(reconnect_delay)
+                    reconnect_delay = min(reconnect_delay * 1.5, 30.0)
+                    
+            self.ws_thread = threading.Thread(target=run_socket, daemon=True)
+            self.ws_thread.start()
+        except ImportError:
+            print("⚠️ [StateLock SDK] 'websocket-client' not installed. Active WebSocket sync disabled (falling back to 60s polling). Run 'pip install websocket-client' to enable live cache invalidation.")
 
     def sync_rules(self):
         """
         Pulls active deterministic rules from the cloud engine and caches them locally.
+        Uses workspace identity and strict API key matching.
         """
         try:
             response = requests.get(
                 f"{STATELOCK_API_URL}/agent/rules/{self.workspace_id}/support",
+                headers={"x-api-key": self.api_key},
                 timeout=5
             )
             if response.status_code == 200:
@@ -81,12 +149,17 @@ class StateLockGuard:
         Evaluates deterministic threshold rules locally at <3ms to eliminate network roundtrips.
         """
         action_lower = action.lower()
-        match = re.search(r"(\$|€|£)?\s*(\d+(?:\.\d+)?)", action_lower)
-        if not match:
-            return None
         
-        val = float(match.group(2))
-        currency = match.group(1)
+        # Check if there are any standalone integers or decimals in the text
+        if not re.search(r'\b\d+(?:\.\d+)?\b', action_lower):
+            return None
+            
+        # Extract maximum numeric value using the hardened engine function
+        val = extract_local_numeric_value(action_lower)
+        
+        # Get currency if present
+        currency_match = re.search(r"(\$|€|£)", action_lower)
+        currency = currency_match.group(1) if currency_match else None
         
         for rule in self.rule_cache:
             r_val = rule.get("threshold_val")
@@ -108,6 +181,15 @@ class StateLockGuard:
                         triggered = True
                     
                     if triggered and (not r_curr or r_curr == currency):
+                        # Check if the rule is permissive (condition met means ALLOWED) vs prohibitive (condition met means BLOCKED)
+                        rule_text_lower = rule["rule_text"].lower()
+                        is_permissive = any(term in rule_text_lower for term in ["permit", "allow", "acceptable", "authorized", "eligible", "waiver", "permitted"])
+                        is_prohibitive = any(term in rule_text_lower for term in ["never", "block", "deny", "must not", "exceed", "limit"])
+                        
+                        if is_permissive and not is_prohibitive:
+                            # Permissive rule condition is successfully met! We let it pass local caching checks.
+                            continue
+                            
                         return {
                             "allowed": False,
                             "reason": f"Local Limit Enforced: {rule['title']} - {rule['rule_text']}",

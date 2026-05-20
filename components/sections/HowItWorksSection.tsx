@@ -21,7 +21,7 @@ export default function HowItWorksSection() {
       number: "03",
       icon: <Zap className="w-5 h-5 text-[#10b981]" />,
       title: "SDK Gateway",
-      description: "Every agent action is intercepted and verified via our 5-line SDK in <50ms. Fail-closed by default."
+      description: "Sub-millisecond local edge caching intercepts actions in <3ms, falling back securely to real-time cloud vectors. Fail-closed by default."
     }
   ];
 

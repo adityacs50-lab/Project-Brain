@@ -177,48 +177,50 @@ if result.is_permitted():
              </div>
              
              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {/* Starter */}
+                {/* Self-Serve */}
                 <div className="p-10 bg-white/[0.03] border border-white/5 rounded-[40px] space-y-8 flex flex-col">
                    <div className="space-y-2">
-                      <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em]">Starter</p>
-                      <h3 className="text-4xl font-black">$2,500 <span className="text-sm text-zinc-500">/mo</span></h3>
+                      <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em]">Self-Serve</p>
+                      <h3 className="text-4xl font-black">$500 <span className="text-sm text-zinc-500">/mo</span></h3>
                    </div>
                    <ul className="space-y-4 flex-1">
-                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Up to 5 Active Agents</li>
-                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> 1 Slack Channel Link</li>
-                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Standard Adjudication</li>
+                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Up to 3 Active Agents</li>
+                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> 1 Million Adjudications/mo</li>
+                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Local Rule Caching</li>
+                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Community Support</li>
                    </ul>
                    <button className="w-full py-4 bg-white/5 hover:bg-white/10 rounded-2xl font-bold transition-all">Get Started</button>
                 </div>
 
-                {/* Growth */}
+                {/* Starter */}
                 <div className="p-10 bg-emerald-600 rounded-[40px] space-y-8 flex flex-col shadow-2xl shadow-emerald-500/20 relative overflow-hidden group">
                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform">
                       <Zap className="w-20 h-20" />
                    </div>
                    <div className="space-y-2">
-                      <p className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Growth</p>
-                      <h3 className="text-4xl font-black">$8,000 <span className="text-sm text-emerald-100">/mo</span></h3>
+                      <p className="text-[10px] font-black text-white uppercase tracking-[0.3em]">Starter</p>
+                      <h3 className="text-4xl font-black">$2,500 <span className="text-sm text-emerald-100">/mo</span></h3>
                    </div>
                    <ul className="space-y-4 flex-1">
-                      <li className="flex items-center gap-3 text-sm text-emerald-50"><CheckCircle2 className="w-4 h-4 text-white" /> Up to 25 Active Agents</li>
-                      <li className="flex items-center gap-3 text-sm text-emerald-50"><CheckCircle2 className="w-4 h-4 text-white" /> 5 Slack Channel Links</li>
-                      <li className="flex items-center gap-3 text-sm text-emerald-50"><CheckCircle2 className="w-4 h-4 text-white" /> Custom Logic Graphs</li>
-                      <li className="flex items-center gap-3 text-sm text-emerald-50"><CheckCircle2 className="w-4 h-4 text-white" /> SOC2 Compliance Logs</li>
+                      <li className="flex items-center gap-3 text-sm text-emerald-50"><CheckCircle2 className="w-4 h-4 text-white" /> Up to 10 Active Agents</li>
+                      <li className="flex items-center gap-3 text-sm text-emerald-50"><CheckCircle2 className="w-4 h-4 text-white" /> Slack/Teams Auto-Ingestion</li>
+                      <li className="flex items-center gap-3 text-sm text-emerald-50"><CheckCircle2 className="w-4 h-4 text-white" /> 10 Million Adjudications/mo</li>
+                      <li className="flex items-center gap-3 text-sm text-emerald-50"><CheckCircle2 className="w-4 h-4 text-white" /> Conflict Detection & priority support</li>
                    </ul>
-                   <button className="w-full py-4 bg-white text-emerald-600 rounded-2xl font-black transition-all shadow-xl">Approach Sales</button>
+                   <button className="w-full py-4 bg-white text-emerald-600 rounded-2xl font-black transition-all shadow-xl">Get Started</button>
                 </div>
 
                 {/* Enterprise */}
                 <div className="p-10 bg-white/[0.03] border border-white/5 rounded-[40px] space-y-8 flex flex-col">
                    <div className="space-y-2">
-                      <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em]">Custom</p>
-                      <h3 className="text-4xl font-black">Enterprise</h3>
+                      <p className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em]">Enterprise</p>
+                      <h3 className="text-4xl font-black">$10,000+ <span className="text-sm text-zinc-500">/mo</span></h3>
                    </div>
                    <ul className="space-y-4 flex-1">
-                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Unlimited Agents</li>
-                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Full Knowledge Moat</li>
-                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> 24/7 Dedicated Support</li>
+                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Private VPC / Helm Charts</li>
+                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> SSO & SAML Integration</li>
+                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Zero-Retention Logs</li>
+                      <li className="flex items-center gap-3 text-sm text-zinc-400"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> SOC2 & HIPAA Dedicated SLAs</li>
                    </ul>
                    <button className="w-full py-4 bg-white/5 hover:bg-white/10 rounded-2xl font-bold transition-all">Contact Sales</button>
                 </div>

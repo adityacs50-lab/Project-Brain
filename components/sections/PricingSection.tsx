@@ -5,23 +5,23 @@ import { Check } from 'lucide-react';
 export default function PricingSection() {
   const tiers = [
     {
-      name: "Starter",
-      price: "$2,500",
-      description: "Small teams, <5 agents",
-      features: ["Core gateway", "3 Million Adjudication runs/mo", "Basic integrations"]
+      name: "Self-Serve",
+      price: "$500",
+      description: "Fast-moving AI startups, <3 agents",
+      features: ["Core gateway", "1 Million Adjudications/mo", "Local rule caching", "Developer community support"]
     },
     {
-      name: "Growth",
-      price: "$8,000",
-      description: "Scaling AI teams",
-      features: ["Unlimited reviews", "Advanced integrations", "Priority support", "Conflict detection"],
+      name: "Starter",
+      price: "$2,500",
+      description: "Scaling AI teams, <10 agents",
+      features: ["Slack/Teams auto-ingestion", "10 Million Adjudications/mo", "Conflict detection", "Priority developer support"],
       popular: true
     },
     {
       name: "Enterprise",
-      price: "Custom",
-      description: "Large scale deployments",
-      features: ["Private VPC / Air-Gapped Helm Charts", "SSO & SAML", "Zero-Retention Ledgers", "Localized micro-LLM pipelines"]
+      price: "$10,000+",
+      description: "Enterprise scale and compliance",
+      features: ["Private VPC / Air-Gapped Helm Charts", "SSO & SAML integration", "Zero-Retention logs", "Dedicated compliance channels (SOC2/HIPAA)"]
     }
   ];
 
