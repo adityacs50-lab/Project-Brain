@@ -99,7 +99,6 @@ print("Verify decisions and audit trails at: https://statelock.vercel.app")
 export default function QuickstartPage() {
   const [copiedScript, setCopiedScript] = useState(false);
   const [copiedKeyEnv, setCopiedKeyEnv] = useState(false);
-  const [copiedPip, setCopiedPip] = useState(false);
 
   const handleCopy = (text: string, setCopiedState: (v: boolean) => void) => {
     navigator.clipboard.writeText(text);
@@ -130,10 +129,10 @@ export default function QuickstartPage() {
       <div className="max-w-6xl mx-auto px-6 py-20">
         <div className="max-w-3xl mb-16">
           <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6">
-            Get Started in <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200">10 Minutes</span>.
+            Get Started in <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-200">10 Seconds</span>.
           </h1>
           <p className="text-zinc-400 text-lg md:text-xl leading-relaxed">
-            Run the demo script locally, see the deterministic `$500` refund block trigger in real-time, and link your agent loop. No sales calls, no manual white-glove onboarding.
+            Run the demo script locally and see the deterministic `$500` refund block trigger in real-time. No installation required. The script runs instantly in local simulation mode. Copy, paste, run.
           </p>
         </div>
 
@@ -145,56 +144,12 @@ export default function QuickstartPage() {
             <div className="absolute -left-[18px] top-0 w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
               1
             </div>
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-white">Get your Dev API Key</h2>
-              <p className="text-zinc-400 text-sm leading-relaxed max-w-xl">
-                Register on the developer portal to instantly generate your key (starts with <code className="text-emerald-400 font-mono">sl_live_</code>). Set it in your environment.
-              </p>
-              <div className="flex items-center gap-3 bg-zinc-900 border border-white/5 rounded-xl px-4 py-3 max-w-xl justify-between">
-                <code className="text-emerald-400 font-mono text-sm">export STATELOCK_API_KEY=&quot;sl_live_your_key_here&quot;</code>
-                <button 
-                  onClick={() => handleCopy('export STATELOCK_API_KEY="sl_live_your_key_here"', setCopiedKeyEnv)}
-                  className="p-1.5 hover:bg-white/5 rounded-lg text-zinc-400 hover:text-white transition-colors"
-                >
-                  {copiedKeyEnv ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 2 */}
-          <div className="relative pl-12 border-l border-white/10">
-            <div className="absolute -left-[18px] top-0 w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
-              2
-            </div>
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-white">Install the SDK</h2>
-              <p className="text-zinc-400 text-sm leading-relaxed max-w-xl">
-                Install our lightweight Python package containing the client runtime and secure local PII scrubbers.
-              </p>
-              <div className="flex items-center gap-3 bg-zinc-900 border border-white/5 rounded-xl px-4 py-3 max-w-xl justify-between">
-                <code className="text-emerald-400 font-mono text-sm">pip install statelock</code>
-                <button 
-                  onClick={() => handleCopy('pip install statelock', setCopiedPip)}
-                  className="p-1.5 hover:bg-white/5 rounded-lg text-zinc-400 hover:text-white transition-colors"
-                >
-                  {copiedPip ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 3 */}
-          <div className="relative pl-12">
-            <div className="absolute -left-[18px] top-0 w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
-              3
-            </div>
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-bold text-white">Run the Verification Script</h2>
+                <h2 className="text-xl font-bold text-white">Save and Run the Verification Script</h2>
                 <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl mt-1">
-                  Copy the code below, save it as <code className="text-emerald-400 font-mono">statelock_demo.py</code>, and execute it. 
-                  If no API Key is found in the environment, the SDK dynamically switches to a high-fidelity local simulator so you can test it offline immediately.
+                  Copy the code below, save it as <code className="text-emerald-400 font-mono">statelock_demo.py</code>, and execute it using <code className="text-emerald-400 font-mono">python statelock_demo.py</code>.
+                  The SDK runs completely standalone in mock simulation mode for instant, offline verification.
                 </p>
               </div>
 
@@ -229,6 +184,28 @@ export default function QuickstartPage() {
                     <code>{QUICKSTART_CODE}</code>
                   </pre>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 2 */}
+          <div className="relative pl-12">
+            <div className="absolute -left-[18px] top-0 w-9 h-9 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold text-sm">
+              2
+            </div>
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold text-white">Connect to the Live Cloud Gateway</h2>
+              <p className="text-zinc-400 text-sm leading-relaxed max-w-xl">
+                When you are ready to enforce rules on your live agents, register on the developer portal to instantly generate your key (starts with <code className="text-emerald-400 font-mono">sl_live_</code>), and set it in your environment:
+              </p>
+              <div className="flex items-center gap-3 bg-zinc-900 border border-white/5 rounded-xl px-4 py-3 max-w-xl justify-between">
+                <code className="text-emerald-400 font-mono text-sm">export STATELOCK_API_KEY=&quot;sl_live_your_key_here&quot;</code>
+                <button 
+                  onClick={() => handleCopy('export STATELOCK_API_KEY="sl_live_your_key_here"', setCopiedKeyEnv)}
+                  className="p-1.5 hover:bg-white/5 rounded-lg text-zinc-400 hover:text-white transition-colors"
+                >
+                  {copiedKeyEnv ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                </button>
               </div>
             </div>
           </div>
