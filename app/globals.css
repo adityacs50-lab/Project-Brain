@@ -3,21 +3,16 @@
 @tailwind utilities;
 
 :root {
-  --background: #050505;
-  --foreground: #e5e5e5;
+  --background: #ffffff;
+  --foreground: #1f2a1d;
 }
 
 @layer base {
-  * {
-    @apply border-white/10;
-  }
-  body {
-    @apply bg-[#050505] text-[#e5e5e5] selection:bg-[#10b981]/30;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight;
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Neue Haas Grotesk Display Pro 55 Roman', 'Neue Haas Grotesk Text Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
