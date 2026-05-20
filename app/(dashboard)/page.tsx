@@ -60,30 +60,32 @@ export default function Dashboard() {
               </Link>
             </div>
             
-            <div className="divide-y divide-zinc-100">
-              {recentRules.length > 0 ? (
-                recentRules.map((rule: Rule, i) => (
-                  <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-zinc-50 transition-colors cursor-pointer group">
-                    <div className="flex items-center gap-4">
-                      <div className={`p-2 rounded-lg ${rule.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'}`}>
-                        {rule.status === 'active' ? <ShieldCheck className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
+            <div className="overflow-x-auto">
+              <div className="divide-y divide-zinc-100 min-w-[500px]">
+                {recentRules.length > 0 ? (
+                  recentRules.map((rule: Rule, i) => (
+                    <div key={i} className="px-6 py-4 flex items-center justify-between hover:bg-zinc-50 transition-colors cursor-pointer group">
+                      <div className="flex items-center gap-4">
+                        <div className={`p-2 rounded-lg ${rule.status === 'active' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'}`}>
+                          {rule.status === 'active' ? <ShieldCheck className="w-4 h-4" /> : <Zap className="w-4 h-4" />}
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium text-zinc-900 group-hover:text-blue-600 transition-colors">{rule.title}</h3>
+                          <p className="text-xs text-zinc-500 mt-0.5">{rule.source_channel || "#general"}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-sm font-medium text-zinc-900 group-hover:text-blue-600 transition-colors">{rule.title}</h3>
-                        <p className="text-xs text-zinc-500 mt-0.5">{rule.source_channel || "#general"}</p>
+                      <div className="text-right">
+                        <p className="text-xs text-zinc-400">{new Date(rule.created_at).toLocaleDateString()}</p>
+                        <p className="text-[10px] font-mono text-zinc-500 mt-1 uppercase tracking-tighter">{rule.status}</p>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="text-xs text-zinc-400">{new Date(rule.created_at).toLocaleDateString()}</p>
-                      <p className="text-[10px] font-mono text-zinc-500 mt-1 uppercase tracking-tighter">{rule.status}</p>
-                    </div>
+                  ))
+                ) : (
+                  <div className="p-12 text-center">
+                    <p className="text-sm text-zinc-400">No recent activity found.</p>
                   </div>
-                ))
-              ) : (
-                <div className="p-12 text-center">
-                  <p className="text-sm text-zinc-400">No recent activity found.</p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         </div>

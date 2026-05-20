@@ -43,7 +43,7 @@ export function StatsBar({ workspaceId }: { workspaceId: string }) {
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-4 w-full">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
       {stats.map((stat, i) => (
         <div key={i} className="bg-white border border-zinc-200 rounded-xl p-5 hover:border-zinc-300 transition-colors shadow-sm">
           <div className="flex items-center justify-between mb-2">

@@ -12,7 +12,7 @@ import FooterSection from '@/components/sections/FooterSection';
 
 export default function Home() {
   return (
-    <main className="bg-[#050505]">
+    <main className="bg-[#050505] max-w-7xl mx-auto">
       <HeroSection />
       <PhilosophySection />
       <AdjudicationSection />

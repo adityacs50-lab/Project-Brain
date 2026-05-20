@@ -74,14 +74,14 @@ export default function HeroSection() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
-                className="px-4 py-1.5 md:px-5 md:py-2 text-[#10b981] text-xs md:text-sm font-medium border border-[#10b981]/20 hover:border-[#10b981]/40 hover:bg-[#10b981]/5 rounded-full transition-all"
+                className="min-h-[44px] min-w-[44px] px-4 md:px-5 md:py-2 text-[#10b981] text-xs md:text-sm font-medium border border-[#10b981]/20 hover:border-[#10b981]/40 hover:bg-[#10b981]/5 rounded-full transition-all flex items-center justify-center"
               >
                 Sign In
               </button>
 
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 text-white/80 hover:text-white transition-colors"
+                className="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center text-white/80 hover:text-white transition-colors"
                 aria-label="Toggle navigation menu"
               >
                 {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -168,21 +168,21 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto px-6 sm:px-0 mb-16 md:mb-24">
             <button
               onClick={() => { setShowModal(true); setFormState('idle'); setErrorMsg(''); }}
-              className="w-full sm:w-auto bg-[#10b981] hover:bg-[#0e9f6e] text-black font-bold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
+              className="w-full sm:w-auto min-h-[44px] bg-[#10b981] hover:bg-[#0e9f6e] text-black font-bold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(16,185,129,0.25)]"
             >
               Join Private Beta
               <ArrowRight className="w-4 h-4" />
             </button>
             <a
               href="/quickstart"
-              className="w-full sm:w-auto bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 text-white font-semibold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all text-center flex items-center justify-center gap-2"
+              className="w-full sm:w-auto min-h-[44px] bg-white/5 border border-white/10 hover:border-white/20 hover:bg-white/10 text-white font-semibold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all text-center flex items-center justify-center gap-2"
             >
               Developer Quickstart
               <ArrowRight className="w-4 h-4 text-white/50" />
             </a>
             <a
               href="/sandbox"
-              className="w-full sm:w-auto bg-transparent border border-white/5 hover:border-white/10 hover:bg-white/5 text-[#e5e5e5]/60 hover:text-[#e5e5e5] font-semibold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all text-center flex items-center justify-center"
+              className="w-full sm:w-auto min-h-[44px] bg-transparent border border-white/5 hover:border-white/10 hover:bg-white/5 text-[#e5e5e5]/60 hover:text-[#e5e5e5] font-semibold rounded-full px-6 py-3.5 sm:px-8 sm:py-4 text-sm sm:text-base transition-all text-center flex items-center justify-center"
             >
               Test Sandbox
             </a>
