@@ -7,21 +7,20 @@ export default function HowItWorksSection() {
     {
       number: "01",
       icon: <Database className="w-5 h-5 text-[#10b981]" />,
-      title: "Policy Sync",
-      description: "We connect to Slack to sync your team's operational guidelines and tribal knowledge into executable rules."
+      title: "Write Your Rules",
+      description: "Tell us what your AI is not allowed to do in plain English. For example: 'Never issue refunds over $200 without human approval.'"
     },
     {
       number: "02",
-      icon: <Users className="w-5 h-5 text-[#10b981]" />,
-      title: "Adjudication Engine",
-      iconAlt: "Intelligent policy resolving",
-      description: "Our engine resolves rule contradictions and ambiguities using a safety-first deterministic precedence hierarchy."
+      icon: <Zap className="w-5 h-5 text-[#10b981]" />,
+      title: "Agent Asks Permission",
+      description: "Before your AI agent takes any critical action (like sending an email or moving money), it checks with StateLock."
     },
     {
       number: "03",
-      icon: <Zap className="w-5 h-5 text-[#10b981]" />,
-      title: "SDK Gateway",
-      description: "Sub-millisecond local edge caching intercepts actions in <3ms, falling back securely to real-time cloud vectors. Fail-closed by default."
+      icon: <Users className="w-5 h-5 text-[#10b981]" />,
+      title: "Instant Decision",
+      description: "StateLock instantly compares the action against your rules. It either allows the action, blocks it immediately, or alerts a human to review it."
     }
   ];
 
