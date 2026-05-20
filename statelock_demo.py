@@ -17,11 +17,11 @@ from statelock import StateLock
 
 # 1. Initialize the client
 # Replace with your actual key from the developer portal
-API_KEY = "sk-demo-12345678" 
+API_KEY = os.environ.get("STATELOCK_API_KEY", "sk-demo-12345678")
 sl = StateLock(
     api_key=API_KEY,
     workspace_id="demo-workspace",
-    base_url="https://distinguished-adventure-production-4d26.up.railway.app"
+    base_url="https://project-brain-production-fa75.up.railway.app"
 )
 
 def run_agent_workflow(action_text, user_context):
@@ -37,16 +37,16 @@ def run_agent_workflow(action_text, user_context):
     print(f"[StateLock] Reasoning: {result.reason}")
     
     if result.is_permitted():
-        print("✅ [SUCCESS] Action permitted. Executing business logic...")
+        print("[SUCCESS] Action permitted. Executing business logic...")
         # Your actual logic here (e.g. stripe.refund.create(...))
         return True
     
     elif result.is_denied():
-        print("❌ [BLOCKED] Action denied by governance policy. Audit ID:", result.audit_id)
+        print("[BLOCKED] Action denied by governance policy. Audit ID:", result.audit_id)
         return False
         
     elif result.should_escalate():
-        print("⚠️ [ESCALATED] Manual approval required. Notifying administrator...")
+        print("[ESCALATED] Manual approval required. Notifying administrator...")
         # Logic to wait for human-in-the-loop approval
         return None
 

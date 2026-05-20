@@ -512,6 +512,7 @@ async def get_decisions(workspace_id: str):
                     "context": safe_parse_context(d.context),
                     "decision": d.decision,
                     "matched_rule_id": str(d.matched_rule_id) if d.matched_rule_id else None,
+                    "rule_text": d.rule_text,
                     "escalate_to": d.escalate_to,
                     "confidence": d.confidence,
                     "agent_feedback": d.agent_feedback,

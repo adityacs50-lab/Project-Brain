@@ -7,7 +7,7 @@ import { fetcher, getRules, getStats } from "@/lib/api";
 import { StatsBar } from "@/components/StatsBar";
 import { Rule } from "@/components/RuleCard";
 import { useWorkspace } from "@/components/WorkspaceContext";
-import { WorkflowFeed } from "@/components/WorkflowFeed";
+import { LiveAuditFeed } from "@/components/LiveAuditFeed";
 
 export default function Dashboard() {
   const { workspaceId } = useWorkspace();
@@ -45,8 +45,8 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          {/* Workflow Feed */}
-          <WorkflowFeed workspaceId={workspaceId} />
+          {/* Live Audit Feed */}
+          <LiveAuditFeed workspaceId={workspaceId} />
 
           {/* Activity Feed */}
           <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">

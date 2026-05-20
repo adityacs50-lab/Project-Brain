@@ -57,10 +57,10 @@ export function Sidebar() {
       <div className="p-4 border-t border-white/5">
         <div className="flex items-center gap-3 px-2 py-2">
           <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
-            US
+            AS
           </div>
           <div className="flex flex-col overflow-hidden">
-            <span className="text-sm font-medium text-white truncate">Umesh Shinde</span>
+            <span className="text-sm font-medium text-white truncate">Aditya Shinde</span>
             <span className="text-xs text-zinc-500">Administrator</span>
           </div>
         </div>
